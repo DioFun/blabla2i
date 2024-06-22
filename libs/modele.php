@@ -10,6 +10,15 @@ include_once("maLibSQL.pdo.php");
 function sendConfirmationEmail($email, $token, $id) {
     $subject = "Confirmation de votre email";
     $message = "Cliquez sur le lien suivant pour confirmer votre email : ";
+    $message .= "http://localhost/TWE2024/projet%20WEB/controleur.php?action=Verify&token=" . urlencode($token)."&id=".urldecode($id);
+    $headers = "From: noreply@blabla2i.com";
+
+    mail($email, $subject, $message, $headers);
+}
+
+function sendResetEmail($email, $token, $id) {
+    $subject = "Confirmation de votre email";
+    $message = "Cliquez sur le lien suivant pour confirmer votre email : ";
     $message .= "http://localhost/TWE2024/projet%20WEB/index.php?view=confirm&token=" . urlencode($token)."&id=".urldecode($id);
     $headers = "From: noreply@blabla2i.com";
 
@@ -53,6 +62,12 @@ function changePassword($mail,$pass){
 	SQLUpdate($SQL);
 }
 
+function putResetToken($id,$resetToken){
+	
+	$SQL = "UPDATE users SET reset_token = '$resetToken' WHERE id = '$id';";
+	SQLUpdate($SQL);
+}
+
 function confirmMail($id){
 	
 	
@@ -93,10 +108,10 @@ function verifCreateUser($nom,$prenom,$mail,$adress,$pass,$secondpass,$planning)
 
 	}
 
-	elseif (substr($mail, -strlen("@centrale.centralelille.fr")) !== "@centrale.centralelille.fr") { 
+	elseif (substr($mail, -strlen("centralelille.fr")) !== "centralelille.fr") { 
 
 
-		createFlash("error", "L'adresse mail doit être une adresse centrale (nom.prenom@centrale.centralelille.fr) ");
+		createFlash("error", "L'adresse mail doit être une adresse centrale (en centralelille.fr) ");
 		$qs = "?view=create";
 		
 

@@ -25,7 +25,7 @@ if (valider("connecte",'SESSION'))
 
 
 
-<?=$info?>
+
 
 <div id="formLogin">
 	<form action="controleur.php" method="GET">

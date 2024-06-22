@@ -69,11 +69,24 @@ session_start();
 
 			break;
 
-			case 'Changer1' :
-				
+			case 'ChangerMDPMail' :
+
+				if (($resetMail = valider("resetMail"))&&($id = valider("id"))){
+
+					$resetToken = generateToken();
+					putResetToken($id,$resetToken);
+					sendResetEmail($resetMail, $resetToken, $id);
+				}
 
 				break;
 
+
+			case 'ChangerMDP' :
+
+				if (($resetMail = valider("resetMail"))&&($id = valider("id"))){
+				}
+
+				break;
 
 			case 'Create' :
 				if (($nom = valider("nom"))

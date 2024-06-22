@@ -14,7 +14,7 @@ if (basename($_SERVER["PHP_SELF"]) != "index.php")
 
 	<img src="URL_de_l'image" alt="Logo">
 
-<h1>EMail de réinitialisatiion</h1>
+<h1>Réinitialiser votre mot de passe</h1>
 
 
 
@@ -22,8 +22,9 @@ if (basename($_SERVER["PHP_SELF"]) != "index.php")
 
 <div id="formLogin">
 	<form action="controleur.php" method="GET">
-		email : <input type="text" name="resetMail" placeholder="Entrez votre email"/><br />
-		<input type="submit" name="action" value="ChangerMDPMail" />
+		Nouveau mot de passe : <input type="text" name="newpass" placeholder="Entrez votre nouveau mot de passe"/><br />
+		Confirmez le mot de passe : <input type="text" name="newpassconfirm" placeholder="Confirmez votre nouveau mot de passe"/><br />
+		<input type="submit" name="action" value="ChangerMDP" />
 	</form>
 </div>
 
