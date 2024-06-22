@@ -73,8 +73,9 @@ session_start();
 
 			case 'Logout' :
 
-				session_destroy();
-				$qs = "?view=login&msg=". urlencode("à bientot !");
+				unset($_SESSION['pseudo'], $_SESSION['idUser'], $_SESSION['isAdmin'], $_SESSION['connecte'], $_SESSION['heureConnexion']);
+				createFlash("success", "Déconnecté !");
+				$qs = "?view=login";
 
 			break;
 

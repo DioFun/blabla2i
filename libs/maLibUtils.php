@@ -101,6 +101,8 @@ function flashExists()
 
 function createFlash($type, $msg)
 {
+	if (!isset($_SESSION)) session_start();
+	if (!isset($_SESSION['flash'])) $_SESSION['flash'] = array();
 	if (!isset($_SESSION['flash'][$type])) $_SESSION['flash'][$type] = array();
 	array_push($_SESSION['flash'][$type], $msg);
 	return true;

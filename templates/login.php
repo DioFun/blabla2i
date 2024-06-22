@@ -14,10 +14,6 @@ if (valider("connecte",'SESSION'))
 }
 
 $info = "";
-if ($msg = valider("msg")) {
-	$info = "<h3 style = \"color:red; \">$msg</h3>";
-}
-
 ?>
  
 <div id="corps">
