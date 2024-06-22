@@ -7,6 +7,12 @@ if (basename($_SERVER["PHP_SELF"]) != "index.php")
 	die("");
 }
 
+if (valider("connecte",'SESSION'))
+{
+	header("Location:index.php?view=accueil");
+	die("");
+}
+
 $info = "";
 if ($msg = valider("msg")) {
 	$info = "<h3 style = \"color:red; \">$msg</h3>";

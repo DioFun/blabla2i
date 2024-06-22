@@ -12,68 +12,7 @@ Dans ce fichier, on définit diverses fonctions permettant de récupérer des do
 include_once("maLibSQL.pdo.php");
 
 
-function listerUtilisateurs($classe = "both")
-{
-	// Cette fonction liste les utilisateurs de la base de données 
-	// et renvoie un tableau d'enregistrements. 
-	// Chaque enregistrement est un tableau associatif contenant les champs 
-	// id,pseudo,blacklist,couleur
 
-	switch($classe){
-
-	case "both" : 
-		$SQL = "select id,pseudo,blacklist,couleur from users";
-	break;
-
-	case "bl" : 
-		$SQL = "select id,pseudo,blacklist,couleur from users
-				WHERE blacklist = 1";
-	break;
-
-	case "nbl" : 
-		$SQL = "select id,pseudo,blacklist,couleur from users
-				WHERE blacklist = 0";
-	break;
-
-	default : // si le template correspondant à l'argument existe, on l'affiche
-		$SQL = "select id,pseudo,blacklist,couleur from users";
-
-}
-
-	// Lorsque la variable $classe vaut "both", elle renvoie tous les utilisateurs
-	// Lorsqu'elle vaut "bl", elle ne renvoie que les utilisateurs blacklistés
-	// Lorsqu'elle vaut "nbl", elle ne renvoie que les utilisateurs non blacklistés
-
-	
-	return parcoursRs(SQLSelect($SQL));
-
-}
-
-function interdireUtilisateur($idUser)
-{
-	// cette fonction affecte le booléen "blacklist" à vrai 
-
-	$SQL = "UPDATE users
-	SET blacklist = 1
-	WHERE id = '".$idUser."'";
-
-	SQLUpdate($SQL);
-
-}
-
-function autoriserUtilisateur($idUser)
-{
-	// cette fonction affecte le booléen "blacklist" à faux 
-
-	$SQL = "UPDATE users
-	SET blacklist = 0
-	WHERE id = '".$idUser."'";
-
-	SQLUpdate($SQL);
-
-}
-
-/********* EXERCICE 4 *********/
 
 function verifUserBdd($login,$passe)
 {
@@ -90,9 +29,6 @@ function verifUserBdd($login,$passe)
 
 	$hash = ParcoursRs(SQLSelect($SQL))[0]["password"];
 
-
-	var_dump($hash);
-
 	if (password_verify($passe, $hash)){
 		return ParcoursRs(SQLSelect($SQL))[0]["id"];
 	}
@@ -104,6 +40,45 @@ function verifUserBdd($login,$passe)
 	// on aurait du utiliser SQLSelect
 }
 
+function generateToken($length = 32) {
+    return bin2hex(random_bytes($length));
+}
+
+function verifCreateUser($nom,$prenom,$mail,$pass,$secondpass)
+{
+
+
+	if ((strlen($nom) >= 255)||(strlen($prenom) >= 255)||(strlen($mail) >= 255)||
+		(strlen($pass) >= 255)||(strlen($secondpass) >= 255)||(strlen($adress) >= 255)) {
+
+		$qs = "?view=create&msg=". urlencode("Tous les champs textuels doivent contenir moins de 255 caractères.");
+
+
+	}
+
+	elseif ($pass !== $secondpass) {
+
+		$qs = "?view=create&msg=". urlencode("Les deux mots de passe sont différents.");
+
+	}
+
+	elseif (substr($mail, -strlen("@centrale.centralelille.fr")) === "@centrale.centralelille.fr") { 
+
+		$qs = "?view=create&msg=". urlencode("L'adresse mail doit être une adresse centrale (nom.prenom@centrale.centralelille.fr) ");
+
+	} else {
+
+	
+	$token = generateToken();
+	$SQL = "UPDATE users SET confirmation_token = '$token', confirmation_send_at = NOW() WHERE email = '$mail'";
+
+	}
+
+	return $qs;
+	
+
+}
+
 function isAdmin($idUser)
 {
 	$SQL = "SELECT role from users
@@ -113,126 +88,6 @@ function isAdmin($idUser)
 
 }
 
-/********* EXERCICE 5 *********/
 
-function listerConversations($mode="tout")
-{
-	// Liste toutes les conversations ($mode="tout")
-	// OU uniquement celles actives  ($mode="actives"), ou inactives  ($mode="inactives")
-
-	switch($mode){
-
-		case "tout" : 
-			$SQL = "SELECT * FROM conversations";
-			
-		break;
-	
-		case "actives" : 
-			$SQL = "SELECT * FROM conversations
-					WHERE active = 1";
-				
-		break;
-	
-		case "inactives" : 
-			$SQL = "SELECT * FROM conversations
-					WHERE active = 0";
-		break;
-	
-		default : // si le template correspondant à l'argument existe, on l'affiche
-			$SQL = "select * from conversations";
-	
-	}
-
-	return parcoursRs(SQLSelect($SQL));
-
-
-}
-
-function archiverConversation($idConversation)
-{
-	// rend une conversation inactive
-
-	$SQL = "UPDATE conversations
-	SET active = 0
-	WHERE id = '".$idConversation."'";
-
-	SQLUpdate($SQL);
-
-}
-
-function reactiverConversation($idConversation)
-{
-	// rend une conversation active
-
-	$SQL = "UPDATE conversations
-	SET active = 1
-	WHERE id = '".$idConversation."'";
-
-	SQLUpdate($SQL);
-
-}
-
-function creerConversation($theme)
-{
-	// crée une nouvelle conversation et renvoie son identifiant
-
-	$SQL = "INSERT INTO `conversations` (`theme`) VALUES ('$theme'); ";
-
-	SQLInsert($SQL);
-}
-
-function supprimerConversation($idConv)
-{
-	// supprime une conversation et ses messages
-	// Utiliser pour cela des mises à jour en cascade en appliquant l'intégrité référentielle
-
-	$SQL = "DELETE FROM conversations WHERE id = '$idConv'";
-	SQLDelete($SQL);
-}
-
-
-/********* EXERCICE 6 *********/
-
-function enregistrerMessage($idConversation, $idAuteur, $contenu)
-{
-	// Enregistre un message dans la base en encodant les caractères spéciaux HTML : <, > et & 
-	// pour interdire les messages HTML
-
-	
-}
-function listerMessages($idConv)
-{
-	// Liste les messages de cette conversation
-	// Champs à extraire : contenu, auteur, couleur 
-	// en ne renvoyant pas les utilisateurs blacklistés
-
-	$SQL = "SELECT * FROM messages WHERE idConversation = '$idConv'";
-	return SQLSelect($SQL);
-
-
-}
-
-function listerMessagesFromIndex($idConv,$index)
-{
-	// Liste les messages de cette conversation, 
-	// dont l'id est superieur à l'identifiant passé
-	// Champs à extraire : contenu, auteur, couleur 
-	// en ne renvoyant pas les utilisateurs blacklistés
-
-}
-
-function getConversation($idConv)
-{	
-	// Récupère les données de la conversation (theme, active)
-	$SQL = "SELECT theme, active FROM conversations WHERE id='$idConv'";
-	$listConversations = parcoursRs(SQLSelect($SQL));
-
-	// Attention : parcoursRS nous renvoie un tableau contenant potentiellement PLUSIEURS CONVERSATIONS
-	// Il faut renvoyer uniquement la première case de ce tableau, c'est à dire la case 0 
-	// OU false si la conversation n'existe pas
-	 
-	if (count($listConversations) == 0) return false;
-	else return $listConversations[0];
-}
 
 ?>

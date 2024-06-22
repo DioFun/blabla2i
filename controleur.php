@@ -53,18 +53,19 @@ session_start();
 
 			case 'Create' :
 				if (($nom = valider("nom"))
-				  	&&($prenoms = valider("prenom"))
+				  	&&($prenom = valider("prenom"))
 					&&($mail = valider("mail"))
 					&&($pass = valider("pass"))
 					&&($secondpass = valider("secondpass"))){
 
+						$qs = verifCreateUser($nom,$prenom,$mail,$pass,$secondpass);
 						
 
 					
 
 					} else {
 
-						$qs = "?view=login&msg=". urlencode("Tous les champs doivent être remplis.");
+						$qs = "?view=create&msg=". urlencode("Tous les champs doivent être remplis.");
 					}
 				
 			break;

@@ -29,6 +29,7 @@ if ($msg = valider("msg")) {
 		Nom : <input type="text" name="nom" placeholder="Nom"/><br />
 		Prénom : <input type="text" name="prenom" placeholder="Prénom"/><br />
 		mail : <input type="text" name="mail" placeholder="E-Mail (en @centrale.centralelille.fr)"/><br />
+		Adresse : <input type="text" name="adress" placeholder="Adresse"/><br />
 		Password : <input type="password" name="pass" placeholder="Mot de passe"/><br />
 		Confirmer Password : <input type="password" name="secondpass" placeholder="Confirmez votre mot de passe"/><br />
 		<input type="submit" name="action" value="Create" />
