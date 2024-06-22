@@ -10,7 +10,7 @@ Afin de commencer à développer sur ce projet, commencez par cloner le réperto
 git clone git@github.com:DioFun/blabla2i.git
 ```
 Puis, copier le fichier `config.php.model` vers `config.php` avec la commande
-``bash
+```bash
 cp config.php.model config.php
 ```
 Puis y mettre les informations de connexion à votre base de donnée.
