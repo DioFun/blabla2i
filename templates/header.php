@@ -49,4 +49,16 @@ echo "<?xml version=\"1.0\" encoding=\"utf-8\" ?>";
 
 <?php endif; ?>
 
+<?php var_dump($_SESSION); ?>
 
+<?php if (flashExists()): ?>
+    <?php foreach(getAllFlash() as $type => $flashMessages): ?>
+        <div class="flash <?= $type ?>">
+            <ul>
+                <?php foreach ($flashMessages as $flash): ?>
+                    <li><?= $flash ?></li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+    <?php endforeach; ?>
+<?php endif; unflash(); ?>

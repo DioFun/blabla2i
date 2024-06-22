@@ -29,15 +29,15 @@ session_start();
 					// On verifie l'utilisateur, et on crée des variables de session si tout est OK
 					// Cf. maLibSecurisation
 					if (verifUser($login,$pass)){
-
+						createFlash("success", "Connecté !");
 						$qs = "?view=accueil";
 						
 
 					} else {
-
-						$qs = "?view=login&msg=". urlencode("Identifiant et/ou mot de passe incorrect");
+						createFlash("error", "Login ou mot de passe incorrect");
+						$qs = "?view=login";
 					}
-				}
+				} else createFlash("error", "Login ou mot de passe incorrect");
 
 				// On redirigera vers la page index automatiquement
 				
@@ -88,7 +88,7 @@ session_start();
 	// On l'extrait donc du chemin du script courant : $_SERVER["PHP_SELF"]
 	// Par exemple, si $_SERVER["PHP_SELF"] vaut /chat/data.php, dirname($_SERVER["PHP_SELF"]) contient /chat
 
-	$urlBase = dirname($_SERVER["PHP_SELF"]) . "/index.php";
+	$urlBase = dirname($_SERVER["PHP_SELF"]) . "index.php";
 	
 	// On redirige vers la page index avec les bons arguments
 

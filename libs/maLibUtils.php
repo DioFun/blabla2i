@@ -94,6 +94,28 @@ function proteger($str)
 }
 
 
+function flashExists()
+{
+	return !empty($_SESSION['flash']);
+}
+
+function createFlash($type, $msg)
+{
+	if (!isset($_SESSION['flash'][$type])) $_SESSION['flash'][$type] = array();
+	array_push($_SESSION['flash'][$type], $msg);
+	return true;
+}
+
+function unflash()
+{
+	$_SESSION["flash"] = array();
+}
+
+function getAllFlash()
+{
+	if (!isset($_SESSION["flash"])) return array();
+	return $_SESSION["flash"];
+}
 
 function tprint($tab)
 {
