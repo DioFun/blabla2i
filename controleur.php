@@ -14,18 +14,6 @@ session_start();
 
 		echo "Action = '$action' <br />";
 
-		// ATTENTION : le codage des caractères peut poser PB 
-		// si on utilise des actions comportant des accents... 
-		// A EVITER si on ne maitrise pas ce type de problématiques
-
-		/* TODO: exercice 4
-		// Dans tous les cas, il faut etre logue... 
-		// Sauf si on veut se connecter (action == Connexion)
-
-		if ($action != "Connexion") 
-			securiser("login");
-		*/
-
 		// Un paramètre action a été soumis, on fait le boulot...
 		switch($action)
 		{
@@ -36,13 +24,14 @@ session_start();
 			case 'Connexion' :
 				// On verifie la presence des champs login et passe
 				if ($login = valider("login"))
-				if ($passe = valider("passe"))
+				if ($pass = valider("pass"))
 				{
 					// On verifie l'utilisateur, et on crée des variables de session si tout est OK
 					// Cf. maLibSecurisation
-					if (verifUser($login,$passe)){
+					if (verifUser($login,$pass)){
 
 						$qs = "?view=accueil";
+						
 
 					} else {
 
@@ -54,14 +43,30 @@ session_start();
 				
 			break;
 
-			case 'Autoriser' :
-				// On verifie la presence des champs login et passe
-				if ($idUser = valider("idUser")){
+			/*
+			Nom : <input type="text" name="nom" placeholder="Nom"/><br />
+			Prénom : <input type="text" name="prenom" placeholder="Prénom"/><br />
+			mail : <input type="text" name="mail" placeholder="E-Mail (en @centrale.centralelille.fr)"/><br />
+			Password : <input type="password" name="pass" placeholder="Mot de passe"/><br />
+			Confirmer Password : <input type="password" name="secondpass" placeholder="Confirmez votre mot de passe"/><br />
+			*/
 
-					autoriserUtilisateur($idUser);}
+			case 'Create' :
+				if (($nom = valider("nom"))
+				  	&&($prenoms = valider("prenom"))
+					&&($mail = valider("mail"))
+					&&($pass = valider("pass"))
+					&&($secondpass = valider("secondpass"))){
 
-					// On redirigera vers la page index automatiquement
-					$qs = "?view=users";
+						
+
+					
+
+					} else {
+
+						$qs = "?view=login&msg=". urlencode("Tous les champs doivent être remplis.");
+					}
+				
 			break;
 
 			case 'Logout' :
@@ -71,41 +76,7 @@ session_start();
 
 			break;
 
-			case 'Interdire' :
-				// On verifie la presence des champs login et passe
-				if ($idUser = valider("idUser")){
-				
-				interdireUtilisateur($idUser);}
-				// On redirigera vers la page index automatiquement
-
-				$qs = "?view=users";
-
-			break;
-
-			case 'Archiver' :
-				if ($idConv = valider("idConv")){
-					archiverConversation($idConv);
-					$qs = "view=conversations&idLastConv=$idConv";
-
-				}
-			break;
-
-			case 'Réactiver' :
-				if ($idConv = valider("idConv")){
-					reactiverConversation($idConv);
-					$qs = "view=conversations&idLastConv=$idConv";
-
-				}
-			break;
-
-			case 'Supprimer' :
-				if ($idConv = valider("idConv")){
-					supprimerConversation($idConv);
-					$qs = "view=conversations&idLastConv=$idConv";
-
-				}
-			break;
-
+			
 		}
 
 	}

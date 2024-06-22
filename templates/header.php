@@ -17,13 +17,16 @@ echo "<?xml version=\"1.0\" encoding=\"utf-8\" ?>";
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <!-- **** H E A D **** -->
+<?php if (valider("connecte","SESSION")): ?>
+
+
+
 <head>	
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-15" />
 	<title>TinyMVC</title>
 	<link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 <!-- **** F I N **** H E A D **** -->
-
 
 <!-- **** B O D Y **** -->
 <body>
@@ -38,12 +41,12 @@ echo "<?xml version=\"1.0\" encoding=\"utf-8\" ?>";
 <a href="index.php?view=users">Utilisateurs</a>
 <a href="index.php?view=conversation">Conversations</a>
 
-<?php
-// Si l'utilisateur n'est pas connecte, on affiche un lien de connexion 
-if (!valider("connecte","SESSION"))
-	echo "<a href=\"index.php?view=login\">Se connecter</a>";
-?>
 
-<h1 id="stitre"> TinyMVC </h1>
+
+<h1 id="stitre"> Centro'd'voitures </h1>
 
 </div>
+
+<?php endif; ?>
+
+

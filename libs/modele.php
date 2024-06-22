@@ -82,11 +82,23 @@ function verifUserBdd($login,$passe)
 	// renvoie faux si user inconnu
 	// renvoie l'id de l'utilisateur si succès
 
-	$SQL = "SELECT id FROM users
-	WHERE passe = '$passe' AND pseudo = '$login'";
+	//$passwordHash = password_hash($passe, PASSWORD_BCRYPT);
 
-	return SQLGetChamp($SQL);
+	$SQL = "SELECT password,id FROM users
+	WHERE email = '$login'";
 
+
+	$hash = ParcoursRs(SQLSelect($SQL))[0]["password"];
+
+
+	var_dump($hash);
+
+	if (password_verify($passe, $hash)){
+		return ParcoursRs(SQLSelect($SQL))[0]["id"];
+	}
+	
+	else return false;
+	
 	// On utilise SQLGetCHamp
 	// si on avait besoin de plus d'un champ
 	// on aurait du utiliser SQLSelect
@@ -94,7 +106,7 @@ function verifUserBdd($login,$passe)
 
 function isAdmin($idUser)
 {
-	$SQL = "SELECT admin from users
+	$SQL = "SELECT role from users
 	WHERE id = '$idUser'";
 
 	return SQLGetChamp($SQL);
