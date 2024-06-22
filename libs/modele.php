@@ -123,6 +123,16 @@ function isAdmin($idUser)
 
 }
 
+function createTrip($isDriving, $departure, $arrival, $date, $hour, $passengers)
+{
+
+	$id = $_SESSION['idUser'];
+	$driving = $isDriving ? $id : "NULL";
+	$SQL = "INSERT INTO trips (driver_id, creator_id, departure, arrival, date, hour, passenger, status) VALUES ($driving, $id, '$departure', '$arrival', '$date', '$hour', '$passengers', 0)";
+//	dd($SQL);
+	SQLInsert($SQL);
+}
+
 
 
 ?>

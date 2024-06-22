@@ -79,9 +79,23 @@ session_start();
 
 			break;
 
+			case 'trajets.create' :
+				$destination = valider("destination") ? "ig2i" : "centrale";
+				$isDriving = valider("driver");
+				if (($departure = valider("departure")) && ($date = valider("date"))
+					&& ($time = valider("time")) && ($passengers = valider("passengers"))) {
+					createTrip($isDriving, $departure, $destination, $date, $time, $passengers);
+					createFlash("success", "Le trajet a bien été créé !");
+					$qs = '?view=accueil';
+
+				} else  {
+					$qs = "?view=trajets.create";
+					createFlash("error", "Un ou plusieurs paramètres ne sont pas correctements remplis !");
+				}
+			break;
+
 			
 		}
-
 	}
 
 	// On redirige toujours vers la page index, mais on ne connait pas le répertoire de base

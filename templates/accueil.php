@@ -19,7 +19,7 @@ if (basename($_SERVER["PHP_SELF"]) != "index.php")
 <div id="corps">
 
 <h1>Accueil</h1>
+    <a href="?view=trajets.create"><button class="primary">Créer un trajet</button></a>
 
-Bienvenue dans notre site de covoiturage !
 
 </div>

@@ -101,14 +101,15 @@ CREATE TABLE `passengers` (
 
 CREATE TABLE `trips` (
   `id` int(11) NOT NULL,
-  `vehicle_id` int(11) NOT NULL,
-  `driver_id` int(11) NOT NULL,
+  `vehicle_id` int(11) NULL DEFAULT NULL,
+  `driver_id` int(11) NULL DEFAULT NULL,
   `creator_id` int(11) NOT NULL,
   `departure` varchar(255) NOT NULL,
   `arrival` varchar(255) NOT NULL,
   `date` date NOT NULL,
   `hour` time NOT NULL,
-  `status` int(1) NOT NULL,
+  `status` int(1) NOT NULL DEFAULT 0,
+  `passengers` int(8) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

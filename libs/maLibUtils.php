@@ -152,4 +152,11 @@ if (basename($_SERVER["PHP_SELF"]) != "index.php")
 	die("");
 }
 */
+
+function dd(...$vars)
+{
+	var_dump($vars);
+	die();
+}
+
 ?>
