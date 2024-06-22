@@ -55,10 +55,12 @@ session_start();
 				if (($nom = valider("nom"))
 				  	&&($prenom = valider("prenom"))
 					&&($mail = valider("mail"))
+					&&($adress = valider("adress"))
 					&&($pass = valider("pass"))
+					&&($planning = valider("planning"))
 					&&($secondpass = valider("secondpass"))){
 
-						$qs = verifCreateUser($nom,$prenom,$mail,$pass,$secondpass);
+						$qs = verifCreateUser($nom,$prenom,$mail,$adress,$pass,$secondpass);
 						
 
 					
