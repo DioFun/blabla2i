@@ -60,10 +60,9 @@ session_start();
 					&&($planning = valider("planning"))
 					&&($secondpass = valider("secondpass"))){
 
-						$qs = verifCreateUser($nom,$prenom,$mail,$adress,$pass,$secondpass);
-						
+						var_dump($nom,$prenom,$mail,$adress,$pass,$secondpass,$planning);
 
-					
+						$qs = verifCreateUser($nom,$prenom,$mail,$adress,$pass,$secondpass,$planning);
 
 					} else {
 
