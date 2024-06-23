@@ -130,9 +130,27 @@ function createTrip($isDriving, $departure, $arrival, $date, $hour, $passengers)
 	$driving = $isDriving ? $id : "NULL";
 	$SQL = "INSERT INTO trips (driver_id, creator_id, departure, arrival, date, hour, passenger, status) VALUES ($driving, $id, '$departure', '$arrival', '$date', '$hour', '$passengers', 0)";
 //	dd($SQL);
+	$trip_id = SQLInsert($SQL);
+	if (!$trip_id) return false;
+	$SQL = "INSERT INTO passengers (user_id, trip_id) VALUES ('$id', '$trip_id') ";
 	SQLInsert($SQL);
+	return true;
 }
 
+
+function getUserTrips($id)
+{
+	$SQL = "SELECT * FROM trips JOIN passengers ON trips.id = passengers.trip_id JOIN users ON users.id = trips.creator_id WHERE passengers.user_id = '$id'";
+	return SQLSelect($SQL);
+}
+
+function getAvailableTrips($id)
+{
+	$SQL = "SELECT trips.id FROM trips JOIN passengers ON trips.id = passengers.trip_id WHERE passengers.user_id = '$id'";
+	$SQL = "SELECT * FROM trips JOIN passengers ON trips.id = passengers.trip_id JOIN users ON users.id = trips.creator_id WHERE trips.id NOT IN ({$SQL}) ";
+	return SQLSelect($SQL);
+
+}
 
 
 ?>

@@ -84,8 +84,8 @@ session_start();
 				$isDriving = valider("driver");
 				if (($departure = valider("departure")) && ($date = valider("date"))
 					&& ($time = valider("time")) && ($passengers = valider("passengers"))) {
-					createTrip($isDriving, $departure, $destination, $date, $time, $passengers);
-					createFlash("success", "Le trajet a bien été créé !");
+					if (!createTrip($isDriving, $departure, $destination, $date, $time, $passengers)) createFlash("error", "Une erreur est survenue lors de la création !");
+					else createFlash("success", "Le trajet a bien été créé !");
 					$qs = '?view=accueil';
 
 				} else  {
@@ -111,15 +111,3 @@ session_start();
 
 	// On écrit seulement après cette entête
 	ob_end_flush();
-	
-?>
-
-
-
-
-
-
-
-
-
-
