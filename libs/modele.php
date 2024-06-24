@@ -10,7 +10,7 @@ include_once("maLibSQL.pdo.php");
 function sendConfirmationEmail($email, $token, $id) {
     $subject = "Confirmation de votre email";
     $message = "Cliquez sur le lien suivant pour confirmer votre email : ";
-    $message .= "http://localhost/TWE2024/projet%20WEB/controleur.php?action=Verify&token=" . urlencode($token)."&id=".urldecode($id);
+    $message .= "http://localhost/TWE2024/projetWEB/controleur.php?action=Verify&token=" . urlencode($token)."&id=".urldecode($id);
     $headers = "From: noreply@blabla2i.com";
 
     mail($email, $subject, $message, $headers);
@@ -19,7 +19,7 @@ function sendConfirmationEmail($email, $token, $id) {
 function sendResetEmail($email, $token, $id) {
     $subject = "Confirmation de votre email";
     $message = "Cliquez sur le lien suivant pour confirmer votre email : ";
-    $message .= "http://localhost/TWE2024/projet%20WEB/index.php?view=confirm&token=" . urlencode($token)."&id=".urldecode($id);
+    $message .= "http://localhost/TWE2024/projetWEB/index.php?view=repassword2&token=" . urlencode($token)."&id=".urldecode($id);
     $headers = "From: noreply@blabla2i.com";
 
     mail($email, $subject, $message, $headers);
@@ -34,14 +34,20 @@ function verifUserBdd($login,$passe)
 
 	//$passwordHash = password_hash($passe, PASSWORD_BCRYPT);
 
-	$SQL = "SELECT password,id FROM users
+	$SQL = "SELECT password,id,confirmed FROM users
 	WHERE email = '$login'";
 
+	$requete = ParcoursRs(SQLSelect($SQL))[0];
 
-	$hash = ParcoursRs(SQLSelect($SQL))[0]["password"];
+	if (!$requete["confirmed"]) {
+		createFlash("error", "L'adresse mail n'est pas validée");
+		return false;
+	}
+
+	$hash = $requete["password"]; 
 
 	if (password_verify($passe, $hash)){
-		return parcoursRs(SQLSelect($SQL))[0]["id"];
+		return $requete["id"];
 	}
 	
 	else return false;
@@ -62,11 +68,38 @@ function changePassword($mail,$pass){
 	SQLUpdate($SQL);
 }
 
+function updatePassword($id,$newpass){
+	
+	$SQL = "UPDATE users SET password = '$newpass' WHERE id = '$id';";
+	SQLUpdate($SQL);
+}
+
+function updateLastname($id,$newLastname){
+	
+	$SQL = "UPDATE users SET lastname = '$newLastname' WHERE id = '$id';";
+	SQLUpdate($SQL);
+}
+
+function updateFirstname($id,$newFirstname){
+	
+	$SQL = "UPDATE users SET firstname = '$newFirstname' WHERE id = '$id';";
+	SQLUpdate($SQL);
+}
+
 function putResetToken($id,$resetToken){
 	
 	$SQL = "UPDATE users SET reset_token = '$resetToken' WHERE id = '$id';";
 	SQLUpdate($SQL);
 }
+
+
+function getResetToken($id){
+	
+	$SQL = "SELECT reset_token FROM users WHERE id = '$id';";
+	return SQLGetChamp($SQL);
+}
+
+
 
 function confirmMail($id){
 	
@@ -165,12 +198,20 @@ function isAdmin($idUser)
 
 }
 
-function recupToken($idUser)
+function recupConfirmationToken($idUser)
 {
 	$SQL = "SELECT confirmation_token from users
 	WHERE id = '$idUser'";
 
 	return SQLGetChamp($SQL);
+
+}
+
+function putConnectionToken($idUser, $connectionToken)
+{
+
+	$SQL = "UPDATE connection_tokens SET connection_token = '$resetToken' WHERE user_id = '$id';";
+	SQLUpdate($SQL);
 
 }
 

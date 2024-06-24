@@ -3,7 +3,7 @@
 // Si la page est appelée directement par son adresse, on redirige en passant pas la page index
 if (basename($_SERVER["PHP_SELF"]) != "index.php")
 {
-	header("Location:../index.php?view=create");
+	header("Location:../index.php?view=account.login");
 	die("");
 }
 
@@ -16,9 +16,6 @@ if (basename($_SERVER["PHP_SELF"]) != "index.php")
 
 <h1>EMail de réinitialisatiion</h1>
 
-
-
-<?=$info?>
 
 <div id="formLogin">
 	<form action="controleur.php" method="GET">

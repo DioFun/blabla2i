@@ -29,6 +29,9 @@ session_start();
 					// On verifie l'utilisateur, et on crée des variables de session si tout est OK
 					// Cf. maLibSecurisation
 					if (verifUser($login,$pass)){
+
+
+						
 						createFlash("success", "Connecté !");
 						$qs = "?view=accueil";
 						
@@ -56,7 +59,7 @@ session_start();
 				if (($id = valider("id"))&&($token = valider("token"))){
 					// var_dump($id,$token);
 					// die("");
-					if ($token === recupToken($id)){
+					if ($token === recupConfirmationToken($id)){
 						confirmMail($id);
 						createFlash($type, "E-Mail confirmé");
 					}
@@ -83,8 +86,27 @@ session_start();
 
 			case 'ChangerMDP' :
 
-				if (($resetMail = valider("resetMail"))&&($id = valider("id"))){
+				if (($tokenVal = valider("tokenVal"))&&($idVal = valider("idVal"))
+					&&($newpassconfirm = valider("newpassconfirm"))&&($newpass = valider("newpass"))){
+
+					if ($newpassconfirm !== $newpass){
+						
+						createFlash("error", "les mots de passes sont différents");
+
+					} elseif ($tokenVal === getResetToken($idVal)) {
+
+						createFlash("success", "Mot de passe modifiés");
+						updatePassword($idVal,$newpass);
+
+					} else {
+
+						createFlash("error", "Les tokens de reset ne sont pas les mêmes" );
+
+					}				
 				}
+
+					$qs = "?view=login";
+				
 
 				break;
 
@@ -124,7 +146,7 @@ session_start();
 	// On l'extrait donc du chemin du script courant : $_SERVER["PHP_SELF"]
 	// Par exemple, si $_SERVER["PHP_SELF"] vaut /chat/data.php, dirname($_SERVER["PHP_SELF"]) contient /chat
 
-	$urlBase = dirname($_SERVER["PHP_SELF"]) . "index.php";
+	$urlBase = dirname($_SERVER["PHP_SELF"]) . "/index.php";
 	
 	// On redirige vers la page index avec les bons arguments
 
