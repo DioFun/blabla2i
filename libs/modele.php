@@ -93,15 +93,15 @@ function putResetToken($id,$resetToken){
 }
 
 
-function getResetToken($id){
+function recupResetToken($id){
 	
-	$SQL = "SELECT reset_token FROM users WHERE id = '$id';";
-	return SQLGetChamp($SQL);
+	$SQL = "SELECT reset_token, reset_send_at FROM users WHERE id = '$id';";
+	return parcoursRs(SQLSelect($SQL));
 }
 
 
 
-function confirmMail($id){
+function updateConfirmedMail($id){
 	
 	
 	$SQL = "UPDATE users SET confirmed = 1 WHERE id = '$id';";
@@ -200,10 +200,10 @@ function isAdmin($idUser)
 
 function recupConfirmationToken($idUser)
 {
-	$SQL = "SELECT confirmation_token from users
+	$SQL = "SELECT confirmation_token, confirmation_send_at from users
 	WHERE id = '$idUser'";
 
-	return SQLGetChamp($SQL);
+	return parcoursRs(SQLSelect($SQL));
 
 }
 

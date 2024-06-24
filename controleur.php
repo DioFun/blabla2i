@@ -57,11 +57,23 @@ session_start();
 			case 'Verify' :
 
 				if (($id = valider("id"))&&($token = valider("token"))){
-					// var_dump($id,$token);
-					// die("");
-					if ($token === recupConfirmationToken($id)){
-						confirmMail($id);
-						createFlash($type, "E-Mail confirmé");
+					
+					$requete = recupConfirmationToken($id)[0];
+					$currentTimestamp = time();
+
+					// Convertir send_at en timestamp.
+					$sendAtTimestamp = strtotime($requete["confirmation_send_at"]);
+
+
+					if (!(($currentTimestamp - $sendAtTimestamp) < 3600)) {
+
+						createFlash("error", "E-Mail non confirmé : token expiré");	
+
+					} elseif ($token === $requete["confirmation_token"]){
+						updateConfirmedMail($id);
+						createFlash("success", "E-Mail confirmé");
+					} else {
+						createFlash("error", "E-Mail non confirmé : token invalide");
 					}
 					
 
@@ -89,11 +101,21 @@ session_start();
 				if (($tokenVal = valider("tokenVal"))&&($idVal = valider("idVal"))
 					&&($newpassconfirm = valider("newpassconfirm"))&&($newpass = valider("newpass"))){
 
-					if ($newpassconfirm !== $newpass){
+					$requete = recupResetToken($idVal)[0];
+					$currentTimestamp = time();
+
+					// Convertir send_at en timestamp.
+					$sendAtTimestamp = strtotime($requete["reset_send_at"]);
+
+					if ($newpassconfirm !== $newpass) {
 						
 						createFlash("error", "les mots de passes sont différents");
 
-					} elseif ($tokenVal === getResetToken($idVal)) {
+					} elseif (!(($currentTimestamp - $sendAtTimestamp) < 3600)) {
+
+						createFlash("error", "Mot de passe non modifié : token expiré");	
+
+					} elseif ($tokenVal === $requete["reset_token"]) {
 
 						createFlash("success", "Mot de passe modifiés");
 						updatePassword($idVal,$newpass);
