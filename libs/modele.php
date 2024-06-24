@@ -132,24 +132,35 @@ function createTrip($isDriving, $departure, $arrival, $date, $hour, $passengers)
 //	dd($SQL);
 	$trip_id = SQLInsert($SQL);
 	if (!$trip_id) return false;
-	$SQL = "INSERT INTO passengers (user_id, trip_id) VALUES ('$id', '$trip_id') ";
+	$SQL = "INSERT INTO passengers (user_id, trip_i_id) VALUES ('$id', '$trip_id') ";
 	SQLInsert($SQL);
 	return true;
 }
 
+function getTrip($id)
+{
+	$SQL = "SELECT * FROM trips WHERE id = '$id'";
+	return parcoursRs(SQLSelect($SQL));
+}
 
 function getUserTrips($id)
 {
-	$SQL = "SELECT * FROM trips JOIN passengers ON trips.id = passengers.trip_id JOIN users ON users.id = trips.creator_id WHERE passengers.user_id = '$id'";
-	return SQLSelect($SQL);
+	$SQL = "SELECT departure, arrival, email, trips.id FROM trips JOIN passengers ON trips.id = passengers.trip_id JOIN users ON users.id = trips.creator_id WHERE passengers.user_id = '$id'";
+	return parcoursRs(SQLSelect($SQL));
 }
 
 function getAvailableTrips($id)
 {
 	$SQL = "SELECT trips.id FROM trips JOIN passengers ON trips.id = passengers.trip_id WHERE passengers.user_id = '$id'";
 	$SQL = "SELECT * FROM trips JOIN passengers ON trips.id = passengers.trip_id JOIN users ON users.id = trips.creator_id WHERE trips.id NOT IN ({$SQL}) ";
-	return SQLSelect($SQL);
+	return parcoursRs(SQLSelect($SQL));
 
+}
+
+function getPassengers($id)
+{
+	$SQL = "SELECT users.id, firstname, lastname FROM passengers JOIN users on user_id = users.id WHERE trip_id = '$id'";
+	return parcoursRs(SQLSelect($SQL));
 }
 
 

@@ -24,7 +24,7 @@ if (basename($_SERVER["PHP_SELF"]) != "index.php")
     <div class="my-trips">
         <?php if ($trips = getUserTrips(valider("idUser", "SESSION"))): ?>
         <?php foreach ($trips as $trip): ?>
-          <div class="trip"><?= $trip['departure'] ?>, <?= $trip['arrival'] ?>, <?= $trip['email'] ?></div>
+          <div class="trip"><?= $trip['departure'] ?>, <?= $trip['arrival'] ?>, <?= $trip['email'] ?>, <a href="?view=trajets.view&id=<?= $trip['id'] ?>">view</a></div>
         <?php endforeach; ?>
         <?php else: ?>
             Vous n'avez aucun trajet de prévu !

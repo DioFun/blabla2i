@@ -49,8 +49,6 @@ echo "<?xml version=\"1.0\" encoding=\"utf-8\" ?>";
 
 <?php endif; ?>
 
-<?php var_dump($_SESSION); ?>
-
 <?php if (flashExists()): ?>
     <?php foreach(getAllFlash() as $type => $flashMessages): ?>
         <div class="flash <?= $type ?>">

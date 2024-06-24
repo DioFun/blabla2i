@@ -39,6 +39,10 @@ Les formulaires de toutes les vues générées enverront leurs données vers la 
 			include("templates/conversations.php");
 		break;
 
+		case "trajets.view" :
+			include("templates/trajets/view.php");
+		break;
+
 		case "trajets.create" :
 			include("templates/trajets/create.php");
 		break;
