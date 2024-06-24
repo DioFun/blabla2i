@@ -131,8 +131,20 @@ function isAdmin($idUser)
  * @return void
  */
 function addCar($registration, $idUser) {
+
+	$SQL = "SELECT 1 FROM vehicles WHERE registration = '$registration');";
+	if (!empty(parcoursRs(SQLSelect($SQL)))) {
+
+		$qs = "?view=create&msg=". urlencode("Adresse mail déjà utilisée");
+
+	}else{
+
 	$SQL = "INSERT INTO vehicles (registration, owner_id) VALUES ('$registration', '$idUser')";
 	SQLInsert($SQL);
+	$qs = "?view=login&msg=". urlencode("Utilisateur crée avec succès !");
+	}
+
+	return $qs;
 }
 
 
@@ -142,7 +154,7 @@ function addCar($registration, $idUser) {
  * @return array La liste des voitures de l'utilisateur
  */
 function getUserCar($idUser) {
-	$SQL = "SELECT registration FROM voitures WHERE idUser = '$idUser'";
+	$SQL = "SELECT registration FROM vehicles WHERE owner_id = '$idUser'";
 	return parcoursRs(SQLSelect($SQL));
 }
 
