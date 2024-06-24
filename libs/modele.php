@@ -124,5 +124,37 @@ function isAdmin($idUser)
 }
 
 
+/**
+ * Ajoute une nouvelle voiture dans la base de données pour un utilisateur donné
+ * @param string $registration La plaque d'immatriculation de la voiture
+ * @param int $idUser L'identifiant de l'utilisateur
+ * @return void
+ */
+function addCar($registration, $idUser) {
+	$SQL = "INSERT INTO vehicles (registration, owner_id) VALUES ('$registration', '$idUser')";
+	SQLInsert($SQL);
+}
+
+
+/**
+ * Récupère les voitures d'un utilisateur
+ * @param int $idUser L'identifiant de l'utilisateur
+ * @return array La liste des voitures de l'utilisateur
+ */
+function getUserCar($idUser) {
+	$SQL = "SELECT registration FROM voitures WHERE idUser = '$idUser'";
+	return parcoursRs(SQLSelect($SQL));
+}
+
+/**
+ * Récupère les voitures (dans les faits 1 seule) d'un trajet
+ * @param int $idTrip L'identifiant du trajet
+ * @return array La liste des voitures pour le trajet
+ */
+function getTripCar($idTrip){
+	$SQL = "SELECT v.registration FROM vehicles v JOIN trips t ON v.id = t.vehicle_id WHERE t.id = '$idTrip'";
+	return parcoursRs(SQLSelect($SQL));
+}
+
 
 ?>
