@@ -43,6 +43,7 @@ echo "<?xml version=\"1.0\" encoding=\"utf-8\" ?>";
 
 
 
+
 <h1 id="stitre"> Centro'd'voitures </h1>
 
 </div>
