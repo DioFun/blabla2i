@@ -123,6 +123,15 @@ function isAdmin($idUser)
 
 }
 
+/**
+ * Modifie les informations d'un utilisateur -> présent dans la page profile.php
+ * @param string $nom Le nom de l'utilisateur
+ * @param string $prenom Le prénom de l'utilisateur
+ * @param string $mail L'adresse mail de l'utilisateur
+ * @param string $adress L'adresse de l'utilisateur
+ * @param int $idUser L'identifiant de l'utilisateur
+ * @return string Le message à afficher à l'utilisateur
+ */
 function modifyInfos($nom, $prenom, $mail, $adress, $idUser) {
 	$SQL = "UPDATE users SET lastname = '$nom', firstname = '$prenom', email = '$mail', adress = '$adress' WHERE id = '$idUser'";
 	$modif = SQLUpdate($SQL);
@@ -157,12 +166,26 @@ function addCar($registration, $idUser) {
 	return $qs;
 }
 
+
+/**
+ * Ajoute l'URL du calendrier de l'utilisateur dans la base de données
+ * @param string $calURL L'URL du calendrier
+ * @param int $idUser L'identifiant de l'utilisateur
+ * @return string Le message à afficher à l'utilisateur
+ */
 function addCal($calURL, $idUser) {
 	$SQL = "UPDATE users SET planninglink = '$calURL' WHERE id = '$idUser'";
 	SQLUpdate($SQL);
 	return "?view=profile&msg=". urlencode("Calendrier ajouté avec succès !");
 }
 
+/**
+ * Ajoute un numéro de téléphone à l'utilisateur
+ * @param string $num Le numéro de téléphone
+ * @param int $idUser L'identifiant de l'utilisateur
+ * @return string Le message à afficher à l'utilisateur
+ 
+ */
 function getUserInfos($idUser){
 	$SQL = "SELECT lastname, firstname, email, adress FROM users WHERE id = '$idUser'";
 	return parcoursRs(SQLSelect($SQL));
