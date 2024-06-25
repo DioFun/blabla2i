@@ -123,10 +123,10 @@ function display(which){
     <button onclick="editInfos()">Edit</button>
     <div id="formEditInfos" style="display:none;">
         <form action="controleur.php" method="GET">
-            <input type="text" name="nom" placeholder="Nom" value="<?=$infos["lastname"]?>"/><br />
-            <input type="text" name="prenom" placeholder="Prénom" value="<?=$infos["firstname"]?>"/><br />
-            <input type="text" name="mail" placeholder="E-Mail (en @centrale.centralelille.fr)" value="<?=$infos["email"]?>"/><br />
-            <input type="text" name="adress" placeholder="Adresse" value="<?=$infos["adress"]?>"/><br />
+            <p>Nom : </p><input type="text" name="nom" placeholder="Nom" value="<?=$infos["lastname"]?>"/><br />
+            <p>Pr&eacute;nom : </p><input type="text" name="prenom" placeholder="Prénom" value="<?=$infos["firstname"]?>"/><br />
+            <p>Email : </p><input type="text" name="mail" placeholder="E-Mail (en @centrale.centralelille.fr)" value="<?=$infos["email"]?>"/><br />
+            <p>Adresse : </p><input type="text" name="adress" placeholder="Adresse" value="<?=$infos["adress"]?>"/><br />
             <input type="submit" name="action" value="ModifyInfos" />
         </form>
     </div>
