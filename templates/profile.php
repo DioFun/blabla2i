@@ -6,11 +6,11 @@ if (basename($_SERVER["PHP_SELF"]) != "index.php")
 	die("");
 }
 
-if (!valider("connecte",'SESSION'))
-{
-	header("Location:index.php?view=accueil");
-	die("");
-}
+// if (!valider("connecte",'SESSION'))
+// {
+// 	header("Location:index.php?view=accueil");
+// 	die("");
+// }
 include_once("libs/modele.php");
 include_once("libs/maLibUtils.php");
 include_once("libs/maLibForms.php");
@@ -26,20 +26,38 @@ $infos = getUserInfos($_SESSION["idUser"]);
         padding: 10px;
         margin: 10px;
     }
+    .section0{
+        display: block;
+    }
+    .section1{
+        display: none;
+    }
 </style>
 <script> //Les formulaire d'ajout/modif de calendrier et de numéro sont cachés par défaut, on les affiches à la demande de l'utilisateur
-    createForm(which){
+    function createForm(which){
         if (which == "cal"){
-            document.getElementById("formCreationVoiture").style.display = "block";
+            form = document.getElementById("formAjoutCal");
+            if (form.style.display == "block"){
+                form.style.display = "none";
+            }
+            else{
+                form.style.display = "block";
+            }
         }
         else if (which == "num"){
-            document.getElementById("formCreationVoiture").style.display = "block";
+            form = document.getElementById("formAjoutNum");
+            if (form.style.display == "block"){
+                form.style.display = "none";
+            }
+            else{
+                form.style.display = "block";
+            }
         }
     }
-    createFormCal(){
+    function createFormCal(){
         createForm("cal");
     }
-    createFormNum(){
+    function createFormNum(){
         createForm("num");
     }
 </script>
@@ -47,22 +65,46 @@ $infos = getUserInfos($_SESSION["idUser"]);
 <script> //fonction pour afficher la première ou la deuxième section dans le profile (à propos : 0 & Compte : 1)
 function display(which){
     if (which == 0){
-        document.getElementById("infos").style.display = "block";
-        document.getElementById("settingInfos").style.display = "none";
-        document.getElementById("verifInfos").style.display = "block";
-        document.getElementById("voituresProfile").style.display = "block";
+        s0 = document.getElementsByClassName("section0");
+        for (i = 0; i < s0.length; i++){
+            s0[i].style.display = "block";
+        }
+        s1 = document.getElementsByClassName("section1");
+        for (i = 0; i < s1.length; i++){
+            s1[i].style.display = "none";
+        }
     }
     else if (which == 1){
-        document.getElementById("infos").style.display = "none";
-        document.getElementById("settingInfos").style.display = "block";
-        document.getElementById("verifInfos").style.display = "none";
-        document.getElementById("voituresProfile").style.display = "none";
+        s0 = document.getElementsByClassName("section0");
+        for (i = 0; i < s0.length; i++){
+            s0[i].style.display = "none";
+        }
+        s1 = document.getElementsByClassName("section1");
+        for (i = 0; i < s1.length; i++){
+            s1[i].style.display = "block";
+        }
     }
 
 }
 
 </script>
 
+<script> // Le formulaire d'édition des infos est caché par défaut, on l'affiche à la demande de l'utilisateur
+    cache = true; //pas caché
+    function editInfos(){
+        console.log("editInfos");
+        if (cache){
+            document.getElementById("formEditInfos").style.display = "block";
+            document.getElementById("settingStaticInfos").style.display = "none";
+        }
+        else{
+            document.getElementById("formEditInfos").style.display = "none";
+            document.getElementById("settingStaticInfos").style.display = "block";
+        }
+        cache = !cache;
+    }
+
+</script>
 <!-- Mockup : Ici c'est la barre de navigation qui permet de naviguer entre les différentes sections du profile -->
 <div id="nav">
     <button onclick="display(0)">A propos de vous</button>
@@ -70,45 +112,51 @@ function display(which){
 </div>
 
 <!-- Mockup : Ici c'est la première section "A propos de vous" qui apparaît avec Prénom + Nom + Mail -->
-<div id="infos">
+<div id="infos" class="section0">
     <h1><?=$_SESSION["pseudo"]?></h1>
     <h3><?=$infos["email"]?></h3>
 </div>
 
 
 <!-- Mockup : Ici c'est la deuxième section "Compte" qui apparaît avec la possibilité de modifier ses infos -->
-<div id="settingInfos" display="none">
-    <button onclick="">Edit</button>
-    <form display="none">
-        <input type="text" name="nom" placeholder="Nom"/><br />
-        <input type="text" name="prenom" placeholder="Prénom"/><br />
-        <input type="text" name="mail" placeholder="E-Mail (en @centrale.centralelille.fr)"/><br />
-        <input type="text" name="adress" placeholder="Adresse"/><br />
-        <input type="submit" name="action" value="Create" />
-    </form>
-    <p>Prénom : <?=$infos["firstname"]?></p>
-    <p>Nom : <?=$infos["lastname"]?></p>
-    <p>Mail : <?=$infos["email"]?></p>
-    <p>Adresse : <?=$infos["adress"]?></p>
+<div id="settingInfos" class="section1">
+    <button onclick="editInfos()">Edit</button>
+    <div id="formEditInfos" style="display:none;">
+        <form action="controleur.php" method="GET">
+            <input type="text" name="nom" placeholder="Nom" value="<?=$infos["lastname"]?>"/><br />
+            <input type="text" name="prenom" placeholder="Prénom" value="<?=$infos["firstname"]?>"/><br />
+            <input type="text" name="mail" placeholder="E-Mail (en @centrale.centralelille.fr)" value="<?=$infos["email"]?>"/><br />
+            <input type="text" name="adress" placeholder="Adresse" value="<?=$infos["adress"]?>"/><br />
+            <input type="submit" name="action" value="ModifyInfos" />
+        </form>
+    </div>
+    <div id="settingStaticInfos" style="display:block;">
+        <p>Nom : <?=$infos["lastname"]?></p>
+        <p>Prénom : <?=$infos["firstname"]?></p>
+        <p>Mail : <?=$infos["email"]?></p>
+        <p>Adresse : <?=$infos["adress"]?></p>
+    </div>
 </div>
 
 <!-- Mockup : Retour sur la première section qui permet d'afficher les forms pour l'ajout / la modification du calendrier et du numéro de tél de l'utilisateur -->
-<div id="verifInfos">
-    <button onclick="createFormCal(this)">Ajouter / Modifier un calendrier</button>
-    <form display="none">
+<div id="verifInfos" class="section0">
+    <button onclick="createFormCal()">Ajouter / Modifier un calendrier</button>
+    <form id="formAjoutCal" style="display : none;">
         <input type="text" name="calURL" placeholder="URL du calendrier"/>
         <input type="submit" name="action" value="CreationCal" />
     </form>
-    <button onclick="createFormNum(this)">Ajouter / Modifier un numéro</button>
-    <form display="none">
+    <br>
+    <button onclick="createFormNum()">Ajouter / Modifier un numéro</button>
+    <form id="formAjoutNum" style="display : none;">
         <input type="text" name="num" placeholder="Numéro à ajouter"/>
         <input type="submit" name="action" value="CreationNum" />
     </form>
 </div>
 
+<br>
 
 <!-- Mockup : Toujours la première section avec la liste des voitures de l'utilisateur et la possibilité d'en rajouter une-->
-<div id="voituresProfile">
+<div id="voituresProfile" class="section0">
     <!-- Là c'est le formulaire pour ajouter une voiture -->
     <div id="formCreationVoiture">
         <form action="controleur.php" method="GET">

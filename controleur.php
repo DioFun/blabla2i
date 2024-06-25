@@ -87,6 +87,37 @@ session_start();
 				}
 
 			break;
+
+			case 'CreationCal' :
+				if ($calURL = valider("calURL")){
+					$qs = addCal($calURL, $_SESSION["idUser"]);
+				}else{
+					$qs = "?view=profile&msg=". urlencode("Problème avec l'URL du calendrier entrée");
+				}
+			break;
+
+			case 'CreationNum' :
+				// if ($num = valider("num")){
+				// 	$qs = addNum($num, $_SESSION["idUser"]);
+				// }else{
+				// 	$qs = "?view=profile&msg=". urlencode("Problème avec le numéro entrée");
+				// }
+				$qs = "?view=profile&msg=". urlencode("Pas encore implémentée");
+			break;
+
+			case 'ModifyInfos' :
+				if (($nom = valider("nom"))
+				  	&&($prenom = valider("prenom"))
+					&&($mail = valider("mail"))
+					&&($adress = valider("adress"))){
+
+						$qs = modifyInfos($nom,$prenom,$mail,$adress,$_SESSION["idUser"]);
+
+					} else {
+
+						$qs = "?view=profile&msg=". urlencode("Tous les champs doivent être remplis.");
+					}
+			break;
 		}
 
 	}

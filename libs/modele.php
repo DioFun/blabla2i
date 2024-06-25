@@ -123,12 +123,22 @@ function isAdmin($idUser)
 
 }
 
+function modifyInfos($nom, $prenom, $mail, $adress, $idUser) {
+	$SQL = "UPDATE users SET lastname = '$nom', firstname = '$prenom', email = '$mail', adress = '$adress' WHERE id = '$idUser'";
+	$modif = SQLUpdate($SQL);
+	log($modif === 0);
+	if ($modif === 0) {
+		return "?view=profile&msg=". urlencode("Informations modifiées avec succès !");
+	}else{
+		return "?view=profile&msg=". urlencode("Erreur lors de la modification des informations.");
+	}
+}
 
 /**
  * Ajoute une nouvelle voiture dans la base de données pour un utilisateur donné
  * @param string $registration La plaque d'immatriculation de la voiture
  * @param int $idUser L'identifiant de l'utilisateur
- * @return void
+ * @return string Le message à afficher à l'utilisateur
  */
 function addCar($registration, $idUser) {
 
@@ -147,6 +157,11 @@ function addCar($registration, $idUser) {
 	return $qs;
 }
 
+function addCal($calURL, $idUser) {
+	$SQL = "UPDATE users SET planninglink = '$calURL' WHERE id = '$idUser'";
+	SQLUpdate($SQL);
+	return "?view=profile&msg=". urlencode("Calendrier ajouté avec succès !");
+}
 
 function getUserInfos($idUser){
 	$SQL = "SELECT lastname, firstname, email, adress FROM users WHERE id = '$idUser'";
