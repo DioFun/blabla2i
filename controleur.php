@@ -94,7 +94,33 @@ session_start();
 				}
 			break;
 
-			
+            case "trajets.remove":
+                $id = valider("id");
+                if (canEditTrip($id)) {
+                    removeTrip($id);
+                    createFlash("success", "Le trajet a bien été supprimé !");
+                }
+                $qs = "?view=accueil";
+
+            case "trajets.edit":
+                if (!canEditTrip(valider('id'))) {
+                    $qs = "?view=accueil";
+                } else {
+                    $id = valider("id");
+                    $destination = valider("destination") ? "ig2i" : "centrale";
+                    $isDriving = valider("driver");
+                    if (($departure = valider("departure")) && ($date = valider("date"))
+                        && ($time = valider("time")) && ($passengers = valider("passengers"))) {
+                        if (!editTrip($id, $isDriving, $departure, $destination, $date, $time, $passengers)) createFlash("error", "Une erreur est survenue lors de la création !");
+                        else createFlash("success", "Le trajet a bien été modifié !");
+                        $qs = "?view=trajets.view&id=$id";
+
+                    } else {
+                        $qs = "?view=trajets.edit&id=$id";
+                        createFlash("error", "Un ou plusieurs paramètres ne sont pas correctements remplis !");
+                    }
+                }
+
 		}
 	}
 

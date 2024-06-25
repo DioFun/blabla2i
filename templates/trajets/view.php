@@ -14,7 +14,7 @@ if (basename($_SERVER["PHP_SELF"]) != "index.php" || !($id = valider("id")))
     die("");
 };
 
-$tripDetail = getTrip($id)[0];
+$tripDetail = getTrip($id);
 $passengers = getPassengers($id);
 ?>
 
@@ -22,7 +22,7 @@ $passengers = getPassengers($id);
     <a href="?view=accueil">retour</a>
     <h1>Détail du trajet</h1>
     <?php if($tripDetail['creator_id'] == valider("idUser", "SESSION")): ?>
-        <a href="?view=trajets.edit&id=<?= $id ?>">Éditer</a> <a href="?view=trajets.remove&id=<?= $id ?>">Supprimer</a><br>
+        <a href="?view=trajets.edit&id=<?= $id ?>">Éditer</a> <a href="controleur.php?action=trajets.remove&id=<?= $id ?>">Supprimer</a><br>
     <?php endif; ?>
     Point de rencontre:  <?= $tripDetail['departure']; ?> <br>
     Arrivée : <?= $tripDetail['arrival']; ?> <br>

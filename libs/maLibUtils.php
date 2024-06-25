@@ -153,6 +153,15 @@ if (basename($_SERVER["PHP_SELF"]) != "index.php")
 }
 */
 
+function canEditTrip($id)
+{
+	if (!($userId = valider("idUser", "SESSION"))) return false;
+	// check if the user is well auth with token
+	$trip = getTrip($id);
+	if ($trip['creator_id'] != $userId) return false; // check if the user is admin
+	return true;
+}
+
 function dd(...$vars)
 {
 	var_dump($vars);

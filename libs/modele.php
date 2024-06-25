@@ -126,13 +126,13 @@ function isAdmin($idUser)
 function createTrip($isDriving, $departure, $arrival, $date, $hour, $passengers)
 {
 
-	$id = $_SESSION['idUser'];
+	$id = valider("idUser", "SESSION");
 	$driving = $isDriving ? $id : "NULL";
 	$SQL = "INSERT INTO trips (driver_id, creator_id, departure, arrival, date, hour, passenger, status) VALUES ($driving, $id, '$departure', '$arrival', '$date', '$hour', '$passengers', 0)";
 //	dd($SQL);
 	$trip_id = SQLInsert($SQL);
 	if (!$trip_id) return false;
-	$SQL = "INSERT INTO passengers (user_id, trip_i_id) VALUES ('$id', '$trip_id') ";
+	$SQL = "INSERT INTO passengers (user_id, trip_id) VALUES ('$id', '$trip_id') ";
 	SQLInsert($SQL);
 	return true;
 }
@@ -140,7 +140,7 @@ function createTrip($isDriving, $departure, $arrival, $date, $hour, $passengers)
 function getTrip($id)
 {
 	$SQL = "SELECT * FROM trips WHERE id = '$id'";
-	return parcoursRs(SQLSelect($SQL));
+	return parcoursRs(SQLSelect($SQL))[0];
 }
 
 function getUserTrips($id)
@@ -161,6 +161,20 @@ function getPassengers($id)
 {
 	$SQL = "SELECT users.id, firstname, lastname FROM passengers JOIN users on user_id = users.id WHERE trip_id = '$id'";
 	return parcoursRs(SQLSelect($SQL));
+}
+
+function removeTrip($id)
+{
+	$SQL = "DELETE FROM trips WHERE id = '$id'";
+	return SQLDelete($SQL);
+}
+
+function editTrip($id, $isDriving, $departure, $destination, $date, $time, $passengers)
+{
+	$userId = valider("idUser", "SESSION");
+	$driving = $isDriving ? $userId : "NULL";
+	$SQL = "UPDATE trips SET driver_id = $driving, departure = '$departure', arrival='$destination', date='$date', hour='$time', passenger='$passengers' WHERE id = '$id'";
+	return SQLUpdate($SQL);
 }
 
 
