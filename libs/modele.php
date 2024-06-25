@@ -148,6 +148,11 @@ function addCar($registration, $idUser) {
 }
 
 
+function getUserInfos($idUser){
+	$SQL = "SELECT lastname, firstname, email, adress FROM users WHERE id = '$idUser'";
+	return parcoursRs(SQLSelect($SQL));
+}
+
 /**
  * Récupère les voitures d'un utilisateur
  * @param int $idUser L'identifiant de l'utilisateur
