@@ -13,8 +13,6 @@ if (valider("connecte",'SESSION'))
 	die("");
 }
 
-
-
 ?>
  
 <div id="corps">

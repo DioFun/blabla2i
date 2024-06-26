@@ -161,4 +161,105 @@ function recupToken($idUser)
 
 
 
+/**
+ * Ajoute l'URL du calendrier de l'utilisateur dans la base de données
+ * @param string $calURL L'URL du calendrier
+ * @param int $idUser L'identifiant de l'utilisateur
+ * @return string Le message à afficher à l'utilisateur
+ */
+function addCal($calURL, $idUser) {
+	$SQL = "UPDATE users SET planninglink = '$calURL' WHERE id = '$idUser'";
+	SQLUpdate($SQL);
+	return "?view=profile&msg=". urlencode("Calendrier ajouté avec succès !");
+}
+
+/**
+ * Ajoute un numéro de téléphone à l'utilisateur
+ * @param string $num Le numéro de téléphone
+ * @param int $idUser L'identifiant de l'utilisateur
+ * @return string Le message à afficher à l'utilisateur
+ 
+ */
+function getUserInfos($idUser){
+	$SQL = "SELECT lastname, firstname, email, adress FROM users WHERE id = '$idUser'";
+	return parcoursRs(SQLSelect($SQL));
+}
+
+/**
+ * Récupère les voitures d'un utilisateur
+ * @param int $idUser L'identifiant de l'utilisateur
+ * @return array La liste des voitures de l'utilisateur
+ */
+function getUserCar($idUser) {
+	$SQL = "SELECT registration FROM vehicles WHERE owner_id = '$idUser'";
+	return parcoursRs(SQLSelect($SQL));
+}
+
+/**
+ * Récupère les voitures (dans les faits 1 seule) d'un trajet
+ * @param int $idTrip L'identifiant du trajet
+ * @return array La liste des voitures pour le trajet
+ */
+function getTripCar($idTrip){
+	$SQL = "SELECT v.registration FROM vehicles v JOIN trips t ON v.id = t.vehicle_id WHERE t.id = '$idTrip'";
+	return parcoursRs(SQLSelect($SQL));
+}
+
+/**
+ * Fonction pour montrer la liste des véhicules entrée en paramètre
+ * à utiliser avec getUserCar ou getTripCar, par exemple.
+ * @param array $voitures La liste des voitures à afficher
+ * @return void
+ */
+function showVehicleList($voitures){
+	echo "<div id='listeVoitures' class='liste'>";
+	echo "<h1>Mes voitures</h1>";
+	if (count($voitures) == 0){
+		echo "<p>Vous n'avez pas encore enregistré de voiture</p>";
+	}else{
+		foreach($voitures as $voiture){
+			echo "<div class='voiture'>";
+			echo "<img src='../ressources/ec-lille.png' alt='Logo Voiture' />";
+			echo "<p>".$voiture["registration"]."</p>";
+			echo "</div>";
+		}
+	}
+	echo "</div>";
+	return;
+}
+
+/**
+ * Fonction popur créer une notif en y rentrant l'id de l'utilisateur (vu qu'on met pas le message dans la bdd)
+ * @param int $idUser L'identifiant de l'utilisateur
+ * @return int L'identifiant de la notification créée
+ */
+function createNotif($idUser){
+	$SQL = "INSERT INTO notifications (user_id) VALUES ('$idUser')";
+	$lastId = SQLInsert($SQL);
+
+	return $lastId;
+}
+
+/**
+ * Fonction pour récupérer les notifications d'un utilisateur
+ * @param int $idUser L'identifiant de l'utilisateur
+ * @return array La liste des notifications de l'utilisateur
+ */
+function getNotif($idUser){
+	$SQL = "SELECT * FROM notifications WHERE user_id = '$idUser'";
+	return parcoursRs(SQLSelect($SQL));
+}
+
+/**
+ * Fonction pour supprimer une notification
+ * @param int $idNotif L'identifiant de la notification à supprimer
+ * @return string Le message à afficher à l'utilisateur
+ */
+function deleteNotif($idNotif){
+	$SQL = "DELETE FROM notifications WHERE id = '$idNotif'";
+	$res = SQLDelete($SQL);
+	return !$res;
+}
+
 ?>
+

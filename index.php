@@ -10,7 +10,7 @@ Les formulaires de toutes les vues générées enverront leurs données vers la 
 */
 
 
-	include_once "libs/maLibUtils.php";
+	include_once("libs/maLibUtils.php");
 
 	// Dans tous les cas, on affiche l'entete, 
 	// qui contient les balises de structure de la page, le logo, etc. 
@@ -39,6 +39,9 @@ Les formulaires de toutes les vues générées enverront leurs données vers la 
 			include("templates/accueil.php");
 		break;
 
+		case "profile" :
+			include("templates/profile.php");
+		break;
 		default : // si le template correspondant à l'argument existe, on l'affiche
 			if (file_exists("templates/$view.php"))
 				include("templates/$view.php");	
