@@ -152,4 +152,42 @@ if (basename($_SERVER["PHP_SELF"]) != "index.php")
 	die("");
 }
 */
+
+/**
+ * Fonction pour créer une notif dans la bdd et sur la page (on récupère l'id sur le moment et il nous sert d'id de notif en html aussi)
+ * @param string $msg Le message de la notification
+ * @return void
+ */
+function showNotif($msg){
+	$id = createNotif($_SESSION["idUser"]);
+	?>
+	<div id="<?= $id ?>" class="notif">
+		<p><?= $msg ?></p>
+		<button onclick="deletionNotif(<?= $id ?>)">X</button>
+	</div>
+	<?php
+}
 ?>
+
+
+<script>// fonction appelée pour supprimer une notification. Elle la supprime sur la page mais aussi la BDD
+		// Pour ça je fais un appel ajax à une autre page qui a pour seul but de récup dans modele.php la fonction deleteNotif
+		// et de la lancer avec l'id de la notif à supprimer
+	function deletionNotif(id){
+		
+		$.ajax({
+			url: './ajaxCall.php',
+			method: 'POST',
+			data: { 'idNotif': id },
+			success: function(response) {
+				// Handle the success response here
+				console.log('Notification deleted successfully');
+				document.getElementById(id).remove();
+			},
+			error: function(xhr, status, error) {
+				// Handle the error response here
+				console.error('Error deleting notification:', error);
+			}
+		})
+	}
+</script>

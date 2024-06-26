@@ -233,4 +233,42 @@ function showVehicleList($voitures){
 	echo "</div>";
 	return;
 }
+
+/**
+ * Fonction popur créer une notif en y rentrant l'id de l'utilisateur (vu qu'on met pas le message dans la bdd)
+ * @param int $idUser L'identifiant de l'utilisateur
+ * @return int L'identifiant de la notification créée
+ */
+function createNotif($idUser){
+	$SQL = "INSERT INTO notifications (user_id) VALUES ('$idUser')";
+	SQLInsert($SQL);
+
+	$SQL = "SELECT MAX(id) in notifications WHERE user_id = '$idUser'";
+	$result = SQLSelect($SQL);
+	$lastId = $result[0]['MAX(id)'];
+	return $lastId;
+}
+
+/**
+ * Fonction pour récupérer les notifications d'un utilisateur
+ * @param int $idUser L'identifiant de l'utilisateur
+ * @return array La liste des notifications de l'utilisateur
+ */
+function getNotif($idUser){
+	$SQL = "SELECT * FROM notifications WHERE user_id = '$idUser'";
+	return parcoursRs(SQLSelect($SQL));
+}
+
+/**
+ * Fonction pour supprimer une notification
+ * @param int $idNotif L'identifiant de la notification à supprimer
+ * @return void
+ */
+function deleteNotif($idNotif){
+	$SQL = "DELETE FROM notifications WHERE id = '$idNotif'";
+	SQLDelete($SQL);
+}
+
+
 ?>
+
