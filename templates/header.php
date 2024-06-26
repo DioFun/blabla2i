@@ -25,6 +25,7 @@ echo "<?xml version=\"1.0\" encoding=\"utf-8\" ?>";
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-15" />
 	<title>TinyMVC</title>
 	<link rel="stylesheet" type="text/css" href="css/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 <!-- **** F I N **** H E A D **** -->
 
@@ -40,6 +41,7 @@ echo "<?xml version=\"1.0\" encoding=\"utf-8\" ?>";
 <a href="index.php?view=accueil">Accueil</a>
 <a href="index.php?view=users">Utilisateurs</a>
 <a href="index.php?view=conversation">Conversations</a>
+
 
 
 
