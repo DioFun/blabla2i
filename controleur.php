@@ -105,7 +105,7 @@ session_start();
 
 			case 'CreationVoiture' :
 				if ($registrationCar = valider("registrationCar")){
-					$qs = addCar("$registration", $_SESSION["idUser"]);
+					$qs = addCar($registrationCar, $_SESSION["idUser"]);
 				}else{
 					$qs = "?view=profile&msg=". urlencode("Problème avec l'immatriculation entrée");
 				}
