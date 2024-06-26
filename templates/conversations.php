@@ -11,62 +11,150 @@ if (basename($_SERVER["PHP_SELF"]) == "conversations.php")
 include_once("libs/modele.php"); // listes
 include_once("libs/maLibUtils.php");// tprint
 include_once("libs/maLibForms.php");// mkTable, mkLiens, mkSelect ...
-
-
-
 ?>
 
-<h1>Conversations du site</h1>
+<!-- Le style est à adapter mais l'idée y est-->
+<style>
+#topBarConv{
+    position: relative;
+    left: 0;
+    right: 0;
+    top:0;
+    padding: 5px;
+    border-bottom: 1px solid black;
+    text-align: center;
+}
 
-<h2>Liste des conversations actives</h2>
+#archiveButton{
+    position: absolute;
+    bottom : 5px;
+    right : 5px;
+}
 
-<?php
+#titleConv{
+    text-align: center;
+    display: inline;
+}
 
-$conversations = listerConversations("actives");
+.conversation{
+    padding-top: 15px;
+    padding-bottom: 15px;
+    margin-top: 0;
+    margin-bottom: 0;
+}
 
-// mkTable($conversations, array("id","theme")); 
-mkLiens($conversations,"theme","id","infex.php?view=chat","idConv");
-// Comment n'afficher que id & thèmes ?
-// A remplacer par mkLiens
-?>
+.conversation:hover{
+    background-color: aqua;
+}
 
-<h2>Liste des conversations inactives</h2>
+.convName, .convDate, .convMessage{
+    display: inline;
+}
 
-<?php
-$conversations = listerConversations("inactives");
-//mkTable($conversations, array("id","theme")); 
-mkLiens($conversations,"theme","id","infex.php?view=chat","idConv");
-// A remplacer par mkLiens
-?>
+.convDate{
+    float: right;
+}
 
-<hr />
-<h2>Gestion des conversations</h2>
+.convPp{
+    float: left;
+}
 
-<?php
+#loadMoreButton{
+    text-align: center;
+    background-color: blueviolet;
+    padding: 10px;
+    cursor: pointer;
+}
 
-$conversations = listerConversations(); // toutes
-mkTable($conversations); // A remplacer par mkSelect
+#loadMoreButton:hover{
+    background-color: blue;
+}
+</style>
 
-mkForm("controleur.php");
-mkSelect("idConv", $conversations, "id", "theme" );
-mkInput("submit","action", "Archiver");
-mkInput("submit","action", "Réactiver");
-mkInput("submit","action", "Supprimer");
-endForm();
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+	var i;
+	var jConversation = $("<div class = \"conversation\">")
+						.append("<img/>")
+						.append("<div class = \"convName\">")
+						.append("<div class = \"convMessage\">")
+						.append("<div class = \"convDate\">");
 
-?>
+    function refreshMessages(){
+        $("#convCont").html("");
+		var convArray = getConversations();
+		for (i = 0; i<convArray.length; i++){
+			var jCloneConv = jConversation.clone();
+			if (convArray[i].hasOwnProperty("tripId")){
+				jCloneConv.children(".convname").html(convArray[i].t.date + " " + convArray[i].t.heure + " "+ convArray[i].t.departure);
+				jCloneConv.click(window.location.replace("index.php?view=chat&tripId="+convArray[i].tripId));
+			} elseif (convArray[i].hasOwnProperty("userId")){
+				jCloneConv.children(".convname").html(convArray[i].firstname + " " + convArray[i].lastname);
+				jCloneConv.click(window.location.replace("index.php?view=chat&userId="+convArray[i].userId));
+			} else {
+				jCloneConv.children(".convname").html("Général");
+				jCloneConv.click(window.location.replace("index.php?view=chat"));
+			}
+			jCloneConv.children(".convMessage").html(convArray[i].firstname + " " + convArray[i].lastname + " : " + convArray[i].content);
+			jCloneConv.children(".convDate").html(convArray[i].created_at);
+
+			$("#convCont").append(jCloneArray);
+		}
+
+    }
+
+    function getConversations(){
+		$.ajax({
+			type : "GET",
+			url : "controleur.php",
+			success : function(oRep){
+				console.log(oRep);
+				var convJSON = JSON.parse(oRep);
+				var convArray = convJSON.trip.concat(convJSON.user).concat(convJSON.general);
+				convArray.sort(convDateSort);
+				return convArray;
+			}
+		})
+    }
+
+	function convDateSort(a, b){
+		if (a.created_at < b.created_at) return -1;
+		if (a.created_at > b.created_at) return 1;
+		return 0;
+	}
+</script>
+
+<body onload="refreshMessages()">
+    <div id="topBarConv">
+        <div id="titleConv">Conversations</div>
+        <div id = "archiveButton"><a href = "#">Archives</a></div>
+    </div>
+
+<!-- Mettre un header avec un bouton "conversations archivées" -->
+
+<!-- On place les conversations dans des divs de classe .conversation-->
+
+<!--
+<div class = "conversation">
+	<img/>
+	<div class = "convName">Nom de la conversation</div>
+    <div class = "lastSender">Auteur du dernier message ("moi" ou nom de qqn d'autre)</div>
+    <div class = "convMessage">Dernier message en date</div>
+	<div class = "convDate">Date ou heure du dernier message</div>
+</div>
+-->
+    <div id="convCont">
+        <div class = "conversation">
+            <img class = "convPp"/>
+            <div class = "convName">Nom de la conversation</div>
+            <div class = "convMessage">Dernier message en date</div>
+            <div class = "convDate">Date ou heure du dernier message</div>
+        </div>
+    </div>
 
 
+<!-- Load more button-->
 
-
-
-
-
-
-
-
-
-
-
-
-
+    <div id="loadMoreButton">
+        <div>Charger plus de messages</div>
+    </div>

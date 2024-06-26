@@ -79,7 +79,24 @@ session_start();
 
 			break;
 
+			case 'getConversations' :
+				$conv["trip"] = getActiveTripConversations($_SESSION['idUser']);
+				$conv["user"] = getUserConversations($_SESSION['idUser']);
+				$conv["general"] = getGeneralConversation();
+				echo json_encode($conv);
+			break;
 			
+			case "getChat" :
+				if ($tripId=valider("tripId")){
+				
+					}
+				elseif ($userId=valider("userId")){
+
+				}
+				else{ // chat général
+
+				}
+			break;
 		}
 
 	}

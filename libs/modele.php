@@ -123,6 +123,72 @@ function isAdmin($idUser)
 
 }
 
+function getGeneralMessages($start = 0){
+	$SQL = "SELECT u.firstname, u.lastname, u.id, cg.idsender, cg.content, cg.created_at FROM chat_global AS cg 
+	INNER JOIN users AS u 
+	ON cg.sender_id = u.id 
+	WHERE cg.deleted_at IS NULL
+	ORDER BY created_at DESC
+	LIMIT 20 OFFSET $start";
+
+	return parcoursRs(SQLSelect($SQL));
+}
+
+function getSenderConversations($idUser){ // A priori useless mais je laisse ça là en attendant de test
+	$SQL = "SELECT u.id AS userId, firstname, lastname, content, ct.created_at AS created_at
+	FROM chat_user AS cu
+	INNER JOIN users AS u ON cu.receiver_id = u.id
+	WHERE cu.sender_id = $idUser
+	ORDER BY cu.created_at DESC";
+
+	return parcoursRs(SQLSelect($SQL));		
+}
+
+function getReceiverConversations($idUser){ // A priori useless mais je laisse ça là en attendant de test
+	$SQL = "SELECT u.id AS userId, firstname, lastname, content, cu.created_at AS created_at
+	FROM chat_user AS cu
+	INNER JOIN users AS u ON cu.sender_id = u.id
+	WHERE cu.receiver_id = $idUser
+	GROUP BY userId
+	ORDER BY cu.created_at DESC";
+
+	return parcoursRs(SQLSelect($SQL));
+}
+
+// On cherche le dernier message qui implique idUser (qu'il soit sender ou receiver)
+function getUserConversations($idUser){
+	$SQL = "SELECT u.id AS userId, firstname, lastname, content, cu.created_at AS created_at
+	FROM (SELECT u.id, firstname, lastname, content, cu.created_at FROM chat_user AS cu INNER JOIN users AS u ON cu.sender_id = u.id WHERE cu.receiver_id = $idUser)
+	UNION (SELECT u.id AS userId, firstname, lastname, content, cu.created_at AS created_at FROM chat_user AS cu INNER JOIN users AS u ON cu.sender_id = u.id WHERE cu.receiver_id = $idUser)
+	GROUP BY userId
+	ORDER BY cu.created_at DESC"
+
+	return parcoursRs(SQLSelect($SQL))
+}
+
+function getActiveTripConversations($idUser){
+	// On prend la date et l'heure pour le nom de la conversation
+	$SQL = "SELECT ct.trip_id AS tripId, t.date, t.heure, t.departure, firstname, lastname, content, ct.created_at AS created_at
+	FROM chat_trips AS ct
+	INNER JOIN passengers AS p ON ct.trip_id = p.trip_id
+	INNER JOIN trips AS t ON ct.trip_id = t.id
+	INNER JOIN users AS u ON ct.sender_id = u.id
+	WHERE (p.user_id = $idUser OR t.driver_id = $idUser) AND ct.deleted_at IS NULL AND t.status != 2
+	GROUP BY ct.trip_id
+	ORDER BY ct.created_at DESC";
+
+	return parcoursRs(SQLSelect($SQL));
+}
+
+function getGeneralConversation(){
+	$SQL = "SELECT firstname, lastname, content, cg.created_at AS created_at
+	FROM chat_global AS cg
+	INNER JOIN users AS u ON cg.sender_id = u.id 
+	WHERE cg.deleted_at IS NULL
+	ORDER BY created_at DESC
+	LIMIT 1"
+}
+
 
 
 ?>
