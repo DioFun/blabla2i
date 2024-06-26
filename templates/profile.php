@@ -6,16 +6,16 @@ if (basename($_SERVER["PHP_SELF"]) != "index.php")
 	die("");
 }
 
-// if (!valider("connecte",'SESSION'))
-// {
-// 	header("Location:index.php?view=accueil");
-// 	die("");
-// }
+if (!valider("connecte",'SESSION'))
+{
+	header("Location:index.php?view=accueil");
+	die("");
+}
 include_once("libs/modele.php");
 include_once("libs/maLibUtils.php");
 include_once("libs/maLibForms.php");
 
-$infos = getUserInfos($_SESSION["idUser"]);
+$infos = getUserInfos(valider("idUser","SESSION"));
 ?>
 
 <style>

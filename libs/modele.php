@@ -123,48 +123,6 @@ function isAdmin($idUser)
 
 }
 
-/**
- * Modifie les informations d'un utilisateur -> présent dans la page profile.php
- * @param string $nom Le nom de l'utilisateur
- * @param string $prenom Le prénom de l'utilisateur
- * @param string $mail L'adresse mail de l'utilisateur
- * @param string $adress L'adresse de l'utilisateur
- * @param int $idUser L'identifiant de l'utilisateur
- * @return string Le message à afficher à l'utilisateur
- */
-function modifyInfos($nom, $prenom, $mail, $adress, $idUser) {
-	$SQL = "UPDATE users SET lastname = '$nom', firstname = '$prenom', email = '$mail', adress = '$adress' WHERE id = '$idUser'";
-	$modif = SQLUpdate($SQL);
-	log($modif === 0);
-	if ($modif === 0) {
-		return "?view=profile&msg=". urlencode("Informations modifiées avec succès !");
-	}else{
-		return "?view=profile&msg=". urlencode("Erreur lors de la modification des informations.");
-	}
-}
-
-/**
- * Ajoute une nouvelle voiture dans la base de données pour un utilisateur donné
- * @param string $registration La plaque d'immatriculation de la voiture
- * @param int $idUser L'identifiant de l'utilisateur
- * @return string Le message à afficher à l'utilisateur
- */
-function addCar($registration, $idUser) {
-
-	$SQL = "SELECT 1 FROM vehicles WHERE registration = '$registration');";
-	if (!empty(parcoursRs(SQLSelect($SQL)))) {
-
-		$qs = "?view=create&msg=". urlencode("Adresse mail déjà utilisée");
-
-	}else{
-
-	$SQL = "INSERT INTO vehicles (registration, owner_id) VALUES ('$registration', '$idUser')";
-	SQLInsert($SQL);
-	$qs = "?view=login&msg=". urlencode("Utilisateur crée avec succès !");
-	}
-
-	return $qs;
-}
 
 
 /**
@@ -262,11 +220,12 @@ function getNotif($idUser){
 /**
  * Fonction pour supprimer une notification
  * @param int $idNotif L'identifiant de la notification à supprimer
- * @return void
+ * @return string Le message à afficher à l'utilisateur
  */
-function deleteNotif($idNotif){
+function deleteNotif($idNotif, $viewOfNotif){
 	$SQL = "DELETE FROM notifications WHERE id = '$idNotif'";
 	SQLDelete($SQL);
+	return "?view=".$viewOfNotif."&msg=". urlencode("Calendrier ajouté avec succès !");
 }
 
 

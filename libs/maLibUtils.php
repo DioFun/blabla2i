@@ -158,36 +158,60 @@ if (basename($_SERVER["PHP_SELF"]) != "index.php")
  * @param string $msg Le message de la notification
  * @return void
  */
-function showNotif($msg){
-	$id = createNotif($_SESSION["idUser"]);
+function showNotif($msg, $viewOfNotif){
+	$id = createNotif(valider("idUser", "SESSION"));
 	?>
 	<div id="<?= $id ?>" class="notif">
 		<p><?= $msg ?></p>
-		<button onclick="deletionNotif(<?= $id ?>)">X</button>
+		<form action="data.php" method="post">
+			<input type="hidden" name="id" value="<?= $id ?>">
+			<input type="hidden" name="view" value="<?= $viewOfNotif ?>">
+			<button onclick="this.parent.remove()" type="submit" name="action" value="DeleteNotif">X</button>
+		</form>
 	</div>
 	<?php
 }
-?>
 
+/**
+ * Ajoute une nouvelle voiture dans la base de données pour un utilisateur donné
+ * @param string $registration La plaque d'immatriculation de la voiture
+ * @param int $idUser L'identifiant de l'utilisateur
+ * @return string Le message à afficher à l'utilisateur
+ */
+function addCar($registration, $idUser) {
 
-<script>// fonction appelée pour supprimer une notification. Elle la supprime sur la page mais aussi la BDD
-		// Pour ça je fais un appel ajax à une autre page qui a pour seul but de récup dans modele.php la fonction deleteNotif
-		// et de la lancer avec l'id de la notif à supprimer
-	function deletionNotif(id){
-		
-		$.ajax({
-			url: './ajaxCall.php',
-			method: 'POST',
-			data: { 'idNotif': id },
-			success: function(response) {
-				// Handle the success response here
-				console.log('Notification deleted successfully');
-				document.getElementById(id).remove();
-			},
-			error: function(xhr, status, error) {
-				// Handle the error response here
-				console.error('Error deleting notification:', error);
-			}
-		})
+	$SQL = "SELECT 1 FROM vehicles WHERE registration = '$registration');";
+	if (!empty(parcoursRs(SQLSelect($SQL)))) {
+
+		$qs = "?view=create&msg=". urlencode("Adresse mail déjà utilisée");
+
+	}else{
+
+	$SQL = "INSERT INTO vehicles (registration, owner_id) VALUES ('$registration', '$idUser')";
+	SQLInsert($SQL);
+	$qs = "?view=login&msg=". urlencode("Utilisateur crée avec succès !");
 	}
-</script>
+
+	return $qs;
+}
+
+/**
+ * Modifie les informations d'un utilisateur -> présent dans la page profile.php
+ * @param string $nom Le nom de l'utilisateur
+ * @param string $prenom Le prénom de l'utilisateur
+ * @param string $mail L'adresse mail de l'utilisateur
+ * @param string $adress L'adresse de l'utilisateur
+ * @param int $idUser L'identifiant de l'utilisateur
+ * @return string Le message à afficher à l'utilisateur
+ */
+function modifyInfos($nom, $prenom, $mail, $adress, $idUser) {
+	$SQL = "UPDATE users SET lastname = '$nom', firstname = '$prenom', email = '$mail', adress = '$adress' WHERE id = '$idUser'";
+	$modif = SQLUpdate($SQL);
+	log($modif === 0);
+	if ($modif === 0) {
+		return "?view=profile&msg=". urlencode("Informations modifiées avec succès !");
+	}else{
+		return "?view=profile&msg=". urlencode("Erreur lors de la modification des informations.");
+	}
+}
+?>

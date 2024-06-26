@@ -118,6 +118,13 @@ session_start();
 						$qs = "?view=profile&msg=". urlencode("Tous les champs doivent être remplis.");
 					}
 			break;
+
+			case 'DeleteNotif' :
+				if ($id = valider("id") && $viewOfNotif = valider("viewOfNotif")){
+					$qs = deleteNotif($id, $viewOfNotif);
+				}else{
+					$qs = "?view=".$viewOfNotif."&msg=". urlencode("Problème avec la notification");
+				}
 		}
 
 	}
