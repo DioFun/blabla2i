@@ -1,3 +1,4 @@
+
 <?php
 
 // V1.0 du 18 mai 2018
@@ -158,16 +159,12 @@ if (basename($_SERVER["PHP_SELF"]) != "index.php")
  * @param string $msg Le message de la notification
  * @return void
  */
-function showNotif($msg, $viewOfNotif){
+function showNotif($msg){
 	$id = createNotif(valider("idUser", "SESSION"));
 	?>
-	<div id="<?= $id ?>" class="notif">
-		<p><?= $msg ?></p>
-		<form action="data.php" method="post">
-			<input type="hidden" name="id" value="<?= $id ?>">
-			<input type="hidden" name="view" value="<?= $viewOfNotif ?>">
-			<button onclick="this.parent.remove()" type="submit" name="action" value="DeleteNotif">X</button>
-		</form>
+	<div id="notif<?= $id ?>" class="notif">
+		<p id-notif="<?=$msg?>"><?= $msg ?></p>
+		<button onclick="removeNotif(<?=$id?>)">X</button>
 	</div>
 	<?php
 }
@@ -215,3 +212,19 @@ function modifyInfos($nom, $prenom, $mail, $adress, $idUser) {
 	}
 }
 ?>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+	function removeNotif(id){
+		$.ajax({
+			url: "controleur.php",
+			type: "GET",
+			data: {action: "DeleteNotif", id: id},
+			success: function(){
+				$("#notif"+id).hide();
+			}
+		});
+
+		
+	}
+</script>

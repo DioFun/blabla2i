@@ -199,11 +199,8 @@ function showVehicleList($voitures){
  */
 function createNotif($idUser){
 	$SQL = "INSERT INTO notifications (user_id) VALUES ('$idUser')";
-	SQLInsert($SQL);
+	$lastId = SQLInsert($SQL);
 
-	$SQL = "SELECT MAX(id) in notifications WHERE user_id = '$idUser'";
-	$result = SQLSelect($SQL);
-	$lastId = $result[0]['MAX(id)'];
 	return $lastId;
 }
 
@@ -222,12 +219,11 @@ function getNotif($idUser){
  * @param int $idNotif L'identifiant de la notification à supprimer
  * @return string Le message à afficher à l'utilisateur
  */
-function deleteNotif($idNotif, $viewOfNotif){
+function deleteNotif($idNotif){
 	$SQL = "DELETE FROM notifications WHERE id = '$idNotif'";
-	SQLDelete($SQL);
-	return "?view=".$viewOfNotif."&msg=". urlencode("Calendrier ajouté avec succès !");
+	$res = SQLDelete($SQL);
+	return !$res;
 }
-
 
 ?>
 

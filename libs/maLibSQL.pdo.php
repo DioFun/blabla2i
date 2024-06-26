@@ -62,7 +62,7 @@ function SQLDelete($sql) {return SQLUpdate($sql);}
  * Exécuter une requête INSERT 
  * @param string $sql
  * @pre Les variables  $BDD_login, $BDD_password $BDD_chaine doivent exister
- * @return Renvoie l'insert ID ... utile quand c'est un numéro auto
+ * @return int Renvoie l'insert ID ... utile quand c'est un numéro auto
  */
 function SQLInsert($sql)
 {

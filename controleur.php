@@ -121,9 +121,14 @@ session_start();
 
 			case 'DeleteNotif' :
 				if ($id = valider("id") && $viewOfNotif = valider("viewOfNotif")){
-					$qs = deleteNotif($id, $viewOfNotif);
+					$res = deleteNotif($id);
+					if ($res){
+						createFlash("success", "Notification supprimée !");
+					}else{
+						createFlash("error", "Problème lors de la suppression de la notification");
+					}
 				}else{
-					$qs = "?view=".$viewOfNotif."&msg=". urlencode("Problème avec la notification");
+					createFlash("error", "Problème lors de la suppression de la notification");
 				}
 		}
 
