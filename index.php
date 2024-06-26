@@ -31,12 +31,12 @@ Les formulaires de toutes les vues générées enverront leurs données vers la 
 			include("templates/login.php");
 		break; 
 
-		case "accueil" : 
-			include("templates/accueil.php");
+		case "confirm" : 
+			include("templates/confirm.php");
 		break;
 
-		case "conversation" : 
-			include("templates/conversations.php");
+		case "accueil" : 
+			include("templates/accueil.php");
 		break;
 
 		case "profile" :

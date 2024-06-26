@@ -13,7 +13,6 @@ if (valider("connecte",'SESSION'))
 	die("");
 }
 
-$info = "";
 ?>
  
 <div id="corps">
@@ -32,7 +31,7 @@ $info = "";
 		Password : <input type="password" name="pass" placeholder="Entrez votre mot de passe"/><br />
 
 		<a href="index.php?view=create">Créer un compte</a>
-		<a href="index.php?view=password">Mot de passe oublié ?</a>
+		<a href="index.php?view=repassword">Mot de passe oublié ?</a>
 
 		<input type="submit" name="action" value="Connexion" />
 		

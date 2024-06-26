@@ -50,17 +50,41 @@ session_start();
 			Password : <input type="password" name="pass" placeholder="Mot de passe"/><br />
 			Confirmer Password : <input type="password" name="secondpass" placeholder="Confirmez votre mot de passe"/><br />
 			*/
+			
+			case 'Verify' :
+
+				if (($id = valider("id"))&&($token = valider("token"))){
+					// var_dump($id,$token);
+					// die("");
+					if ($token === recupToken($id)){
+						confirmMail($id);
+						createFlash($type, "E-Mail confirmé");
+					}
+					
+
+				}
+
+				$qs = "?view=login";
+				
+
+			break;
+
+			case 'Changer1' :
+				
+
+				break;
+
 
 			case 'Create' :
 				if (($nom = valider("nom"))
 				  	&&($prenom = valider("prenom"))
 					&&($mail = valider("mail"))
-					&&($adress = valider("adress"))
+					&&($adress = strtolower(valider("adress")))
 					&&($pass = valider("pass"))
 					&&($planning = valider("planning"))
 					&&($secondpass = valider("secondpass"))){
 
-						var_dump($nom,$prenom,$mail,$adress,$pass,$secondpass,$planning);
+						
 
 						$qs = verifCreateUser($nom,$prenom,$mail,$adress,$pass,$secondpass,$planning);
 

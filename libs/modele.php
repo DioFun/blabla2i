@@ -7,10 +7,10 @@ Dans ce fichier, on définit diverses fonctions permettant de récupérer des do
 // inclure ici la librairie faciliant les requêtes SQL (en veillant à interdire les inclusions multiples)
 include_once("maLibSQL.pdo.php");
 
-function sendConfirmationEmail($email, $token) {
+function sendConfirmationEmail($email, $token, $id) {
     $subject = "Confirmation de votre email";
     $message = "Cliquez sur le lien suivant pour confirmer votre email : ";
-    $message .= "http://localhost/TWE2024/projet%20WEB/index.php?view=confirm&token=" . urlencode($token);
+    $message .= "http://localhost/TWE2024/projet%20WEB/index.php?view=confirm&token=" . urlencode($token)."&id=".urldecode($id);
     $headers = "From: noreply@blabla2i.com";
 
     mail($email, $subject, $message, $headers);
@@ -32,7 +32,7 @@ function verifUserBdd($login,$passe)
 	$hash = ParcoursRs(SQLSelect($SQL))[0]["password"];
 
 	if (password_verify($passe, $hash)){
-		return ParcoursRs(SQLSelect($SQL))[0]["id"];
+		return parcoursRs(SQLSelect($SQL))[0]["id"];
 	}
 	
 	else return false;
@@ -46,34 +46,59 @@ function generateToken($length = 32) {
     return bin2hex(random_bytes($length));
 }
 
+function changePassword($mail,$pass){
+	
+	$hashed_password = password_hash($pass, PASSWORD_BCRYPT);
+	$SQL = "UPDATE users SET password = '$hashed_password' WHERE email = '$mail';";
+	SQLUpdate($SQL);
+}
+
+function confirmMail($id){
+	
+	
+	$SQL = "UPDATE users SET confirmed = 1 WHERE id = '$id';";
+	SQLUpdate($SQL);
+
+
+}
+
 function verifCreateUser($nom,$prenom,$mail,$adress,$pass,$secondpass,$planning)
 {
 
 
-	$SQL = "SELECT 1 FROM users WHERE email = '$mail');";
+	$SQL = "SELECT id FROM users WHERE email = '$mail';";
 	
 
 	if ((strlen($nom) >= 255)||(strlen($prenom) >= 255)||(strlen($mail) >= 255)||
 		(strlen($pass) >= 255)||(strlen($secondpass) >= 255)||(strlen($adress) >= 255)||(strlen($planning) >= 255)) {
 
-		$qs = "?view=create&msg=". urlencode("Tous les champs textuels doivent contenir moins de 255 caractères.");
+		
+		createFlash("error", "Tous les champs textuels doivent contenir moins de 255 caractères.");
+		$qs = "?view=create";
+		
 
 
 	} elseif (!empty(parcoursRs(SQLSelect($SQL)))) {
 
-		$qs = "?view=create&msg=". urlencode("Adresse mail déjà utilisée");
+		createFlash("error", "Adresse mail déjà utilisée");
+		$qs = "?view=create";
 
 	}
 
 	elseif ($pass !== $secondpass) {
 
-		$qs = "?view=create&msg=". urlencode("Les deux mots de passe sont différents.");
+		createFlash("error", "Les deux mots de passe sont différents.");
+		$qs = "?view=create";
+		
 
 	}
 
 	elseif (substr($mail, -strlen("@centrale.centralelille.fr")) !== "@centrale.centralelille.fr") { 
 
-		$qs = "?view=create&msg=". urlencode("L'adresse mail doit être une adresse centrale (nom.prenom@centrale.centralelille.fr) ");
+
+		createFlash("error", "L'adresse mail doit être une adresse centrale (nom.prenom@centrale.centralelille.fr) ");
+		$qs = "?view=create";
+		
 
 	} else {
 
@@ -102,10 +127,12 @@ function verifCreateUser($nom,$prenom,$mail,$adress,$pass,$secondpass,$planning)
 		);";
 
 
-	sendConfirmationEmail($mail, $token);
+	sendConfirmationEmail($mail, $token, $id);
 	
 	SQLInsert($SQL);
-	$qs = "?view=login&msg=". urlencode("Utilisateur crée avec succès !");
+	createFlash("success", "Utilisateur crée avec succès !");
+	$qs = "?view=confirm	";
+	
 	
 	}
 
@@ -117,6 +144,15 @@ function verifCreateUser($nom,$prenom,$mail,$adress,$pass,$secondpass,$planning)
 function isAdmin($idUser)
 {
 	$SQL = "SELECT role from users
+	WHERE id = '$idUser'";
+
+	return SQLGetChamp($SQL);
+
+}
+
+function recupToken($idUser)
+{
+	$SQL = "SELECT confirmation_token from users
 	WHERE id = '$idUser'";
 
 	return SQLGetChamp($SQL);
