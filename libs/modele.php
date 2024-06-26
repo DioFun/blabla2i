@@ -7,6 +7,7 @@ Dans ce fichier, on définit diverses fonctions permettant de récupérer des do
 // inclure ici la librairie faciliant les requêtes SQL (en veillant à interdire les inclusions multiples)
 include_once("maLibSQL.pdo.php");
 
+// TODO : Changer les url pour avoir un base url dans la config !
 function sendConfirmationEmail($email, $token, $id) {
     $subject = "Confirmation de votre email";
     $message = "Cliquez sur le lien suivant pour confirmer votre email : ";
@@ -44,7 +45,7 @@ function verifUserBdd($login,$passe)
 		return false;
 	}
 
-	$hash = $requete["password"]; 
+	$hash = $requete["password"];
 
 	if (password_verify($passe, $hash)){
 		return $requete["id"];
@@ -62,39 +63,39 @@ function generateToken($length = 32) {
 }
 
 function changePassword($mail,$pass){
-	
+
 	$hashed_password = password_hash($pass, PASSWORD_BCRYPT);
 	$SQL = "UPDATE users SET password = '$hashed_password' WHERE email = '$mail';";
 	SQLUpdate($SQL);
 }
 
 function updatePassword($id,$newpass){
-	
+
 	$SQL = "UPDATE users SET password = '$newpass' WHERE id = '$id';";
 	SQLUpdate($SQL);
 }
 
 function updateLastname($id,$newLastname){
-	
+
 	$SQL = "UPDATE users SET lastname = '$newLastname' WHERE id = '$id';";
 	SQLUpdate($SQL);
 }
 
 function updateFirstname($id,$newFirstname){
-	
+
 	$SQL = "UPDATE users SET firstname = '$newFirstname' WHERE id = '$id';";
 	SQLUpdate($SQL);
 }
 
 function putResetToken($id,$resetToken){
-	
+
 	$SQL = "UPDATE users SET reset_token = '$resetToken' WHERE id = '$id';";
 	SQLUpdate($SQL);
 }
 
 
 function recupResetToken($id){
-	
+
 	$SQL = "SELECT reset_token, reset_send_at FROM users WHERE id = '$id';";
 	return parcoursRs(SQLSelect($SQL));
 }
@@ -102,8 +103,8 @@ function recupResetToken($id){
 
 
 function updateConfirmedMail($id){
-	
-	
+
+
 	$SQL = "UPDATE users SET confirmed = 1 WHERE id = '$id';";
 	SQLUpdate($SQL);
 
@@ -120,10 +121,10 @@ function verifCreateUser($nom,$prenom,$mail,$adress,$pass,$secondpass,$planning)
 	if ((strlen($nom) >= 255)||(strlen($prenom) >= 255)||(strlen($mail) >= 255)||
 		(strlen($pass) >= 255)||(strlen($secondpass) >= 255)||(strlen($adress) >= 255)||(strlen($planning) >= 255)) {
 
-		
+
 		createFlash("error", "Tous les champs textuels doivent contenir moins de 255 caractères.");
 		$qs = "?view=create";
-		
+
 
 
 	} elseif (!empty(parcoursRs(SQLSelect($SQL)))) {
@@ -137,16 +138,16 @@ function verifCreateUser($nom,$prenom,$mail,$adress,$pass,$secondpass,$planning)
 
 		createFlash("error", "Les deux mots de passe sont différents.");
 		$qs = "?view=create";
-		
+
 
 	}
 
-	elseif (substr($mail, -strlen("centralelille.fr")) !== "centralelille.fr") { 
+	elseif (substr($mail, -strlen("centralelille.fr")) !== "centralelille.fr") {
 
 
 		createFlash("error", "L'adresse mail doit être une adresse centrale (en centralelille.fr) ");
 		$qs = "?view=create";
-		
+
 
 	} else {
 
@@ -180,7 +181,7 @@ function verifCreateUser($nom,$prenom,$mail,$adress,$pass,$secondpass,$planning)
 	SQLInsert($SQL);
 	createFlash("success", "Utilisateur crée avec succès !");
 	$qs = "?view=confirm	";
-	
+
 	
 	}
 
@@ -192,6 +193,15 @@ function verifCreateUser($nom,$prenom,$mail,$adress,$pass,$secondpass,$planning)
 function isAdmin($idUser)
 {
 	$SQL = "SELECT role from users
+	WHERE id = '$idUser'";
+
+	return SQLGetChamp($SQL);
+
+}
+
+function recupToken($idUser)
+{
+	$SQL = "SELECT confirmation_token from users
 	WHERE id = '$idUser'";
 
 	return SQLGetChamp($SQL);
@@ -216,5 +226,105 @@ function putConnectionToken($idUser, $connectionToken)
 }
 
 
+
+/**
+ * Ajoute l'URL du calendrier de l'utilisateur dans la base de données
+ * @param string $calURL L'URL du calendrier
+ * @param int $idUser L'identifiant de l'utilisateur
+ * @return string Le message à afficher à l'utilisateur
+ */
+function addCal($calURL, $idUser) {
+	$SQL = "UPDATE users SET planninglink = '$calURL' WHERE id = '$idUser'";
+	SQLUpdate($SQL);
+	return "?view=profile&msg=". urlencode("Calendrier ajouté avec succès !");
+}
+
+/**
+ * Ajoute un numéro de téléphone à l'utilisateur
+ * @param string $num Le numéro de téléphone
+ * @param int $idUser L'identifiant de l'utilisateur
+ * @return string Le message à afficher à l'utilisateur
+
+ */
+function getUserInfos($idUser){
+	$SQL = "SELECT lastname, firstname, email, adress FROM users WHERE id = '$idUser'";
+	return parcoursRs(SQLSelect($SQL));
+}
+
+/**
+ * Récupère les voitures d'un utilisateur
+ * @param int $idUser L'identifiant de l'utilisateur
+ * @return array La liste des voitures de l'utilisateur
+ */
+function getUserCar($idUser) {
+	$SQL = "SELECT registration FROM vehicles WHERE owner_id = '$idUser'";
+	return parcoursRs(SQLSelect($SQL));
+}
+
+/**
+ * Récupère les voitures (dans les faits 1 seule) d'un trajet
+ * @param int $idTrip L'identifiant du trajet
+ * @return array La liste des voitures pour le trajet
+ */
+function getTripCar($idTrip){
+	$SQL = "SELECT v.registration FROM vehicles v JOIN trips t ON v.id = t.vehicle_id WHERE t.id = '$idTrip'";
+	return parcoursRs(SQLSelect($SQL));
+}
+
+/**
+ * Fonction pour montrer la liste des véhicules entrée en paramètre
+ * à utiliser avec getUserCar ou getTripCar, par exemple.
+ * @param array $voitures La liste des voitures à afficher
+ * @return void
+ */
+function showVehicleList($voitures){
+	echo "<div id='listeVoitures' class='liste'>";
+	echo "<h1>Mes voitures</h1>";
+	if (count($voitures) == 0){
+		echo "<p>Vous n'avez pas encore enregistré de voiture</p>";
+	}else{
+		foreach($voitures as $voiture){
+			echo "<div class='voiture'>";
+			echo "<img src='../ressources/ec-lille.png' alt='Logo Voiture' />";
+			echo "<p>".$voiture["registration"]."</p>";
+			echo "</div>";
+		}
+	}
+	echo "</div>";
+	return;
+}
+
+/**
+ * Fonction popur créer une notif en y rentrant l'id de l'utilisateur (vu qu'on met pas le message dans la bdd)
+ * @param int $idUser L'identifiant de l'utilisateur
+ * @return int L'identifiant de la notification créée
+ */
+function createNotif($idUser){
+	$SQL = "INSERT INTO notifications (user_id) VALUES ('$idUser')";
+	$lastId = SQLInsert($SQL);
+
+	return $lastId;
+}
+
+/**
+ * Fonction pour récupérer les notifications d'un utilisateur
+ * @param int $idUser L'identifiant de l'utilisateur
+ * @return array La liste des notifications de l'utilisateur
+ */
+function getNotif($idUser){
+	$SQL = "SELECT * FROM notifications WHERE user_id = '$idUser'";
+	return parcoursRs(SQLSelect($SQL));
+}
+
+/**
+ * Fonction pour supprimer une notification
+ * @param int $idNotif L'identifiant de la notification à supprimer
+ * @return string Le message à afficher à l'utilisateur
+ */
+function deleteNotif($idNotif){
+	$SQL = "DELETE FROM notifications WHERE id = '$idNotif'";
+	$res = SQLDelete($SQL);
+	return !$res;
+}
 
 ?>

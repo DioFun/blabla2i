@@ -29,9 +29,6 @@ session_start();
 					// On verifie l'utilisateur, et on crée des variables de session si tout est OK
 					// Cf. maLibSecurisation
 					if (verifUser($login,$pass)){
-
-
-						
 						createFlash("success", "Connecté !");
 						$qs = "?view=accueil";
 						
@@ -53,11 +50,11 @@ session_start();
 			Password : <input type="password" name="pass" placeholder="Mot de passe"/><br />
 			Confirmer Password : <input type="password" name="secondpass" placeholder="Confirmez votre mot de passe"/><br />
 			*/
-			
+
 			case 'Verify' :
 
 				if (($id = valider("id"))&&($token = valider("token"))){
-					
+
 					$requete = recupConfirmationToken($id)[0];
 					$currentTimestamp = time();
 
@@ -67,7 +64,7 @@ session_start();
 
 					if (!(($currentTimestamp - $sendAtTimestamp) < 3600)) {
 
-						createFlash("error", "E-Mail non confirmé : token expiré");	
+						createFlash("error", "E-Mail non confirmé : token expiré");
 
 					} elseif ($token === $requete["confirmation_token"]){
 						updateConfirmedMail($id);
@@ -75,12 +72,12 @@ session_start();
 					} else {
 						createFlash("error", "E-Mail non confirmé : token invalide");
 					}
-					
+
 
 				}
 
 				$qs = "?view=login";
-				
+
 
 			break;
 
@@ -108,12 +105,12 @@ session_start();
 					$sendAtTimestamp = strtotime($requete["reset_send_at"]);
 
 					if ($newpassconfirm !== $newpass) {
-						
+
 						createFlash("error", "les mots de passes sont différents");
 
 					} elseif (!(($currentTimestamp - $sendAtTimestamp) < 3600)) {
 
-						createFlash("error", "Mot de passe non modifié : token expiré");	
+						createFlash("error", "Mot de passe non modifié : token expiré");
 
 					} elseif ($tokenVal === $requete["reset_token"]) {
 
@@ -124,11 +121,11 @@ session_start();
 
 						createFlash("error", "Les tokens de reset ne sont pas les mêmes" );
 
-					}				
+					}
 				}
 
 					$qs = "?view=login";
-				
+
 
 				break;
 
@@ -141,7 +138,7 @@ session_start();
 					&&($planning = valider("planning"))
 					&&($secondpass = valider("secondpass"))){
 
-						
+
 
 						$qs = verifCreateUser($nom,$prenom,$mail,$adress,$pass,$secondpass,$planning);
 
@@ -154,12 +151,63 @@ session_start();
 
 			case 'Logout' :
 
-				session_destroy();
-				$qs = "?view=login&msg=". urlencode("à bientot !");
+				unset($_SESSION['pseudo'], $_SESSION['idUser'], $_SESSION['isAdmin'], $_SESSION['connecte'], $_SESSION['heureConnexion']);
+				createFlash("success", "Déconnecté !");
+				$qs = "?view=login";
 
 			break;
 
-			
+			case 'CreationVoiture' :
+				if ($registrationCar = valider("registrationCar")){
+					$qs = addCar("$registration", $_SESSION["idUser"]);
+				}else{
+					$qs = "?view=profile&msg=". urlencode("Problème avec l'immatriculation entrée");
+				}
+
+			break;
+
+			case 'CreationCal' :
+				if ($calURL = valider("calURL")){
+					$qs = addCal($calURL, $_SESSION["idUser"]);
+				}else{
+					$qs = "?view=profile&msg=". urlencode("Problème avec l'URL du calendrier entrée");
+				}
+			break;
+
+			case 'CreationNum' :
+				// if ($num = valider("num")){
+				// 	$qs = addNum($num, $_SESSION["idUser"]);
+				// }else{
+				// 	$qs = "?view=profile&msg=". urlencode("Problème avec le numéro entrée");
+				// }
+				$qs = "?view=profile&msg=". urlencode("Pas encore implémentée");
+			break;
+
+			case 'ModifyInfos' :
+				if (($nom = valider("nom"))
+				  	&&($prenom = valider("prenom"))
+					&&($mail = valider("mail"))
+					&&($adress = valider("adress"))){
+
+						$qs = modifyInfos($nom,$prenom,$mail,$adress,$_SESSION["idUser"]);
+
+					} else {
+
+						$qs = "?view=profile&msg=". urlencode("Tous les champs doivent être remplis.");
+					}
+			break;
+
+			case 'DeleteNotif' :
+				if ($id = valider("id") && $viewOfNotif = valider("viewOfNotif")){
+					$res = deleteNotif($id);
+					if ($res){
+						createFlash("success", "Notification supprimée !");
+					}else{
+						createFlash("error", "Problème lors de la suppression de la notification");
+					}
+				}else{
+					createFlash("error", "Problème lors de la suppression de la notification");
+				}
 		}
 
 	}
