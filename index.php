@@ -40,7 +40,7 @@ Les formulaires de toutes les vues générées enverront leurs données vers la 
 		break;
 
 		case "account.profile" : 
-			include("templates/account/profile.php");
+			include("templates/profile.php");
 		break;
 
 		case "accueil" : 
