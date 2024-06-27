@@ -158,8 +158,8 @@ function getReceiverConversations($idUser){ // A priori useless mais je laisse Ã
 // On cherche le dernier message qui implique idUser (qu'il soit sender ou receiver)
 function getUserConversations($idUser){
 	$SQL = "SELECT u.id AS userId, firstname, lastname, content, cu.created_at AS created_at
-	FROM (SELECT u.id, firstname, lastname, content, cu.created_at FROM chat_user AS cu INNER JOIN users AS u ON cu.sender_id = u.id WHERE cu.receiver_id = $idUser)
-	UNION (SELECT u.id AS userId, firstname, lastname, content, cu.created_at AS created_at FROM chat_user AS cu INNER JOIN users AS u ON cu.sender_id = u.id WHERE cu.receiver_id = $idUser)
+	FROM (SELECT u.id, firstname, lastname, content, cu.created_at FROM chat_user AS cu INNER JOIN users AS u ON cu.sender_id = u.id WHERE cu.receiver_id = '$idUser')
+	UNION (SELECT u.id AS userId, firstname, lastname, content, cu.created_at AS created_at FROM chat_user AS cu INNER JOIN users AS u ON cu.sender_id = u.id WHERE cu.receiver_id = '$idUser')
 	GROUP BY userId
 	ORDER BY cu.created_at DESC"
 
@@ -173,7 +173,7 @@ function getActiveTripConversations($idUser){
 	INNER JOIN passengers AS p ON ct.trip_id = p.trip_id
 	INNER JOIN trips AS t ON ct.trip_id = t.id
 	INNER JOIN users AS u ON ct.sender_id = u.id
-	WHERE (p.user_id = $idUser OR t.driver_id = $idUser) AND ct.deleted_at IS NULL AND t.status != 2
+	WHERE (p.user_id = '$idUser' OR t.driver_id = '$idUser') AND ct.deleted_at IS NULL AND t.status != 2
 	GROUP BY ct.trip_id
 	ORDER BY ct.created_at DESC";
 
@@ -188,7 +188,5 @@ function getGeneralConversation(){
 	ORDER BY created_at DESC
 	LIMIT 1"
 }
-
-
 
 ?>
