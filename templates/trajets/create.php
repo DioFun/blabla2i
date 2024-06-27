@@ -1,3 +1,28 @@
+<?php
+include_once ('libs/modele.php');
+//C'est la propriété php_self qui nous l'indique : 
+// Quand on vient de index : 
+// [PHP_SELF] => /chatISIG/index.php 
+// Quand on vient directement par le répertoire templates
+// [PHP_SELF] => /chatISIG/templates/accueil.php
+
+// Si la page est appelée directement par son adresse, on redirige en passant pas la page index
+// Pas de soucis de bufferisation, puisque c'est dans le cas où on appelle directement la page sans son contexte
+if (basename($_SERVER["PHP_SELF"]) != "index.php")
+{
+	header("Location:../index.php?view=accueil");
+	die("");
+}
+
+?>
+
+<script>
+    function changeIconColor(){
+        $(".icons:eq(0)").css("fill", "orange");
+    }
+</script>
+
+
 <form action="controleur.php" method="POST">
     <label for="destination">Où allez vous ?</label> <input type="checkbox" id="destination" name="destination"/> <br>
     <label for="departure">D'où partez vous ?</label> <input type="text" id="departure" name="departure" placeholder="Point de rencontre"><br>

@@ -10,8 +10,11 @@ if (basename($_SERVER["PHP_SELF"]) != "index.php")
 
 if (($token === valider("token"))&&($id === valider("id"))): ?>
 
-	
-	
+<script>
+    function changeIconColor(){
+        $(".icons:eq(3)").css("fill", "orange");
+    }
+</script>
 
  
 <div id="corps">

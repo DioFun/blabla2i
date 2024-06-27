@@ -17,26 +17,11 @@ if (basename($_SERVER["PHP_SELF"]) != "index.php")
 ?>
 <script>
     function changeIconColor(){
-        $(".icons:eq(2)").css("fill", "orange");
+        $(".icons:eq(1)").css("fill", "orange");
     }
 </script>
 
-<div id="corps">
-
-<h1>Accueil</h1>
-    <a href="?view=trajets.create"><button class="primary">Créer un trajet</button></a>
-    <h2>Mes trajets</h2>
-    <div class="my-trips">
-        <?php if ($trips = getUserTrips(valider("idUser", "SESSION"))): ?>
-        <?php foreach ($trips as $trip): ?>
-          <div class="trip"><?= $trip['departure'] ?>, <?= $trip['arrival'] ?>, <?= $trip['email'] ?>, <a href="?view=trajets.view&id=<?= $trip['id'] ?>">view</a></div>
-        <?php endforeach; ?>
-        <?php else: ?>
-            Vous n'avez aucun trajet de prévu !
-        <?php endif; ?>
-    </div>
-
-    <h2>Trajets disponibles</h2>
+<h2>Trajets disponibles</h2>
     <div class="available-trips">
         <?php if ($trips = getAvailableTrips(valider("idUser", "SESSION"))): ?>
             <?php foreach ($trips as $trip): ?>
@@ -46,5 +31,3 @@ if (basename($_SERVER["PHP_SELF"]) != "index.php")
             Il n'y a pas de tajets disponibles !
         <?php endif; ?>
     </div>
-
-</div>

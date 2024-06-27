@@ -18,7 +18,11 @@ include_once("libs/maLibForms.php");
 $infos = getUserInfos(valider("idUser","SESSION"));
 
 ?>
-
+<script>
+    function changeIconColor(){
+        $(".icons:eq(3)").css("fill", "orange");
+    }
+</script>
 <div id="settingInfos">
     <button onclick="editInfos()">Edit</button>
     <div id="formEditInfos" style="display:none;">

@@ -3,7 +3,11 @@ include_once 'libs/modele.php';
 $trip = getTrip(valider("id"));
 $car  = getCar($trip['vehicle_id']);
 ?>
-
+<script>
+    function changeIconColor(){
+        $(".icons:eq(1)").css("fill", "orange");
+    }
+</script>
 <form action="controleur.php?id=<?= $trip['id'] ?>" method="POST">
     <label for="destination">Où allez vous ?</label> <input type="checkbox" id="destination" name="destination" <?= $trip['arrival'] ? "checked" : "" ?>/> <br>
     <label for="departure">D'où partez vous ?</label> <input type="text" id="departure" name="departure" placeholder="Point de rencontre" value="<?= $trip['departure'] ?>"><br>

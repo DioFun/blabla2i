@@ -278,7 +278,6 @@ session_start();
 					}
 				}
 				die();
-			break;
 
 			case "suggestUser" :
 				if ($debut = valider("debut")){

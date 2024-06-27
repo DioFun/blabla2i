@@ -1,21 +1,23 @@
 <?php
 // Si la page est appelée directement par son adresse, on redirige en passant pas la page index
-if (basename($_SERVER["PHP_SELF"]) != "index.php")
-{
-	header("Location:../index.php?view=account.profile");
-	die("");
-}
+// if (basename($_SERVER["PHP_SELF"]) != "index.php")
+// {
+// 	header("Location:../index.php?view=account.profile");
+// 	die("");
+// }
 
-if (!valider("connecte",'SESSION'))
-{
-	header("Location:index.php?view=accueil");
-	die("");
-}
+// if (!valider("connecte",'SESSION'))
+// {
+// 	header("Location:index.php?view=accueil");
+// 	die("");
+// }
 include_once("libs/modele.php");
 include_once("libs/maLibUtils.php");
 include_once("libs/maLibForms.php");
 
-$infos = getUserInfos(valider("idUser","SESSION"));
+// $infos = getUserInfos(valider("idUser","SESSION"));
+
+$infos = getUserInfos(1);
 ?>
 
 <style>
@@ -32,7 +34,26 @@ $infos = getUserInfos(valider("idUser","SESSION"));
     .section1{
         display: none;
     }
+    button {
+        background-color: white;
+        border: none;
+        color: orange;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+    
+    }
 </style>
+
+<script>
+    function changeIconColor(){
+        $(".icons:eq(3)").css("fill", "orange");
+    }
+</script>
+
 <script> //Les formulaire d'ajout/modif de calendrier et de numéro sont cachés par défaut, on les affiches à la demande de l'utilisateur
     function createForm(which){
         if (which == "cal"){
@@ -65,6 +86,8 @@ $infos = getUserInfos(valider("idUser","SESSION"));
 <script> //fonction pour afficher la première ou la deuxième section dans le profile (à propos : 0 & Compte : 1)
 function display(which){
     if (which == 0){
+        $("#nav button:eq(1)").css("background-color", "lightgrey");
+        $("#nav button:eq(0)").css("background-color", "white");
         s0 = document.getElementsByClassName("section0");
         for (i = 0; i < s0.length; i++){
             s0[i].style.display = "block";
@@ -75,6 +98,8 @@ function display(which){
         }
     }
     else if (which == 1){
+        $("#nav button:eq(0)").css("background-color", "lightgrey");
+        $("#nav button:eq(1)").css("background-color", "white");
         s0 = document.getElementsByClassName("section0");
         for (i = 0; i < s0.length; i++){
             s0[i].style.display = "none";
@@ -107,9 +132,11 @@ function display(which){
 </script>
 <!-- Mockup : Ici c'est la barre de navigation qui permet de naviguer entre les différentes sections du profile -->
 <div id="nav">
-    <button onclick="display(0)">A propos de vous</button>
-    <button onclick="display(1)">Compte</button>
+    <button style="background-color : white; color : black; font-size : 4ch" onclick="display(0)">A propos de vous</button>
+    <button style="background-color : lightgrey; color : black; font-size : 4ch" onclick="display(1)">Compte</button>
 </div>
+
+<br>
 
 <!-- Mockup : Ici c'est la première section "A propos de vous" qui apparaît avec Prénom + Nom + Mail -->
 <div id="infos" class="section0">
@@ -120,6 +147,7 @@ function display(which){
 
 <!-- Mockup : Ici c'est la deuxième section "Compte" qui apparaît avec la possibilité de modifier ses infos -->
 <div id="settingInfos" class="section1">
+    <h1>Informations</h1>
     <button onclick="editInfos()">Edit</button>
     <div id="formEditInfos" style="display:none;">
         <form action="controleur.php" method="GET">
@@ -167,5 +195,5 @@ function display(which){
         </form>
     </div>
     <!-- Là c'est la liste -->
-    <?php showVehicleList(getUserCar($_SESSION["idUser"]));?>
+    <?php showVehicleList(getUserCar(valider("idUser", "SESSION")));?>
 </div>

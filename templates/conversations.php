@@ -73,6 +73,11 @@ include_once("libs/maLibForms.php");// mkTable, mkLiens, mkSelect ...
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script>
+    function changeIconColor(){
+        $(".icons:eq(4)").css("fill", "orange");
+    }
+</script>
+<script>
 	var i;
 	var jConversation = $("<div class = \"conversation\">")
 						.append("<img/>")
