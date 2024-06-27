@@ -123,6 +123,27 @@ session_start();
                     }
                 }
             break;
+            case "trajets.join":
+                if ($id = valider("id")) {
+                    if (!joinTrip($id)) createFlash("error", "Impossible de rejoindre ce trajet.");
+                    else createFlash('success', "Vous avez rejoins le trajet.");
+                    $qs="?view=trajets.view&id=$id";
+                }
+            break;
+
+            case "trajets.remove-passenger" :
+                $id = valider("user_id");
+                $id = $id ?: valider("idUser", "SESSION");
+                if ($tripId = valider("trip_id")) {
+                    if (removePassenger($id, $tripId)) createFlash("success", "Passager supprimé !");
+                    else createFlash("error", "Impossible de supprimer ce passager.");
+                    $qs = "?view=trajets.view&id=$tripId";
+                } else {
+                    createFlash("error", "Erreur!");
+                    $qs= "?view=trajets.view&id=$tripId";
+                }
+            break;
+
             case "ajax.getAvailableCars" :
                 header("Content-Type: application/json; charset=UTF-8");
                 if ($edited = valider("edit")) $response['cars'] = getAvailableCarsTripBypass(valider("date"), $edited);

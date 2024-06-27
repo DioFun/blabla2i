@@ -27,10 +27,14 @@ $passengers = getPassengers($id);
     Point de rencontre:  <?= $tripDetail['departure']; ?> <br>
     Arrivée : <?= $tripDetail['arrival']; ?> <br>
     Jour du trajet : <?= $tripDetail['date']; ?> <br>
-    Passagers :
+    Passagers : <?php if ($tripDetail['creator_id'] != valider("idUser", "SESSION")): ?>
+    <?php if (isPassenger($tripDetail['id'])): ?> <a href='controleur.php?action=trajets.remove-passenger&trip_id=<?= $id ?>'>quitter</a>
+        <?php else : ?>
+            <a href='controleur.php?action=trajets.join&id=<?= $id ?>'>rejoindre</a>
+        <?php endif; endif; ?>
     <ul>
         <?php foreach ($passengers as $passenger): ?>
-            <li><?= ucfirst($passenger['firstname']) ?> <?= strtoupper($passenger['lastname']) ?> <?php if(valider("idUser", "SESSION") != $passenger['id']): ?><a href="?view=trajets.remove-passenger&trip_id=<?= $id ?>&user_id=<?= $passenger['id'] ?>">-</a> <?php endif; ?></li>
+            <li><?= ucfirst($passenger['firstname']) ?> <?= strtoupper($passenger['lastname']) ?> <?php if(valider("idUser", "SESSION") != $passenger['id'] && $tripDetail['creator_id'] == valider("idUser", "SESSION")): ?><a href="controleur.php?action=trajets.remove-passenger&trip_id=<?= $id ?>&user_id=<?= $passenger['id'] ?>">-</a> <?php endif; ?></li>
         <?php endforeach; ?>
     </ul>
 

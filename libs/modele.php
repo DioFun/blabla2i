@@ -155,7 +155,7 @@ function getUserTrips($id)
 function getAvailableTrips($id)
 {
 	$SQL = "SELECT trips.id FROM trips JOIN passengers ON trips.id = passengers.trip_id WHERE passengers.user_id = '$id'";
-	$SQL = "SELECT * FROM trips JOIN passengers ON trips.id = passengers.trip_id JOIN users ON users.id = trips.creator_id WHERE trips.id NOT IN ({$SQL}) ";
+	$SQL = "SELECT departure, arrival, email, trips.id FROM trips JOIN passengers ON trips.id = passengers.trip_id JOIN users ON users.id = trips.creator_id WHERE trips.id NOT IN ({$SQL}) ";
 	return parcoursRs(SQLSelect($SQL));
 
 }
@@ -223,6 +223,32 @@ function isCarAvailableTripBypass($id, $date, $tripId)
 	$SQL = "SELECT vehicles.id FROM vehicles LEFT JOIN trips ON vehicle_id = vehicles.id WHERE (trips.id IS NULL OR ((trips.id IS NOT NULL AND date<>'$date') OR trips.id = '$tripId')) AND (owner_id = '$userId' OR owner_id = 1) AND vehicles.id = '$id' ";
 
 	return SQLGetChamp($SQL);
+}
+
+function joinTrip($id)
+{
+	$userId = valider("idUser", "SESSION");
+	if (isPassenger($id) || count(getPassengers($id)) >= getTrip($id)['passenger']) return false;
+	$SQL = "INSERT INTO passengers (user_id, trip_id) VALUES ('$userId', '$id')";
+	return SQLInsert($SQL);
+}
+
+function isPassenger($id)
+{
+	$userId = valider("idUser", "SESSION");
+	$SQL = "SELECT id FROM passengers WHERE user_id = '$userId' AND trip_id = '$id'";
+	if (SQLGetChamp($SQL)) return true;
+	return false;
+}
+
+function removePassenger($userId, $tripId)
+{
+	$id = valider("idUser", "SESSION");
+	$trip = getTrip($tripId);
+	if ($trip['creator_id'] == $userId) return false;
+	if ($id != $userId && $id != $trip['creator_id']) return false;
+	$SQL = "DELETE FROM passengers WHERE user_id = '$userId' AND trip_id = '$tripId'";
+	return SQLDelete($SQL);
 }
 
 ?>
