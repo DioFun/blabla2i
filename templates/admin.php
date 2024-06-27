@@ -19,6 +19,26 @@ $infos = getUserInfos(valider("idUser","SESSION"));
 
 ?>
 
+<div id="settingInfos">
+    <button onclick="editInfos()">Edit</button>
+    <div id="formEditInfos" style="display:none;">
+        <form action="controleur.php" method="GET">
+            <p>Nom : </p><input type="text" name="nom" placeholder="Nom" value="<?=$infos["lastname"]?>"/><br />
+            <p>Pr&eacute;nom : </p><input type="text" name="prenom" placeholder="Prénom" value="<?=$infos["firstname"]?>"/><br />
+            <p>Email : </p><input type="text" name="mail" placeholder="E-Mail (en @centrale.centralelille.fr)" value="<?=$infos["email"]?>"/><br />
+            <p>Adresse : </p><input type="text" name="adress" placeholder="Adresse" value="<?=$infos["adress"]?>"/><br />
+            <input type="submit" name="action" value="ModifyInfos" />
+        </form>
+    </div>
+    <div id="settingStaticInfos" style="display:block;">
+        <p>Nom : <?=$infos["lastname"]?></p>
+        <p>Prénom : <?=$infos["firstname"]?></p>
+        <p>Mail : <?=$infos["email"]?></p>
+        <p>Adresse : <?=$infos["adress"]?></p>
+    </div>
+</div>
+
+<br>
 
 <!-- Première section importante de la page admin, les voitures -->
 <div id="voituresProfile">
