@@ -88,7 +88,7 @@ include_once("libs/maLibForms.php");// mkTable, mkLiens, mkSelect ...
 			if (convArray[i].hasOwnProperty("tripId")){
 				jCloneConv.children(".convname").html(convArray[i].t.date + " " + convArray[i].t.heure + " "+ convArray[i].t.departure);
 				jCloneConv.click(window.location.replace("index.php?view=chat&tripId="+convArray[i].tripId));
-			} elseif (convArray[i].hasOwnProperty("userId")){
+			} elseif (convArray[i].hasOwnProperty("userId")) {
 				jCloneConv.children(".convname").html(convArray[i].firstname + " " + convArray[i].lastname);
 				jCloneConv.click(window.location.replace("index.php?view=chat&userId="+convArray[i].userId));
 			} else {
@@ -107,6 +107,7 @@ include_once("libs/maLibForms.php");// mkTable, mkLiens, mkSelect ...
 		$.ajax({
 			type : "GET",
 			url : "controleur.php",
+            data : {"action" : "getConversations"},
 			success : function(oRep){
 				console.log(oRep);
 				var convJSON = JSON.parse(oRep);

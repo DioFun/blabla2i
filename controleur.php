@@ -97,6 +97,20 @@ session_start();
 					echo json_encode(getGeneralMessages());
 				}
 			break;
+
+			case "getUserName" :
+				if ($userId=valider("userId")){
+					$rep = getUserName($userId);
+					echo $rep["firstname"]." ".$rep["lastname"];
+				};
+			break;
+
+			case "getTripName" :
+				if ($tripId = valider("tripId")){
+					$rep = getTripInfos($tripId);
+					echo $rep["date"]." ".$rep["heure"]." ".$rep["departure"];
+				}
+			break;
 		}
 
 	}

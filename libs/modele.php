@@ -215,4 +215,20 @@ function getGeneralConversation(){
 	return parcoursRs(SQLSelect($SQL));
 }
 
+function getUserName($idUser){
+	$SQL = "SELECT firstname, lastname
+	FROM users 
+	WHERE id = '$idUser'";
+
+	return parcoursRs(SQLSelect($SQL))[0];
+}
+
+function getTripInfos($tripId){
+	$SQL = "SELECT date, heure, departure
+	FROM trips
+	WHERE id = '$tripId'";
+
+	return parcoursRs(SQLSelect($SQL))[0];
+}
+
 ?>
