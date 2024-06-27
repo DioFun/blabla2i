@@ -1,4 +1,3 @@
-
 <?php
 
 // V1.0 du 18 mai 2018
@@ -128,8 +127,6 @@ function tprint($tab)
 }
 
 
-
-
 function rediriger($url,$qs="")
 {
 	// if ($qs != "")	 $qs = urlencode($qs);	
@@ -242,9 +239,24 @@ function showBannedUsersList(){
 
 }
 
+
+function canEditTrip($id)
+{
+	if (!($userId = valider("idUser", "SESSION"))) return false;
+	// check if the user is well auth with token
+	$trip = getTrip($id);
+	if ($trip['creator_id'] != $userId) return false; // check if the user is admin
+	return true;
+}
+
+function dd(...$vars)
+{
+	var_dump($vars);
+	die();
+}
+
 ?>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script>
 	// Fonction pour supprimer une notification
 	function removeNotif(id){
@@ -257,7 +269,7 @@ function showBannedUsersList(){
 			}
 		});
 
-		
+
 	}
 </script>
 

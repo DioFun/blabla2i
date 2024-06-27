@@ -12,7 +12,7 @@ session_start();
 	{
 		ob_start ();
 
-		echo "Action = '$action' <br />";
+//		echo "Action = '$action' <br />";
 
 		// Un paramètre action a été soumis, on fait le boulot...
 		switch($action)
@@ -157,6 +157,70 @@ session_start();
 
 			break;
 
+			case 'trajets.create' :
+				$destination = valider("destination") ? "ig2i" : "centrale";
+				$isDriving = valider("driver");
+				if (($departure = valider("departure")) && ($date = valider("date"))
+					&& ($time = valider("time")) && ($passengers = valider("passengers"))
+                    && ($vehicle = valider("car"))) {
+					if (!createTrip($isDriving, $departure, $destination, $date, $time, $passengers, $vehicle)) createFlash("error", "Une erreur est survenue lors de la création !");
+					else createFlash("success", "Le trajet a bien été créé !");
+					$qs = '?view=accueil';
+
+				} else  {
+					$qs = "?view=trajets.create";
+					createFlash("error", "Un ou plusieurs paramètres ne sont pas correctements remplis !");
+				}
+			break;
+
+            case "trajets.remove":
+                $id = valider("id");
+                if (canEditTrip($id)) {
+                    removeTrip($id);
+                    createFlash("success", "Le trajet a bien été supprimé !");
+                }
+                $qs = "?view=accueil";
+            break;
+            case "trajets.edit":
+                if (!canEditTrip(valider('id'))) {
+                    $qs = "?view=accueil";
+                } else {
+                    $id = valider("id");
+                    $destination = valider("destination") ? "ig2i" : "centrale";
+                    $isDriving = valider("driver");
+                    if (($departure = valider("departure")) && ($date = valider("date"))
+                        && ($time = valider("time")) && ($passengers = valider("passengers"))
+                        && $vehicle = valider("car")) {
+                        editTrip($id, $isDriving, $departure, $destination, $date, $time, $passengers, $vehicle);
+                        createFlash("success", "Le trajet a bien été modifié !");
+                        $qs = "?view=trajets.view&id=$id";
+
+                    } else {
+                        $qs = "?view=trajets.edit&id=$id";
+                        createFlash("error", "Un ou plusieurs paramètres ne sont pas correctements remplis !");
+                    }
+                }
+            break;
+            case "trajets.join":
+                if ($id = valider("id")) {
+                    if (!joinTrip($id)) createFlash("error", "Impossible de rejoindre ce trajet.");
+                    else createFlash('success', "Vous avez rejoins le trajet.");
+                    $qs="?view=trajets.view&id=$id";
+                }
+            break;
+
+            case "trajets.remove-passenger" :
+                $id = valider("user_id");
+                $id = $id ?: valider("idUser", "SESSION");
+                if ($tripId = valider("trip_id")) {
+                    if (removePassenger($id, $tripId)) createFlash("success", "Passager supprimé !");
+                    else createFlash("error", "Impossible de supprimer ce passager.");
+                    $qs = "?view=trajets.view&id=$tripId";
+                } else {
+                    createFlash("error", "Erreur!");
+                    $qs= "?view=trajets.view&id=$tripId";
+                }
+            break;
 			case 'getConversations' :
 				$conv["trip"] = getActiveTripConversations($_SESSION['idUser']);
 				$conv["user"] = getUserConversations($_SESSION['idUser']);
@@ -164,7 +228,7 @@ session_start();
 				echo json_encode($conv);
 				die();
 			break;
-			
+
 			case "getChat" :
 				if ($tripId=valider("tripId")){
 					echo json_encode(getTripMessages($tripId));
@@ -218,7 +282,7 @@ session_start();
 			case "suggestUser" :
 				if ($debut = valider("debut")){
 					echo json_encode(suggestUser($debut));
-				} 
+				}
 				die();
 
 			case 'CreationVoiture' :
@@ -315,6 +379,14 @@ session_start();
 		}
 
 
+            case "ajax.getAvailableCars" :
+                header("Content-Type: application/json; charset=UTF-8");
+                if ($edited = valider("edit")) $response['cars'] = getAvailableCarsTripBypass(valider("date"), $edited);
+                else $response['cars'] = getAvailableCars(valider("date"));
+                echo json_encode($response);
+                die();
+
+		}
 	}
 
 	// On redirige toujours vers la page index, mais on ne connait pas le répertoire de base
