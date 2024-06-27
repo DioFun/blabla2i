@@ -231,4 +231,25 @@ function getTripInfos($tripId){
 	return parcoursRs(SQLSelect($SQL))[0];
 }
 
+function sendUserMessage($senderId, $receiverId, $content){
+	$SQL = "INSERT INTO chat_users (sender_id, receiver_id, content)
+	VALUES ('$senderId', '$receiverId', '$content')";
+
+	SQLInsert($SQL);
+}
+
+function sendTripMessage($senderId, $tripId, $content){
+	$SQL = "INSERT INTO chat_users (sender_id, trip_id, content)
+	VALUES ('$senderId', '$tripId', '$content')";
+	
+	SQLInsert($SQL);
+}
+
+function sendGeneralMessage($senderId, $content){
+	$SQL = "INSERT INTO chat_users (sender_id, content)
+	VALUES ('$senderId', '$content')";
+	
+	SQLInsert($SQL);
+}
+
 ?>

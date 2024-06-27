@@ -52,6 +52,7 @@ include_once("libs/maLibForms.php");
 			var messages = getMessages();
 			var i;
 
+			$("#chatCont").html("");
 			for (i = 0; i<messages.legnth; i++){
 				var jCloneMessage = jMessage.clone();
 				if (!cache.hasOwnProperty(messages[i].sender_id)){
@@ -77,6 +78,28 @@ include_once("libs/maLibForms.php");
 			}
 		}
 	}
+
+	function sendMessage(){
+		$.ajax({
+			type : "POST",
+			url : "controleur.php",
+			data : {
+				"action" : "newMessage",
+				"senderId" : userId,
+				"content" : $("input [type=text]").val()},
+				<?php
+					if ($tripId=valider("tripId")) {
+						echo "'tripId' : '$tripId'";
+					}
+					if ($receiverId=valider("receiverId")) {
+						echo "'receiverId' : '$receiverId'";
+					}
+					?>,
+			success : function(){
+				displayMessages();
+			}
+		})
+	}
 </script>
 
 <!--
@@ -90,3 +113,6 @@ include_once("libs/maLibForms.php");
 <div id="chatCont">
 
 </div>
+
+<input type="text"/>
+<input type="button" value ="Envoyer" onclick="sendMessage()"/>
