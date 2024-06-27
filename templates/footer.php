@@ -66,6 +66,7 @@ if (valider("connecte","SESSION"))
             data: {action: "BanUser", idBanUser: id},
             success: function(){
                 $("#listeBannedUsers").append($("#user"+id));
+                $("#user"+id).find("button").attr("onclick", "unbanUser("+id+")").text("Débannir");
             }
         });
     }
@@ -78,6 +79,7 @@ if (valider("connecte","SESSION"))
             data: {action: "UnBanUser", idUnBanUser: id},
             success: function(){
                 $("#listeUsers").append($("#user"+id));
+                $("#user"+id).find("button").attr("onclick", "banUser("+id+")").text("Bannir");
             }
         });
     }
