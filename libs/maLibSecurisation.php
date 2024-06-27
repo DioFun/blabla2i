@@ -22,9 +22,16 @@ include_once "modele.php";	// Car on utilise la fonction connecterUtilisateur()
 function verifUser($login,$password)
 {
 
+
+
 	$id = verifUserBdd($login,$password);
 
+	
+
 	if ($id) {
+		$connectionToken = generateToken();
+		putConnectionToken($id, $connectionToken);
+		$_SESSION["connectionToken"] = $connectionToken;
 		$_SESSION["idUser"] = $id;
 		$_SESSION["pseudo"] = $login;
 		$_SESSION["heureConnexion"] = date("H:i:s");
@@ -37,8 +44,34 @@ function verifUser($login,$password)
 
 
 }
+// Renvoie true si les tokens correspondent et false 
+function verifConnectionToken(){
+
+	$id = valider("idUser", "SESSION");
+
+	$SQL = "SELECT connexion_token,send_at FROM connection_tokens WHERE user_id = '$id';";
+	$tokenConnectionServer = parcoursRs(SQLSelect($SQL));
+	
+	$currentTimestamp = time();
 
 
+	foreach ($tokenConnectionServer as $tokenEntry) {
+        
+
+		// Convertir send_at en timestamp.
+		$sendAtTimestamp = strtotime($tokenEntry['send_at']);
+
+		// Vérifier si le token correspond et si la date d'envoi est inférieure à 1 jour avant la date actuelle.
+		if (valider("connectionToken", "SESSION") === $tokenEntry['connexion_token'] && ($currentTimestamp - $sendAtTimestamp) < 86400) {
+			// Si un token correspondant est trouvé et la date d'envoi est valide
+			$_SESSION["isAdmin"] = isAdmin($id);
+			return true;
+		}
+        
+    }
+
+	return false;
+}
 
 
 /**
