@@ -12,7 +12,7 @@ if (basename($_SERVER["PHP_SELF"]) != "index.php")
  
 <div id="corps">
 
-	<img src="URL_de_l'image" alt="Logo">
+	<img src="../../ressources/logo.png" alt="Logo">
 
 <h1>EMail de réinitialisatiion</h1>
 

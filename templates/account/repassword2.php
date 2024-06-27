@@ -16,7 +16,7 @@ if (($token === valider("token"))&&($id === valider("id"))): ?>
  
 <div id="corps">
 
-	<img src="URL_de_l'image" alt="Logo">
+	<img src="../../ressources/logo.png" alt="Logo">
 
 <h1>Réinitialiser votre mot de passe</h1>
 
