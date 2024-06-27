@@ -279,7 +279,7 @@ function modifyInfos($nom, $prenom, $mail, $adress, $idUser) {
  */
 function addCar($registration, $idUser) {
 
-	$SQL = "SELECT 1 FROM vehicles WHERE registration = '$registration');";
+	$SQL = "SELECT 1 FROM vehicles WHERE registration = '$registration';";
 	if (!empty(parcoursRs(SQLSelect($SQL)))) {
 
 		$qs = "?view=create&msg=". urlencode("Voiture déjà existante !");
