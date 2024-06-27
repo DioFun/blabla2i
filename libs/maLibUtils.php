@@ -208,10 +208,10 @@ function modifyInfos($nom, $prenom, $mail, $adress, $idUser) {
 	$modif = SQLUpdate($SQL);
 	log($modif === 0);
 	if ($modif === 0) {
-		
+
 		$resetToken = generateToken();
 		putResetToken($mail,$resetToken);
-					
+
 		sendResetEmail($mail, $resetToken, $id);
 		return "?view=profile&msg=". urlencode("Informations modifiées avec succès ! Si l'email à été changé, vueillez le confirmer.");
 	}else{
@@ -232,26 +232,84 @@ function showVehicleList($voitures){
 		echo "<p>Vous n'avez pas encore enregistré de voiture</p>";
 	}else{
 		foreach($voitures as $voiture){
-			echo "<div class='voiture'>";
+			echo "<div id='voiture".$voiture["id"]."' class='voiture'>";
 			echo "<img src='../ressources/ec-lille.png' alt='Logo Voiture' />";
 			echo "<p>".$voiture["registration"]."</p>";
 			echo "</div>";
+			echo "<button onclick='deleteCar(".$voiture["id"].")'>Supprimer</button>";
 		}
 	}
 	echo "</div>";
 	return;
 }
 
-function dd(...$args)
+/**
+ * Fonction pour montrer la liste des utilisateurs (page admin)
+ * @return void
+ */
+function showUsersList(){
+	$usersList = getAllUsers();
+	echo "<div id='listeUsers' class='liste'>";
+	echo "<h1>Liste des utilisateurs</h1>";
+	if (count($usersList) == 0){
+		echo "<p>Il n'y a pas encore d'utilisateurs enregistrés</p>";
+	}else{
+		foreach($usersList as $user){
+			echo "<div id='user".$user["id"]."' class='user'>";
+			echo "<p>".$user["lastname"]." ".$user["firstname"]."</p>";
+			echo "<p>".$user["email"]."</p>";
+			echo "<p>".$user["adress"]."</p>";
+			echo "<button onclick='banUser(".$user["id"].")'>Bannir</button>";
+			echo "</div>";
+		}
+	}
+	echo "</div>";
+}
+
+/**
+ * Fonction pour montrer la liste des utilisateurs bannis (page admin)
+ * @return void
+ */
+function showBannedUsersList(){
+	$usersList = getAllBannedUsers();
+	echo "<div id='listeBannedUsers' class='liste'>";
+	echo "<h1>Liste des utilisateurs bannis</h1>";
+	if (count($usersList) == 0){
+		echo "<p>Il n'y a pas encore d'utilisateurs bannis</p>";
+	}else{
+		foreach($usersList as $user){
+			echo "<div id='user".$user["id"]."' class='user'>";
+			echo "<p>".$user["lastname"]." ".$user["firstname"]."</p>";
+			echo "<p>".$user["email"]."</p>";
+			echo "<p>".$user["adress"]."</p>";
+			echo "<button onclick='unbanUser(".$user["id"].")'>Débannir</button>";
+			echo "</div>";
+		}
+	}
+	echo "</div>";
+
+}
+
+
+function canEditTrip($id)
 {
-	var_dump($args);
+	if (!($userId = valider("idUser", "SESSION"))) return false;
+	// check if the user is well auth with token
+	$trip = getTrip($id);
+	if ($trip['creator_id'] != $userId) return false; // check if the user is admin
+	return true;
+}
+
+function dd(...$vars)
+{
+	var_dump($vars);
 	die();
 }
 
 ?>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script>
+	// Fonction pour supprimer une notification
 	function removeNotif(id){
 		$.ajax({
 			url: "controleur.php",
@@ -262,6 +320,47 @@ function dd(...$args)
 			}
 		});
 
-		
+
+	}
+</script>
+
+<script>
+	// Fonction pour supprimer une voiture
+	function deleteCar(id){
+		$.ajax({
+			url: "controleur.php",
+			type: "GET",
+			data: {action: "DeleteCar", id: id},
+			success: function(){
+				$("#voiture"+id).hide();
+			}
+		});
+	}
+</script>
+
+<script>
+	// Fonctions pour bannir ou débannir un utilisateur
+	// ban
+	function banUser(id){
+		$.ajax({
+			url: "controleur.php",
+			type: "GET",
+			data: {action: "BanUser", idBanUser: id},
+			success: function(){
+				$("#listeBannedUsers").append($("#user"+id));
+			}
+		});
+	}
+
+	// unban
+	function unbanUser(id){
+		$.ajax({
+			url: "controleur.php",
+			type: "GET",
+			data: {action: "UnBanUser", idUnBanUser: id},
+			success: function(){
+				$("#listeUsers").append($("#user"+id));
+			}
+		});
 	}
 </script>
