@@ -172,49 +172,6 @@ function showNotif($msg){
 }
 
 /**
- * Ajoute une nouvelle voiture dans la base de données pour un utilisateur donné
- * @param string $registration La plaque d'immatriculation de la voiture
- * @param int $idUser L'identifiant de l'utilisateur
- * @return string Le message à afficher à l'utilisateur
- */
-function addCar($registration, $idUser) {
-
-	$SQL = "SELECT 1 FROM vehicles WHERE registration = '$registration');";
-	if (!empty(parcoursRs(SQLSelect($SQL)))) {
-
-		$qs = "?view=create&msg=". urlencode("Adresse mail déjà utilisée");
-
-	}else{
-
-	$SQL = "INSERT INTO vehicles (registration, owner_id) VALUES ('$registration', '$idUser')";
-	SQLInsert($SQL);
-	$qs = "?view=login&msg=". urlencode("Utilisateur crée avec succès !");
-	}
-
-	return $qs;
-}
-
-/**
- * Modifie les informations d'un utilisateur -> présent dans la page profile.php
- * @param string $nom Le nom de l'utilisateur
- * @param string $prenom Le prénom de l'utilisateur
- * @param string $mail L'adresse mail de l'utilisateur
- * @param string $adress L'adresse de l'utilisateur
- * @param int $idUser L'identifiant de l'utilisateur
- * @return string Le message à afficher à l'utilisateur
- */
-function modifyInfos($nom, $prenom, $mail, $adress, $idUser) {
-	$SQL = "UPDATE users SET lastname = '$nom', firstname = '$prenom', email = '$mail', adress = '$adress' WHERE id = '$idUser'";
-	$modif = SQLUpdate($SQL);
-	log($modif === 0);
-	if ($modif === 0) {
-		return "?view=profile&msg=". urlencode("Informations modifiées avec succès !");
-	}else{
-		return "?view=profile&msg=". urlencode("Erreur lors de la modification des informations.");
-	}
-}
-
-/**
  * Fonction pour montrer la liste des véhicules entrée en paramètre
  * à utiliser avec getUserCar ou getTripCar, par exemple.
  * @param array $voitures La liste des voitures à afficher
@@ -227,19 +184,69 @@ function showVehicleList($voitures){
 		echo "<p>Vous n'avez pas encore enregistré de voiture</p>";
 	}else{
 		foreach($voitures as $voiture){
-			echo "<div class='voiture'>";
+			echo "<div id='voiture".$voiture["id"]."' class='voiture'>";
 			echo "<img src='../ressources/ec-lille.png' alt='Logo Voiture' />";
 			echo "<p>".$voiture["registration"]."</p>";
 			echo "</div>";
+			echo "<button onclick='deleteCar(".$voiture["id"].")'>Supprimer</button>";
 		}
 	}
 	echo "</div>";
 	return;
 }
+
+/**
+ * Fonction pour montrer la liste des utilisateurs (page admin)
+ * @return void
+ */
+function showUsersList(){
+	$usersList = getAllUsers();
+	echo "<div id='listeUsers' class='liste'>";
+	echo "<h1>Liste des utilisateurs</h1>";
+	if (count($usersList) == 0){
+		echo "<p>Il n'y a pas encore d'utilisateurs enregistrés</p>";
+	}else{
+		foreach($usersList as $user){
+			echo "<div id='user".$user["id"]."' class='user'>";
+			echo "<p>".$user["lastname"]." ".$user["firstname"]."</p>";
+			echo "<p>".$user["email"]."</p>";
+			echo "<p>".$user["adress"]."</p>";
+			echo "<button onclick='banUser(".$user["id"].")'>Bannir</button>";
+			echo "</div>";
+		}
+	}
+	echo "</div>";
+}
+
+/**
+ * Fonction pour montrer la liste des utilisateurs bannis (page admin)
+ * @return void
+ */
+function showBannedUsersList(){
+	$usersList = getAllBannedUsers();
+	echo "<div id='listeBannedUsers' class='liste'>";
+	echo "<h1>Liste des utilisateurs bannis</h1>";
+	if (count($usersList) == 0){
+		echo "<p>Il n'y a pas encore d'utilisateurs bannis</p>";
+	}else{
+		foreach($usersList as $user){
+			echo "<div id='user".$user["id"]."' class='user'>";
+			echo "<p>".$user["lastname"]." ".$user["firstname"]."</p>";
+			echo "<p>".$user["email"]."</p>";
+			echo "<p>".$user["adress"]."</p>";
+			echo "<button onclick='unbanUser(".$user["id"].")'>Débannir</button>";
+			echo "</div>";
+		}
+	}
+	echo "</div>";
+
+}
+
 ?>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script>
+	// Fonction pour supprimer une notification
 	function removeNotif(id){
 		$.ajax({
 			url: "controleur.php",
@@ -251,5 +258,46 @@ function showVehicleList($voitures){
 		});
 
 		
+	}
+</script>
+
+<script>
+	// Fonction pour supprimer une voiture
+	function deleteCar(id){
+		$.ajax({
+			url: "controleur.php",
+			type: "GET",
+			data: {action: "DeleteCar", id: id},
+			success: function(){
+				$("#voiture"+id).hide();
+			}
+		});
+	}
+</script>
+
+<script>
+	// Fonctions pour bannir ou débannir un utilisateur
+	// ban
+	function banUser(id){
+		$.ajax({
+			url: "controleur.php",
+			type: "GET",
+			data: {action: "BanUser", idBanUser: id},
+			success: function(){
+				$("#listeBannedUsers").append($("#user"+id));
+			}
+		});
+	}
+
+	// unban
+	function unbanUser(id){
+		$.ajax({
+			url: "controleur.php",
+			type: "GET",
+			data: {action: "UnBanUser", idUnBanUser: id},
+			success: function(){
+				$("#listeUsers").append($("#user"+id));
+			}
+		});
 	}
 </script>
