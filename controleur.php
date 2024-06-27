@@ -31,10 +31,8 @@ session_start();
 					if (verifUser($login,$pass)){
 						createFlash("success", "Connecté !");
 						$qs = "?view=accueil";
-						
-
 					} else {
-						createFlash("error", "Login ou mot de passe incorrect");
+						createFlash("error", "Login ou mot de passe incorrect ou veillez à valider votre email !");
 						$qs = "?view=account.login";
 					}
 				} else createFlash("error", "Login ou mot de passe incorrect");
@@ -83,10 +81,11 @@ session_start();
 
 			case 'ChangerMDPMail' :
 
-				if (($resetMail = valider("resetMail"))&&($id = valider("id"))){
+				if (($resetMail = valider("resetMail"))){
 
 					$resetToken = generateToken();
-					putResetToken($id,$resetToken);
+					putResetToken($resetMail,$resetToken);
+					
 					sendResetEmail($resetMail, $resetToken, $id);
 				}
 

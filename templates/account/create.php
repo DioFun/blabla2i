@@ -17,8 +17,6 @@ if (basename($_SERVER["PHP_SELF"]) != "index.php")
 
 
 
-<?=$info?>
-
 <div id="formLogin">
 	<form action="controleur.php" method="GET">
 		Nom : <input type="text" name="nom" placeholder="Nom"/><br />

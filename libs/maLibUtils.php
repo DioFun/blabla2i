@@ -208,7 +208,12 @@ function modifyInfos($nom, $prenom, $mail, $adress, $idUser) {
 	$modif = SQLUpdate($SQL);
 	log($modif === 0);
 	if ($modif === 0) {
-		return "?view=profile&msg=". urlencode("Informations modifiées avec succès !");
+		
+		$resetToken = generateToken();
+		putResetToken($mail,$resetToken);
+					
+		sendResetEmail($mail, $resetToken, $id);
+		return "?view=profile&msg=". urlencode("Informations modifiées avec succès ! Si l'email à été changé, vueillez le confirmer.");
 	}else{
 		return "?view=profile&msg=". urlencode("Erreur lors de la modification des informations.");
 	}
