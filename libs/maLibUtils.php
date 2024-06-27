@@ -236,6 +236,13 @@ function showVehicleList($voitures){
 	echo "</div>";
 	return;
 }
+
+function dd(...$args)
+{
+	var_dump($args);
+	die();
+}
+
 ?>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>

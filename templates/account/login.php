@@ -32,8 +32,8 @@ if (valider("connecte",'SESSION'))
 		Login : <input type="text" name="login" placeholder="Entrez votre e-mail"/><br />
 		Password : <input type="password" name="pass" placeholder="Entrez votre mot de passe"/><br />
 
-		<a href="index.php?view=create">Créer un compte</a>
-		<a href="index.php?view=repassword">Mot de passe oublié ?</a>
+		<a href="index.php?view=account.create">Créer un compte</a>
+		<a href="index.php?view=account.repassword">Mot de passe oublié ?</a>
 
 		<input type="submit" name="action" value="Connexion" />
 		

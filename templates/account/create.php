@@ -7,11 +7,6 @@ if (basename($_SERVER["PHP_SELF"]) != "index.php")
 	die("");
 }
 
-$info = "";
-if ($msg = valider("msg")) {
-	$info = "<h3 style = \"color:red; \">$msg</h3>";
-}
-
 ?>
  
 <div id="corps">

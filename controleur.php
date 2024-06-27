@@ -35,7 +35,7 @@ session_start();
 
 					} else {
 						createFlash("error", "Login ou mot de passe incorrect");
-						$qs = "?view=login";
+						$qs = "?view=account.login";
 					}
 				} else createFlash("error", "Login ou mot de passe incorrect");
 
@@ -76,7 +76,7 @@ session_start();
 
 				}
 
-				$qs = "?view=login";
+				$qs = "?view=account.login";
 
 
 			break;
@@ -124,7 +124,7 @@ session_start();
 					}
 				}
 
-					$qs = "?view=login";
+					$qs = "?view=account.login";
 
 
 				break;
@@ -143,8 +143,8 @@ session_start();
 						$qs = verifCreateUser($nom,$prenom,$mail,$adress,$pass,$secondpass,$planning);
 
 					} else {
-
-						$qs = "?view=create&msg=". urlencode("Tous les champs doivent être remplis.");
+						createFlash("error", "Tous les champs doivent être remplis.");
+						$qs = "?view=account.create";
 					}
 				
 			break;
@@ -153,15 +153,16 @@ session_start();
 
 				unset($_SESSION['pseudo'], $_SESSION['idUser'], $_SESSION['isAdmin'], $_SESSION['connecte'], $_SESSION['heureConnexion']);
 				createFlash("success", "Déconnecté !");
-				$qs = "?view=login";
+				$qs = "?view=account.login";
 
 			break;
 
 			case 'CreationVoiture' :
 				if ($registrationCar = valider("registrationCar")){
-					$qs = addCar($registrationCar, $_SESSION["idUser"]);
+					$qs = addCar($registrationCar, valider("idUser", "SESSION"));
 				}else{
-					$qs = "?view=profile&msg=". urlencode("Problème avec l'immatriculation entrée");
+					$qs = "?view=account.profile";
+					createFlash("error", "Problème avec l'immatriculation rentrée !");
 				}
 
 			break;
@@ -170,7 +171,8 @@ session_start();
 				if ($calURL = valider("calURL")){
 					$qs = addCal($calURL, $_SESSION["idUser"]);
 				}else{
-					$qs = "?view=profile&msg=". urlencode("Problème avec l'URL du calendrier entrée");
+					$qs = "?view=account.profile";
+					createFlash("error", "Problème avec l'url fourni !");
 				}
 			break;
 
@@ -180,7 +182,7 @@ session_start();
 				// }else{
 				// 	$qs = "?view=profile&msg=". urlencode("Problème avec le numéro entrée");
 				// }
-				$qs = "?view=profile&msg=". urlencode("Pas encore implémentée");
+				$qs = "?view=accont.profile";
 			break;
 
 			case 'ModifyInfos' :
@@ -189,11 +191,11 @@ session_start();
 					&&($mail = valider("mail"))
 					&&($adress = valider("adress"))){
 
-						$qs = modifyInfos($nom,$prenom,$mail,$adress,$_SESSION["idUser"]);
+						$qs = modifyInfos($nom,$prenom,$mail,$adress,valider("idUser", "SESSION"));
 
 					} else {
-
-						$qs = "?view=profile&msg=". urlencode("Tous les champs doivent être remplis.");
+						createFlash("error", "Informations invalides !");
+						$qs = "?view=account.profile";
 					}
 			break;
 
