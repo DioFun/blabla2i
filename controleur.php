@@ -110,6 +110,7 @@ session_start();
 					$rep = getTripInfos($tripId);
 					echo $rep["date"]." ".$rep["heure"]." ".$rep["departure"];
 				}
+				die();
 			break;
 
 			case "newMessage" :
@@ -131,7 +132,14 @@ session_start();
 					}
 				}
 			break;
+
+			case "suggestUser" :
+				if ($debut = valider("debut")){
+					echo "";
+				} 
+			break;
 		}
+
 
 	}
 

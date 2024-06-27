@@ -76,7 +76,6 @@ include_once("libs/maLibForms.php");
 				if (messages[i].sender_id == userId) jCloneMessage.addClass("loggedInUserMessage"); // pour différencier message de l'utilisateur connecté et les autres
 				$("#chatCont").append(jCloneMessage);
 			}
-			var refreshChat = setInterval(displayMessages, 1000);
 		}
 	}
 
@@ -101,6 +100,11 @@ include_once("libs/maLibForms.php");
 			}
 		})
 	}
+
+	$(document).ready(function(){
+		displayMessages();
+		refreshChat = setInterval(displayMessages, 1000);
+	})
 </script>
 
 <!--
@@ -110,7 +114,7 @@ include_once("libs/maLibForms.php");
 	<div class = "messDate">Date & heure</div>
 </div>
 -->
-<body onload="displayMessages()">
+<body>
 	<div id="chatCont">
 
 	</div>

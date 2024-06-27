@@ -252,4 +252,12 @@ function sendGeneralMessage($senderId, $content){
 	SQLInsert($SQL);
 }
 
+function suggestUser($debut){
+	$SQL = "SELECT id, fistname, lastname
+	FROM users 
+	WHERE firstname LIKE '$debut' OR lastname LIKE '$debut'";
+
+	return parcoursRS(SQLSelect($SQL));
+}
+
 ?>

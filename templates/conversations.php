@@ -79,6 +79,7 @@ include_once("libs/maLibForms.php");// mkTable, mkLiens, mkSelect ...
 						.append("<div class = \"convName\">")
 						.append("<div class = \"convMessage\">")
 						.append("<div class = \"convDate\">");
+    var cacheSuggest;
 
     function refreshMessages(){
         $("#convCont").html("");
@@ -100,7 +101,6 @@ include_once("libs/maLibForms.php");// mkTable, mkLiens, mkSelect ...
 
 			$("#convCont").append(jCloneArray);
 		}
-        var refreshConv = setInterval(refreshMessages, 1000);
     }
 
     function getConversations(){
@@ -123,15 +123,85 @@ include_once("libs/maLibForms.php");// mkTable, mkLiens, mkSelect ...
 		if (a.created_at > b.created_at) return 1;
 		return 0;
 	}
+
+    function suggestUsers(regex){
+        $.ajax({
+            url : "controleur.php",
+            type : "GET",
+            data : {"action" : "suggestUsers",
+                    "" : "",
+            },
+            success : function(oRep){
+
+            }
+        })
+    }
+
+    $(document).ready(function(){
+        console.log("Ok");
+        $("#newMessageForm").hide();
+        refreshMessages();
+        refreshConv = setInterval(refreshMessages, 1000);
+        $("#newMessageTo").click(function(){
+            $("#newMessageForm").show();
+        });
+        $("#newMessageForm button").click(function(){
+            $.ajax({
+                url : "controleur.php",
+                type : "POST",
+                data : {
+                    "action" : "newMessage",
+                    "senderId" :   <?php 
+                                        echo $_SESSION["idUser"];
+                                    ?>,
+                    "receiverId" : $("#receiver").data("userId"),
+                    "content" : $("#content").val()
+                }, 
+                success : function(oRep){
+                    console.log(oRep);
+                    refreshMessages();
+                }
+            })
+        });
+
+        $("#receiver").keyup(function(){
+            var userInput = $("#receiver").val();
+            if (userInput == "") $("#newMessageForm").hide();
+            else {
+                if (!cacheSuggest.hasOwnProperty("userInput")) {
+                    $.ajax({
+                        url : "controleur.php",
+                        type : "GET",
+                        data : {
+                            "action" : "suggestUser",
+                            "debut" : userInput
+                        },
+                        success : function(Orep){
+                            console.log(Orep);
+                            repJSON = JSON.parce(Orep);
+                            var i;
+                            for (i = 0; i<repJSON.length; i++){
+                                var option = $("<div>").html(repJSON[i].firstname + " " + repJSON[i].lastname)
+                                                        .data("userId", repJSON[i].id)
+                                                        .click(function(){
+                                                            $("#receiver").html(option.html())
+                                                                            .data(option.data);
+                                                        });
+                                $("#suggest").append(option);
+                            }
+                        }
+                    })
+                }
+            }
+        })
+    })
 </script>
 
-<body onload="refreshMessages()">
+<body>
     <div id="topBarConv">
         <div id="titleConv">Conversations</div>
-        <div id = "archiveButton"><a href = "#">Archives</a></div>
+        <div id = "newMessageTo">Nouveau message</div>
     </div>
-
-<!-- Mettre un header avec un bouton "conversations archivées" -->
 
 <!-- On place les conversations dans des divs de classe .conversation-->
 
@@ -144,6 +214,14 @@ include_once("libs/maLibForms.php");// mkTable, mkLiens, mkSelect ...
 	<div class = "convDate">Date ou heure du dernier message</div>
 </div>
 -->
+
+    <div id="newMessageForm">
+        <input type="text" placeholder="Destinataire" id="receiver"/>
+        <div id = "suggest"></div>
+        <input type="text" placeholder="Message" id="content"/>
+        <input type="button" value = "Envoyer"/>
+    </div>
+
     <div id="convCont">
         <div class = "conversation">
             <img class = "convPp"/>
@@ -159,3 +237,5 @@ include_once("libs/maLibForms.php");// mkTable, mkLiens, mkSelect ...
     <div id="loadMoreButton">
         <div>Charger plus de messages</div>
     </div>
+
+</body>
