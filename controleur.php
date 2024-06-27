@@ -158,17 +158,30 @@ session_start();
 			break;
 
 			case 'CreationVoiture' :
-				if ($registrationCar = valider("registrationCar")){
-					$qs = addCar($registrationCar, $_SESSION["idUser"]);
+				if (($registrationCar = valider("registrationCar")) && ($idOwner = valider("idUser", "SESSION"))){
+					$qs = addCar($registrationCar, $idOwner);
 				}else{
 					$qs = "?view=profile&msg=". urlencode("Problème avec l'immatriculation entrée");
 				}
 
 			break;
 
+			case 'SuppressionVoiture' :
+				if (($idCar = valider("idCar")) && ($idOwner = valider("idUser", "SESSION"))){
+					$res = deleteCar($idCar, $idOwner);
+					if ($res){
+						createFlash("success", "Voiture supprimée !");
+					}else{
+						createFlash("error", "Problème lors de la suppression de la voiture");
+					}
+				}else{
+					createFlash("error", "Problème lors de la suppression de la voiture");
+				}
+			break;
+
 			case 'CreationCal' :
-				if ($calURL = valider("calURL")){
-					$qs = addCal($calURL, $_SESSION["idUser"]);
+				if (($calURL = valider("calURL")) && ($idUser = valider("idUser", "SESSION"))){
+					$qs = addCal($calURL, $idUser);
 				}else{
 					$qs = "?view=profile&msg=". urlencode("Problème avec l'URL du calendrier entrée");
 				}
@@ -198,7 +211,7 @@ session_start();
 			break;
 
 			case 'DeleteNotif' :
-				if ($id = valider("id") && $viewOfNotif = valider("viewOfNotif")){
+				if ($id = valider("id")){
 					$res = deleteNotif($id);
 					if ($res){
 						createFlash("success", "Notification supprimée !");
@@ -208,6 +221,33 @@ session_start();
 				}else{
 					createFlash("error", "Problème lors de la suppression de la notification");
 				}
+			break;
+
+			case 'BanUser' :
+				if (($idBanUser = valider("idBanUser")) && valider("isAdmin", "SESSION")){
+					$res = banUser($idBanUser);
+					if ($res){
+						createFlash("success", "Utilisateur banni !");
+					}else{
+						createFlash("error", "Problème lors du bannissement de l'utilisateur");
+					}
+				}else{
+					createFlash("error", "Problème lors du bannissement de l'utilisateur");
+				}
+			break;
+
+			case 'UnBanUser' :
+				if (($idUnBanUser = valider("idUnBanUser")) && valider("isAdmin", "SESSION")){
+					$res = unbanUser($idBanUser);
+					if ($res){
+						createFlash("success", "Utilisateur retiré des bans !");
+					}else{
+						createFlash("error", "Problème lors du bannissement de l'utilisateur");
+					}
+				}else{
+					createFlash("error", "Problème lors du bannissement de l'utilisateur");
+				}
+			break;
 		}
 
 	}

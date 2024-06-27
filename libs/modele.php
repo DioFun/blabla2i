@@ -252,12 +252,67 @@ function getUserInfos($idUser){
 }
 
 /**
+ * Modifie les informations d'un utilisateur -> présent dans la page profile.php
+ * @param string $nom Le nom de l'utilisateur
+ * @param string $prenom Le prénom de l'utilisateur
+ * @param string $mail L'adresse mail de l'utilisateur
+ * @param string $adress L'adresse de l'utilisateur
+ * @param int $idUser L'identifiant de l'utilisateur
+ * @return string Le message à afficher à l'utilisateur
+ */
+function modifyInfos($nom, $prenom, $mail, $adress, $idUser) {
+	$SQL = "UPDATE users SET lastname = '$nom', firstname = '$prenom', email = '$mail', adress = '$adress' WHERE id = '$idUser'";
+	$modif = SQLUpdate($SQL);
+	log($modif === 0);
+	if ($modif === 0) {
+		return "?view=profile&msg=". urlencode("Informations modifiées avec succès !");
+	}else{
+		return "?view=profile&msg=". urlencode("Erreur lors de la modification des informations.");
+	}
+}
+
+/**
+ * Ajoute une nouvelle voiture dans la base de données pour un utilisateur donné
+ * @param string $registration La plaque d'immatriculation de la voiture
+ * @param int $idUser L'identifiant de l'utilisateur
+ * @return string Le message à afficher à l'utilisateur
+ */
+function addCar($registration, $idUser) {
+
+	$SQL = "SELECT 1 FROM vehicles WHERE registration = '$registration');";
+	if (!empty(parcoursRs(SQLSelect($SQL)))) {
+
+		$qs = "?view=create&msg=". urlencode("Adresse mail déjà utilisée");
+
+	}else{
+
+	$SQL = "INSERT INTO vehicles (registration, owner_id) VALUES ('$registration', '$idUser')";
+	SQLInsert($SQL);
+	$qs = "?view=login&msg=". urlencode("Utilisateur crée avec succès !");
+	}
+
+	return $qs;
+}
+
+/**
+ * Supprime une voiture de la base de données
+ * @param int $idCar L'identifiant de la voiture
+ * @param int $userId L'identifiant de l'utilisateur
+ * @return string Le message à afficher à l'utilisateur
+ */
+function deleteCar($idCar, $userId) {
+	$SQL = "DELETE FROM vehicles WHERE id = '$idCar' AND owner_id = '$userId'";
+	$res = SQLDelete($SQL);
+	return $res;
+}
+
+/**
  * Récupère les voitures d'un utilisateur
  * @param int $idUser L'identifiant de l'utilisateur
  * @return array La liste des voitures de l'utilisateur
  */
 function getUserCar($idUser) {
-	$SQL = "SELECT registration FROM vehicles WHERE owner_id = '$idUser'";
+	$SQL = "SELECT id, registration FROM vehicles WHERE owner_id = '$idUser'";
 	return parcoursRs(SQLSelect($SQL));
 }
 
@@ -270,8 +325,6 @@ function getTripCar($idTrip){
 	$SQL = "SELECT v.registration FROM vehicles v JOIN trips t ON v.id = t.vehicle_id WHERE t.id = '$idTrip'";
 	return parcoursRs(SQLSelect($SQL))[0];
 }
-
-
 
 /**
  * Fonction popur créer une notif en y rentrant l'id de l'utilisateur (vu qu'on met pas le message dans la bdd)
@@ -306,4 +359,43 @@ function deleteNotif($idNotif){
 	return !$res;
 }
 
+/**
+ * Fonction pour récupérer tous les utilisateurs
+ * @return array La liste des utilisateurs
+ */
+function getAllUsers(){
+	$SQL = "SELECT id, lastname, firstname, email, adress FROM users WHERE role = 1";
+	return parcoursRs(SQLSelect($SQL));
+}
+
+/**
+ * Fonction pour récupérer tous les utilisateurs bannis
+ * @return array La liste des utilisateurs bannis
+ */
+function getAllBannedUsers(){
+	$SQL = "SELECT id, lastname, firstname, email, adress FROM users WHERE role = 2";
+	return parcoursRs(SQLSelect($SQL));
+}
+
+/**
+ * Fonction pour bannir un utilisateur
+ * @param int $idUser L'identifiant de l'utilisateur à bannir
+ * @return bool | int Le résultat de la requête
+ */
+function banUser($idUser){
+	$SQL = "UPDATE users SET role = 2 WHERE id = '$idUser'";
+	$res = SQLUpdate($SQL);
+	return $res;
+}
+
+/**
+ * Fonction pour débannir un utilisateur
+ * @param int $idUser L'identifiant de l'utilisateur à débannir
+ * @return bool | int Le résultat de la requête
+ */
+function unBanUser($idUser){
+	$SQL = "UPDATE users SET role = 1 WHERE id = '$idUser'";
+	$res = SQLUpdate($SQL);
+	return $res;
+}
 ?>
