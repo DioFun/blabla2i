@@ -41,7 +41,7 @@ echo "<?xml version=\"1.0\" encoding=\"utf-8\" ?>";
 <a href="index.php?view=accueil">Accueil</a>
 <a href="index.php?view=accueil">Rajouter trajet</a>
 <a href="index.php?view=accueil">Rechercher</a>
-<a href="index.php?view=accueil">Profil</a>
+<a href="index.php?view=account.profile">Profile</a>
 <a href="index.php?view=conversation">Conversations</a>
 
 
