@@ -84,6 +84,7 @@ session_start();
 				$conv["user"] = getUserConversations($_SESSION['idUser']);
 				$conv["general"] = getGeneralConversation();
 				echo json_encode($conv);
+				die();
 			break;
 			
 			case "getChat" :
@@ -96,6 +97,7 @@ session_start();
 				else{ // chat général
 					echo json_encode(getGeneralMessages());
 				}
+				die();
 			break;
 
 			case "getUserName" :
@@ -103,6 +105,7 @@ session_start();
 					$rep = getUserName($userId);
 					echo $rep["firstname"]." ".$rep["lastname"];
 				};
+				die();
 			break;
 
 			case "getTripName" :
@@ -131,12 +134,14 @@ session_start();
 							sendGeneralMessage($senderId, $content);
 					}
 				}
+				die();
 			break;
 
 			case "suggestUser" :
 				if ($debut = valider("debut")){
-					echo "";
+					echo json_encode(suggestUser($debut));
 				} 
+				die();
 			break;
 		}
 
