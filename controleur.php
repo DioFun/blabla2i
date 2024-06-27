@@ -157,6 +157,70 @@ session_start();
 
 			break;
 
+			case 'getConversations' :
+				$conv["trip"] = getActiveTripConversations($_SESSION['idUser']);
+				$conv["user"] = getUserConversations($_SESSION['idUser']);
+				$conv["general"] = getGeneralConversation();
+				echo json_encode($conv);
+				die();
+			break;
+			
+			case "getChat" :
+				if ($tripId=valider("tripId")){
+					echo json_encode(getTripMessages($tripId));
+					}
+				elseif ($userId=valider("userId")){
+					echo json_encode(getUserMessages($_SESSION['iduUser'], $userId));
+				}
+				else{ // chat général
+					echo json_encode(getGeneralMessages());
+				}
+				die();
+			break;
+
+			case "getUserName" :
+				if ($userId=valider("userId")){
+					$rep = getUserName($userId);
+					echo $rep["firstname"]." ".$rep["lastname"];
+				};
+				die();
+			break;
+
+			case "getTripName" :
+				if ($tripId = valider("tripId")){
+					$rep = getTripInfos($tripId);
+					echo $rep["date"]." ".$rep["heure"]." ".$rep["departure"];
+				}
+				die();
+			break;
+
+			case "newMessage" :
+				if ($tripId = valider("tripId")){
+					if ($senderId = valider("senderId")
+						&& $content = valider("content")){
+							sendTripMessage($senderId, $tripId, $content);
+					}
+				} elseif ($receiverId=valider("receiverId")){
+					if ($senderId = valider("senderId")
+						&& $content = valider("content")){
+							sendUserMessage($senderId, $receiverId, $content);
+					}
+				}
+				else { // chat général
+					if ($senderId = valider("senderId")
+						&& $content = valider("content")){
+							sendGeneralMessage($senderId, $content);
+					}
+				}
+				die();
+			break;
+
+			case "suggestUser" :
+				if ($debut = valider("debut")){
+					echo json_encode(suggestUser($debut));
+				} 
+				die();
+
 			case 'CreationVoiture' :
 				if (($registrationCar = valider("registrationCar")) && ($idOwner = valider("idUser", "SESSION"))){
 					$qs = addCar($registrationCar, $idOwner);
@@ -249,6 +313,7 @@ session_start();
 				}
 			break;
 		}
+
 
 	}
 

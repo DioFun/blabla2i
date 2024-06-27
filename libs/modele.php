@@ -199,6 +199,143 @@ function isAdmin($idUser)
 
 }
 
+function getGeneralMessages(){
+
+	/*
+	$SQL = "SELECT u.firstname, u.lastname, u.id, cg.idsender, cg.content, cg.created_at FROM chat_global AS cg 
+	INNER JOIN users AS u 
+	ON cg.sender_id = u.id 
+	WHERE cg.deleted_at IS NULL
+	ORDER BY created_at DESC";
+	*/
+	$SQL = "SELECT sender_id, content, created_at
+	FROM chat_global
+	WHERE deleted_at IS NULL
+	ORDER BY created_date DESC";
+
+	return parcoursRs(SQLSelect($SQL));
+}
+
+function getUserMessages($user1Id,$user2Id){
+	$SQL = "SELECT sender_id, content, created_at
+	FROM chat_users
+	WHERE (receiver_id = '$user1Id' OR sender_id = '$user1Id') AND (receiver_id = '$user2Id' OR sender_id = '$user2Id') AND deleted_at IS NULL
+	ORDER BY created_at DESC";
+
+	return parcoursRs(SQLSelect($SQL));
+}
+
+function getTripMessages($tripId){
+	$SQL = "SELECT sender_id, content, created_at
+	FROM chat_trips
+	WHERE trip_id = '$tripId' AND deleted_at IS NULL
+	ORDER BY created_at DESC";
+
+	return parcoursRs(SQLSelect($SQL));
+}
+
+function getSenderConversations($idUser){ // A priori useless mais je laisse ça là en attendant de test
+	$SQL = "SELECT u.id AS userId, firstname, lastname, content, ct.created_at AS created_at
+	FROM chat_user AS cu
+	INNER JOIN users AS u ON cu.receiver_id = u.id
+	WHERE cu.sender_id = $idUser
+	ORDER BY cu.created_at DESC";
+
+	return parcoursRs(SQLSelect($SQL));		
+}
+
+function getReceiverConversations($idUser){ // A priori useless mais je laisse ça là en attendant de test
+	$SQL = "SELECT u.id AS userId, firstname, lastname, content, cu.created_at AS created_at
+	FROM chat_user AS cu
+	INNER JOIN users AS u ON cu.sender_id = u.id
+	WHERE cu.receiver_id = $idUser
+	GROUP BY userId
+	ORDER BY cu.created_at DESC";
+
+	return parcoursRs(SQLSelect($SQL));
+}
+
+// On cherche le dernier message qui implique idUser (qu'il soit sender ou receiver)
+function getUserConversations($idUser){
+	$SQL = "SELECT u.id AS userId, firstname, lastname, content, cu.created_at AS created_at
+	FROM (SELECT u.id, firstname, lastname, content, cu.created_at FROM chat_user AS cu INNER JOIN users AS u ON cu.sender_id = u.id WHERE cu.receiver_id = '$idUser')
+	UNION (SELECT u.id AS userId, firstname, lastname, content, cu.created_at AS created_at FROM chat_user AS cu INNER JOIN users AS u ON cu.sender_id = u.id WHERE cu.receiver_id = '$idUser')
+	GROUP BY userId
+	ORDER BY cu.created_at DESC";
+
+	return parcoursRs(SQLSelect($SQL));
+}
+
+function getActiveTripConversations($idUser){
+	// On prend la date et l'heure pour le nom de la conversation
+	$SQL = "SELECT ct.trip_id AS tripId, t.date, t.heure, t.departure, firstname, lastname, content, ct.created_at AS created_at
+	FROM chat_trips AS ct
+	INNER JOIN passengers AS p ON ct.trip_id = p.trip_id
+	INNER JOIN trips AS t ON ct.trip_id = t.id
+	INNER JOIN users AS u ON ct.sender_id = u.id
+	WHERE (p.user_id = '$idUser' OR t.driver_id = '$idUser') AND ct.deleted_at IS NULL AND t.status != 2
+	GROUP BY ct.trip_id
+	ORDER BY ct.created_at DESC";
+
+	return parcoursRs(SQLSelect($SQL));
+}
+
+function getGeneralConversation(){
+	$SQL = "SELECT firstname, lastname, content, cg.created_at AS created_at
+	FROM chat_global AS cg
+	INNER JOIN users AS u ON cg.sender_id = u.id 
+	WHERE cg.deleted_at IS NULL
+	ORDER BY created_at DESC
+	LIMIT 1";
+
+	return parcoursRs(SQLSelect($SQL));
+}
+
+function getUserName($idUser){
+	$SQL = "SELECT firstname, lastname
+	FROM users 
+	WHERE id = '$idUser'";
+
+	return parcoursRs(SQLSelect($SQL))[0];
+}
+
+function getTripInfos($tripId){
+	$SQL = "SELECT date, heure, departure
+	FROM trips
+	WHERE id = '$tripId'";
+
+	return parcoursRs(SQLSelect($SQL))[0];
+}
+
+function sendUserMessage($senderId, $receiverId, $content){
+	$SQL = "INSERT INTO chat_users (sender_id, receiver_id, content)
+	VALUES ('$senderId', '$receiverId', '$content')";
+
+	SQLInsert($SQL);
+}
+
+function sendTripMessage($senderId, $tripId, $content){
+	$SQL = "INSERT INTO chat_users (sender_id, trip_id, content)
+	VALUES ('$senderId', '$tripId', '$content')";
+	
+	SQLInsert($SQL);
+}
+
+function sendGeneralMessage($senderId, $content){
+	$SQL = "INSERT INTO chat_users (sender_id, content)
+	VALUES ('$senderId', '$content')";
+	
+	SQLInsert($SQL);
+}
+
+function suggestUser($debut){
+	$SQL = "SELECT id, fistname, lastname
+	FROM users 
+	WHERE firstname LIKE '$debut' OR lastname LIKE '$debut'";
+
+	return parcoursRS(SQLSelect($SQL));
+}
+
 function recupToken($idUser)
 {
 	$SQL = "SELECT confirmation_token from users

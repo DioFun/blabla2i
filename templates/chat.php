@@ -15,52 +15,110 @@ if (basename($_SERVER["PHP_SELF"]) != "index.php")
 include_once("libs/modele.php");
 include_once("libs/maLibUtils.php");
 include_once("libs/maLibForms.php");
-
-
-// On récupère l'id de la conversation à afficher, dans idConv
-$idConv = getValue("idConv");
-if (!$idConv)
-{
-	// pas d'identifiant ! On redirige vers la page de choix de la conversation
-
-	// NB : pose quelques soucis car on a déjà envoyé la bannière... 
-	// Il y a opportunité d'écrire cette bannière plus tard si on la place en absolu
-	header("Location:index.php?view=conversations"); 
-	die("idConv manquant");
-}
-
-// On récupère les paramètres de la conversation
-$dataConv = getConversation($idConv); 
-if (!$dataConv)
-{
-	// La conversation n'existe pas ! 
-	header("Location:index.php?view=conversations");
-	die("La conversation n'existe pas ");
-}
-
-// Afficher le thème de la conversation courante
-tprint($dataConv);
-
-// Les messages 
-$messages = listerMessages($idConv);
-tprint($messages);
-
-// Ajout d'un message ?
-// Seulement si la conversation est active et si l'utilisateur est identifié ... 
-// Si la conversation est active, on écrit un peu de code javascript pour recharger la page régulièrement
 ?>
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+	var cache; // on associe userId et le nom de l'utilisateur pour l'affichage
+	<?php
+		echo "var userId =".$_SESSION["idUser"]; // pour la mise en page (utilisateur connecté à droite dans le chat)
+	?>
 
+	var jMessage = $("<div class = \"Message\">")
+												.append("<div class =\"senderName\">")
+												.append("<div class = \"messContent\">")
+												.append("<div class = \"messDate\">");
 
+	function getMessages(){
+		$.ajax({
+			type : "GET",
+			url : "controleur.php",
+			data : {"action" : "getChat"
+					<?php
+					if ($tripId=valider("tripId")) {
+						echo "'tripId' : '$tripId'";
+					}
+					if ($userId=valider("userId")) {
+						echo "'userId' : '$userId'";
+					}
+					?>},
+			success : function(oRep){
+				console.log(oRep);
+				return JSON.parse(oRep);
+			}
+		})
 
+		function displayMessages(){
+			var messages = getMessages();
+			var i;
 
+			$("#chatCont").html("");
+			for (i = 0; i<messages.legnth; i++){
+				var jCloneMessage = jMessage.clone();
+				if (!cache.hasOwnProperty(messages[i].sender_id)){
+					$.ajax({
+						type: "GET",
+						url : "controleur.php",
+						data : {
+							"action" : "getUserName",
+							"userId" : messages[i].sender_id
+						},
+						succes : function(oRep){
+							console.log(oRep);
+							cache.messages[i].sender_id = oRep;
+						}
+					})
+				}
+				jCloneMessage.children(".senderName").html(cache.messages[i].sender_id);
+				jCloneMessage.children(".messContent").html(messages[i].content);
+				jCloneMessage.children(".messDate").html(messages[i].created_at);
 
+				if (messages[i].sender_id == userId) jCloneMessage.addClass("loggedInUserMessage"); // pour différencier message de l'utilisateur connecté et les autres
+				$("#chatCont").append(jCloneMessage);
+			}
+		}
+	}
 
+	function sendMessage(){
+		$.ajax({
+			type : "POST",
+			url : "controleur.php",
+			data : {
+				"action" : "newMessage",
+				"senderId" : userId,
+				"content" : $("input [type=text]").val()},
+				<?php
+					if ($tripId=valider("tripId")) {
+						echo "'tripId' : '$tripId'";
+					}
+					if ($receiverId=valider("receiverId")) {
+						echo "'receiverId' : '$receiverId'";
+					}
+					?>,
+			success : function(){
+				displayMessages();
+			}
+		})
+	}
 
+	$(document).ready(function(){
+		displayMessages();
+		refreshChat = setInterval(displayMessages, 1000);
+	})
+</script>
 
+<!--
+<div class="message loggedInUserMessage">
+	<div class ="senderName">Nom sender</div>
+	<div class = "messContent">Contenu</div>
+	<div class = "messDate">Date & heure</div>
+</div>
+-->
+<body>
+	<div id="chatCont">
 
+	</div>
 
-
-
-
-
+	<input type="text"/>
+	<input type="button" value ="Envoyer" onclick="sendMessage()"/>
+</body>
