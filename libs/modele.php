@@ -356,7 +356,7 @@ function recupConfirmationToken($idUser)
 function putConnectionToken($idUser, $connectionToken)
 {
 
-	$SQL = "UPDATE connection_tokens SET connection_token = '$resetToken' WHERE user_id = '$id';";
+	$SQL = "UPDATE connection_tokens SET connection_token = '$connectionToken' WHERE user_id = '$idUser';";
 	SQLUpdate($SQL);
 
 }
@@ -421,11 +421,13 @@ function addCar($registration, $idUser) {
 		$qs = "?view=create&msg=". urlencode("Voiture déjà existante !");
 
 	}else{
-
-	$SQL = "INSERT INTO vehicles (registration, owner_id) VALUES ('$registration', '$idUser');";
-	SQLInsert($SQL);
-	$qs = "?view=login&msg=". urlencode("Utilisateur crée avec succès !");
+		$SQL = "INSERT INTO vehicles (registration, owner_id) VALUES ('$registration', '$idUser');";
+		SQLInsert($SQL);
+		$qs = "?view=login&msg=". urlencode("Utilisateur crée avec succès !");
 	}
+
+	return $qs;
+}
 function createTrip($isDriving, $departure, $arrival, $date, $hour, $passengers, $vehicle)
 {
 
@@ -553,8 +555,6 @@ function removePassenger($userId, $tripId)
 	$SQL = "DELETE FROM passengers WHERE user_id = '$userId' AND trip_id = '$tripId'";
 	return SQLDelete($SQL);
 }
-	return $qs;
-}
 
 /**
  * Supprime une voiture de la base de données
@@ -660,4 +660,4 @@ function unBanUser($idUser){
 	$res = SQLUpdate($SQL);
 	return $res;
 }
-?>
+

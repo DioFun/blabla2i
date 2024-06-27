@@ -369,7 +369,7 @@ session_start();
 
 			case 'UnBanUser' :
 				if (($idUnBanUser = valider("idUnBanUser")) && valider("isAdmin", "SESSION")){
-					$res = unbanUser($idBanUser);
+					$res = unbanUser($idUnBanUser);
 					if ($res){
 						createFlash("success", "Utilisateur retiré des bans !");
 					}else{
@@ -379,10 +379,8 @@ session_start();
 					createFlash("error", "Problème lors du bannissement de l'utilisateur");
 				}
 			break;
-		}
 
-
-            case "ajax.getAvailableCars" :
+            case "ajax.getAvailableCars":
                 header("Content-Type: application/json; charset=UTF-8");
                 if ($edited = valider("edit")) $response['cars'] = getAvailableCarsTripBypass(valider("date"), $edited);
                 else $response['cars'] = getAvailableCars(valider("date"));
