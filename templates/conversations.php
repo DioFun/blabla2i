@@ -79,7 +79,6 @@ include_once("libs/maLibForms.php");// mkTable, mkLiens, mkSelect ...
 						.append("<div class = \"convName\">")
 						.append("<div class = \"convMessage\">")
 						.append("<div class = \"convDate\">");
-    var cacheSuggest;
 
     function refreshMessages(){
         $("#convCont").html("");
@@ -168,30 +167,28 @@ include_once("libs/maLibForms.php");// mkTable, mkLiens, mkSelect ...
             var userInput = $("#receiver").val();
             if (userInput == "") $("#newMessageForm").hide();
             else {
-                if (!cacheSuggest.hasOwnProperty("userInput")) {
-                    $.ajax({
-                        url : "controleur.php",
-                        type : "GET",
-                        data : {
-                            "action" : "suggestUser",
-                            "debut" : userInput
-                        },
-                        success : function(Orep){
-                            console.log(Orep);
-                            repJSON = JSON.parce(Orep);
-                            var i;
-                            for (i = 0; i<repJSON.length; i++){
-                                var option = $("<div>").html(repJSON[i].firstname + " " + repJSON[i].lastname)
-                                                        .data("userId", repJSON[i].id)
-                                                        .click(function(){
-                                                            $("#receiver").html(option.html())
-                                                                            .data(option.data);
-                                                        });
-                                $("#suggest").append(option);
-                            }
+                $.ajax({
+                    url : "controleur.php",
+                    type : "GET",
+                    data : {
+                        "action" : "suggestUser",
+                        "debut" : userInput
+                    },
+                    success : function(Orep){
+                        console.log(Orep);
+                        repJSON = JSON.parce(Orep);
+                        var i;
+                        for (i = 0; i<repJSON.length; i++){
+                            var option = $("<div>").html(repJSON[i].firstname + " " + repJSON[i].lastname)
+                                                    .data("userId", repJSON[i].id)
+                                                    .click(function(){
+                                                        $("#receiver").html(option.html())
+                                                                        .data(option.data);
+                                                    });
+                            $("#suggest").append(option);
                         }
-                    })
-                }
+                    }
+                })
             }
         })
     })
