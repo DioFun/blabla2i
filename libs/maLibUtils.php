@@ -213,6 +213,29 @@ function modifyInfos($nom, $prenom, $mail, $adress, $idUser) {
 		return "?view=profile&msg=". urlencode("Erreur lors de la modification des informations.");
 	}
 }
+
+/**
+ * Fonction pour montrer la liste des véhicules entrée en paramètre
+ * à utiliser avec getUserCar ou getTripCar, par exemple.
+ * @param array $voitures La liste des voitures à afficher
+ * @return void
+ */
+function showVehicleList($voitures){
+	echo "<div id='listeVoitures' class='liste'>";
+	echo "<h1>Mes voitures</h1>";
+	if (count($voitures) == 0){
+		echo "<p>Vous n'avez pas encore enregistré de voiture</p>";
+	}else{
+		foreach($voitures as $voiture){
+			echo "<div class='voiture'>";
+			echo "<img src='../ressources/ec-lille.png' alt='Logo Voiture' />";
+			echo "<p>".$voiture["registration"]."</p>";
+			echo "</div>";
+		}
+	}
+	echo "</div>";
+	return;
+}
 ?>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>

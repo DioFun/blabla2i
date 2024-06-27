@@ -248,7 +248,7 @@ function addCal($calURL, $idUser) {
  */
 function getUserInfos($idUser){
 	$SQL = "SELECT lastname, firstname, email, adress FROM users WHERE id = '$idUser'";
-	return parcoursRs(SQLSelect($SQL));
+	return parcoursRs(SQLSelect($SQL))[0];
 }
 
 /**
@@ -268,31 +268,10 @@ function getUserCar($idUser) {
  */
 function getTripCar($idTrip){
 	$SQL = "SELECT v.registration FROM vehicles v JOIN trips t ON v.id = t.vehicle_id WHERE t.id = '$idTrip'";
-	return parcoursRs(SQLSelect($SQL));
+	return parcoursRs(SQLSelect($SQL))[0];
 }
 
-/**
- * Fonction pour montrer la liste des véhicules entrée en paramètre
- * à utiliser avec getUserCar ou getTripCar, par exemple.
- * @param array $voitures La liste des voitures à afficher
- * @return void
- */
-function showVehicleList($voitures){
-	echo "<div id='listeVoitures' class='liste'>";
-	echo "<h1>Mes voitures</h1>";
-	if (count($voitures) == 0){
-		echo "<p>Vous n'avez pas encore enregistré de voiture</p>";
-	}else{
-		foreach($voitures as $voiture){
-			echo "<div class='voiture'>";
-			echo "<img src='../ressources/ec-lille.png' alt='Logo Voiture' />";
-			echo "<p>".$voiture["registration"]."</p>";
-			echo "</div>";
-		}
-	}
-	echo "</div>";
-	return;
-}
+
 
 /**
  * Fonction popur créer une notif en y rentrant l'id de l'utilisateur (vu qu'on met pas le message dans la bdd)
