@@ -135,7 +135,7 @@ function getGeneralMessages(){
 	$SQL = "SELECT sender_id, content, created_at
 	FROM chat_global
 	WHERE deleted_at IS NULL
-	ORDER BY created_date DESC"
+	ORDER BY created_date DESC";
 
 	return parcoursRs(SQLSelect($SQL));
 }
@@ -144,7 +144,7 @@ function getUserMessages($user1Id,$user2Id){
 	$SQL = "SELECT sender_id, content, created_at
 	FROM chat_users
 	WHERE (receiver_id = '$user1Id' OR sender_id = '$user1Id') AND (receiver_id = '$user2Id' OR sender_id = '$user2Id') AND deleted_at IS NULL
-	ORDER BY created_at DESC"
+	ORDER BY created_at DESC";
 
 	return parcoursRs(SQLSelect($SQL));
 }
@@ -153,8 +153,8 @@ function getTripMessages($tripId){
 	$SQL = "SELECT sender_id, content, created_at
 	FROM chat_trips
 	WHERE trip_id = '$tripId' AND deleted_at IS NULL
-	ORDER BY created_at DESC"
-	
+	ORDER BY created_at DESC";
+
 	return parcoursRs(SQLSelect($SQL));
 }
 
@@ -185,9 +185,9 @@ function getUserConversations($idUser){
 	FROM (SELECT u.id, firstname, lastname, content, cu.created_at FROM chat_user AS cu INNER JOIN users AS u ON cu.sender_id = u.id WHERE cu.receiver_id = '$idUser')
 	UNION (SELECT u.id AS userId, firstname, lastname, content, cu.created_at AS created_at FROM chat_user AS cu INNER JOIN users AS u ON cu.sender_id = u.id WHERE cu.receiver_id = '$idUser')
 	GROUP BY userId
-	ORDER BY cu.created_at DESC"
+	ORDER BY cu.created_at DESC";
 
-	return parcoursRs(SQLSelect($SQL))
+	return parcoursRs(SQLSelect($SQL));
 }
 
 function getActiveTripConversations($idUser){
@@ -210,7 +210,9 @@ function getGeneralConversation(){
 	INNER JOIN users AS u ON cg.sender_id = u.id 
 	WHERE cg.deleted_at IS NULL
 	ORDER BY created_at DESC
-	LIMIT 1"
+	LIMIT 1";
+
+	return parcoursRs(SQLSelect($SQL));
 }
 
 ?>

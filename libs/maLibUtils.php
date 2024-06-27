@@ -152,8 +152,4 @@ if (basename($_SERVER["PHP_SELF"]) != "index.php")
 	die("");
 }
 */
-
-function getMessages($type = "global", $id = 0){
-	switch 
-}
 ?>
