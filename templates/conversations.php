@@ -123,19 +123,6 @@ include_once("libs/maLibForms.php");// mkTable, mkLiens, mkSelect ...
 		return 0;
 	}
 
-    function suggestUsers(regex){
-        $.ajax({
-            url : "controleur.php",
-            type : "GET",
-            data : {"action" : "suggestUsers",
-                    "" : "",
-            },
-            success : function(oRep){
-
-            }
-        })
-    }
-
     $(document).ready(function(){
         console.log("Ok");
         $("#newMessageForm").hide();
