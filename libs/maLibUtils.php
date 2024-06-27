@@ -172,29 +172,6 @@ function showNotif($msg){
 }
 
 /**
- * Ajoute une nouvelle voiture dans la base de données pour un utilisateur donné
- * @param string $registration La plaque d'immatriculation de la voiture
- * @param int $idUser L'identifiant de l'utilisateur
- * @return string Le message à afficher à l'utilisateur
- */
-function addCar($registration, $idUser) {
-
-	$SQL = "SELECT 1 FROM vehicles WHERE registration = '$registration');";
-	if (!empty(parcoursRs(SQLSelect($SQL)))) {
-
-		$qs = "?view=create&msg=". urlencode("Adresse mail déjà utilisée");
-
-	}else{
-
-	$SQL = "INSERT INTO vehicles (registration, owner_id) VALUES ('$registration', '$idUser')";
-	SQLInsert($SQL);
-	$qs = "?view=login&msg=". urlencode("Utilisateur crée avec succès !");
-	}
-
-	return $qs;
-}
-
-/**
  * Modifie les informations d'un utilisateur -> présent dans la page profile.php
  * @param string $nom Le nom de l'utilisateur
  * @param string $prenom Le prénom de l'utilisateur

@@ -387,25 +387,6 @@ function getUserInfos($idUser){
 	return parcoursRs(SQLSelect($SQL))[0];
 }
 
-/**
- * Modifie les informations d'un utilisateur -> présent dans la page profile.php
- * @param string $nom Le nom de l'utilisateur
- * @param string $prenom Le prénom de l'utilisateur
- * @param string $mail L'adresse mail de l'utilisateur
- * @param string $adress L'adresse de l'utilisateur
- * @param int $idUser L'identifiant de l'utilisateur
- * @return string Le message à afficher à l'utilisateur
- */
-function modifyInfos($nom, $prenom, $mail, $adress, $idUser) {
-	$SQL = "UPDATE users SET lastname = '$nom', firstname = '$prenom', email = '$mail', adress = '$adress' WHERE id = '$idUser'";
-	$modif = SQLUpdate($SQL);
-	log($modif === 0);
-	if ($modif === 0) {
-		return "?view=profile&msg=". urlencode("Informations modifiées avec succès !");
-	}else{
-		return "?view=profile&msg=". urlencode("Erreur lors de la modification des informations.");
-	}
-}
 
 /**
  * Ajoute une nouvelle voiture dans la base de données pour un utilisateur donné
