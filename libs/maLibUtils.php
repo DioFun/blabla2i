@@ -306,6 +306,7 @@ function dd(...$vars)
 			data: {action: "BanUser", idBanUser: id},
 			success: function(){
 				$("#listeBannedUsers").append($("#user"+id));
+				$("#user"+id+" button").attr("onclick", "unbanUser("+id+")");
 			}
 		});
 	}
@@ -318,6 +319,7 @@ function dd(...$vars)
 			data: {action: "UnBanUser", idUnBanUser: id},
 			success: function(){
 				$("#listeUsers").append($("#user"+id));
+				$("#user"+id+" button").attr("onclick", "banUser("+id+")");
 			}
 		});
 	}
