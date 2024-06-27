@@ -56,7 +56,7 @@ Les formulaires de toutes les vues générées enverront leurs données vers la 
 		break;
 
 		case "conversations" : 
-			include("templates/account/conversations.php");
+			include("templates/conversations.php");
 		break;
 
 		case "chat" :
