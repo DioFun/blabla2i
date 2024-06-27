@@ -338,9 +338,9 @@ function sendGeneralMessage($senderId, $content){
 }
 
 function suggestUser($debut){
-	$SQL = "SELECT id, fistname, lastname
+	$SQL = "SELECT id, firstname, lastname
 	FROM users 
-	WHERE firstname LIKE '$debut' OR lastname LIKE '$debut'";
+	WHERE firstname LIKE '$debut%' OR lastname LIKE '$debut%'";
 
 	return parcoursRS(SQLSelect($SQL));
 }

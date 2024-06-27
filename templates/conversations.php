@@ -103,7 +103,7 @@ include_once("libs/maLibForms.php");// mkTable, mkLiens, mkSelect ...
     }
 
     function getConversations(){
-		$.ajax({
+		return $.ajax({
 			type : "GET",
 			url : "controleur.php",
             data : {"action" : "getConversations"},
@@ -122,6 +122,12 @@ include_once("libs/maLibForms.php");// mkTable, mkLiens, mkSelect ...
 		if (a.created_at > b.created_at) return 1;
 		return 0;
 	}
+
+    function remplir(nom, id){
+        $("#receiver").val(nom)
+                        .data("userId", id);
+        console.log($("#receiver").data());
+    }
 
     $(document).ready(function(){
         console.log("Ok");
@@ -154,6 +160,7 @@ include_once("libs/maLibForms.php");// mkTable, mkLiens, mkSelect ...
 
         $("#receiver").keyup(function(){
             console.log("test");
+            $("#suggest").html("");
             var userInput = $("#receiver").val();
             if (userInput == "") $("#suggest").hide();
             else {
@@ -166,15 +173,12 @@ include_once("libs/maLibForms.php");// mkTable, mkLiens, mkSelect ...
                     },
                     success : function(Orep){
                         console.log(Orep);
-                        repJSON = JSON.parce(Orep);
+                        var repJSON = JSON.parse(Orep);
                         var i;
                         for (i = 0; i<repJSON.length; i++){
                             var option = $("<div>").html(repJSON[i].firstname + " " + repJSON[i].lastname)
                                                     .data("userId", repJSON[i].id)
-                                                    .click(function(){
-                                                        $("#receiver").html(option.html())
-                                                                        .data(option.data);
-                                                    });
+                                                    .click(remplir(repJSON[i].firstname + " " + repJSON[i].lastname, repJSON[i].id));
                             $("#suggest").append(option);
                             $("#suggest").show();
                         }
