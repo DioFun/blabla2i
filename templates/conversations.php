@@ -100,7 +100,7 @@ include_once("libs/maLibForms.php");// mkTable, mkLiens, mkSelect ...
 
 			$("#convCont").append(jCloneArray);
 		}
-
+        var refreshConv = setInterval(refreshMessages, 1000);
     }
 
     function getConversations(){
