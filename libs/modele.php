@@ -123,14 +123,38 @@ function isAdmin($idUser)
 
 }
 
-function getGeneralMessages($start = 0){
+function getGeneralMessages(){
+
+	/*
 	$SQL = "SELECT u.firstname, u.lastname, u.id, cg.idsender, cg.content, cg.created_at FROM chat_global AS cg 
 	INNER JOIN users AS u 
 	ON cg.sender_id = u.id 
 	WHERE cg.deleted_at IS NULL
-	ORDER BY created_at DESC
-	LIMIT 20 OFFSET $start";
+	ORDER BY created_at DESC";
+	*/
+	$SQL = "SELECT sender_id, content, created_at
+	FROM chat_global
+	WHERE deleted_at IS NULL
+	ORDER BY created_date DESC"
 
+	return parcoursRs(SQLSelect($SQL));
+}
+
+function getUserMessages($user1Id,$user2Id){
+	$SQL = "SELECT sender_id, content, created_at
+	FROM chat_users
+	WHERE (receiver_id = '$user1Id' OR sender_id = '$user1Id') AND (receiver_id = '$user2Id' OR sender_id = '$user2Id') AND deleted_at IS NULL
+	ORDER BY created_at DESC"
+
+	return parcoursRs(SQLSelect($SQL));
+}
+
+function getTripMessages($tripId){
+	$SQL = "SELECT sender_id, content, created_at
+	FROM chat_trips
+	WHERE trip_id = '$tripId' AND deleted_at IS NULL
+	ORDER BY created_at DESC"
+	
 	return parcoursRs(SQLSelect($SQL));
 }
 

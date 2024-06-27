@@ -88,13 +88,13 @@ session_start();
 			
 			case "getChat" :
 				if ($tripId=valider("tripId")){
-				
+					echo json_encode(getTripMessages($tripId));
 					}
 				elseif ($userId=valider("userId")){
-
+					echo json_encode(getUserMessages($_SESSION['iduUser'], $userId));
 				}
 				else{ // chat général
-
+					echo json_encode(getGeneralMessages());
 				}
 			break;
 		}
