@@ -23,5 +23,65 @@ if (valider("connecte","SESSION"))
 ?>
 </div>
 
+<script>
+    // Fonction pour supprimer une notification
+    function removeNotif(id){
+        $.ajax({
+            url: "controleur.php",
+            type: "GET",
+            data: {action: "DeleteNotif", id: id},
+            success: function(){
+                $("#notif"+id).hide();
+            }
+        });
+
+
+    }
+</script>
+
+<script src="jquery-3.7.1.min.js"></script>
+
+<script>
+
+    // Fonction pour supprimer une voiture
+    function deleteCar(id){
+        $.ajax({
+            url: "controleur.php",
+            type: "GET",
+            data: {action: "SuppressionVoiture", idCar: id},
+            success: function(){
+                $("#voiture"+id).hide();
+            }
+        });
+    }
+</script>
+
+<script>
+    // Fonctions pour bannir ou débannir un utilisateur
+    // ban
+    function banUser(id){
+        $.ajax({
+            url: "controleur.php",
+            type: "GET",
+            data: {action: "BanUser", idBanUser: id},
+            success: function(){
+                $("#listeBannedUsers").append($("#user"+id));
+            }
+        });
+    }
+
+    // unban
+    function unbanUser(id){
+        $.ajax({
+            url: "controleur.php",
+            type: "GET",
+            data: {action: "UnBanUser", idUnBanUser: id},
+            success: function(){
+                $("#listeUsers").append($("#user"+id));
+            }
+        });
+    }
+</script>
+
 </body>
 </html>
