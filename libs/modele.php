@@ -12,18 +12,16 @@ function sendConfirmationEmail($email, $token, $id) {
     $subject = "Confirmation de votre email";
     $message = "Cliquez sur le lien suivant pour confirmer votre email : ";
     $message .= "http://localhost/TWE2024/projetWEB/controleur.php?action=Verify&token=" . urlencode($token)."&id=".urldecode($id);
-    $headers = "From: noreply@blabla2i.com";
 
-    mail($email, $subject, $message, $headers);
+    send_mail($email, $subject, $message);
 }
 
 function sendResetEmail($email, $token, $id) {
     $subject = "Confirmation de votre email";
     $message = "Cliquez sur le lien suivant pour confirmer votre email : ";
     $message .= "http://localhost/TWE2024/projetWEB/index.php?view=repassword2&token=" . urlencode($token)."&id=".urldecode($id);
-    $headers = "From: noreply@blabla2i.com";
 
-    mail($email, $subject, $message, $headers);
+    send_mail($email, $subject, $message);
 }
 
 function verifUserBdd($login,$passe)
@@ -112,8 +110,6 @@ function updateConfirmedMail($id){
 
 function verifCreateUser($nom,$prenom,$mail,$adress,$pass,$secondpass,$planning)
 {
-
-
 	$SQL = "SELECT id FROM users WHERE email = '$mail';";
 	
 
@@ -174,10 +170,11 @@ function verifCreateUser($nom,$prenom,$mail,$adress,$pass,$secondpass,$planning)
 			NULL
 		);";
 
+    $insert = SQLInsert($SQL);
 
-	sendConfirmationEmail($mail, $token, $id);
+	sendConfirmationEmail($mail, $token, $insert);
 	
-	SQLInsert($SQL);
+
 	createFlash("success", "Utilisateur crée avec succès !");
 	$qs = "?view=confirm	";
 

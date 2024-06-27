@@ -2,7 +2,6 @@
 <?php
 
 // V1.0 du 18 mai 2018
-
 /**
  * @file maLibUtils.php
  * Ce fichier définit des fonctions d'accès ou d'affichage pour les tableaux superglobaux
@@ -259,6 +258,52 @@ function dd(...$vars)
 {
 	var_dump($vars);
 	die();
+}
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\SMTP;
+
+include dirname(__DIR__) .'/PHPMailer/src/PHPMailer.php';
+include dirname(__DIR__) .'/PHPMailer/src/SMTP.php';
+include dirname(__DIR__) .'/PHPMailer/src/Exception.php';
+
+function send_mail($to, $subject, $message){
+    $mail = new PHPMailer(true);
+
+    try {
+// Server settings
+        $mail->SMTPDebug = 2;                                       // Enable verbose debug output
+        $mail->isSMTP();                                            // Set mailer to use SMTP
+        $mail->Host       = 'mail.rezoleo.fr';                     // Specify main and backup SMTP servers
+        $mail->SMTPAuth   = true;                                   // Enable SMTP authentication
+        $mail->Username   = 'blabla2i@rezoleo.fr';
+        $mail->SMTPSecure = 'tls';// SMTP username
+        $mail->SMTPOptions = array(
+            'ssl' => array(
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+                'allow_self_signed' => true
+            )
+        );
+        $mail->Password   = '<censor>';                               // Enable TLS encryption, `ssl` also accepted
+        $mail->Port       = 587;                                    // TCP port to connect to
+
+// Recipients
+        $mail->setFrom('blabla2i@rezoleo.fr', 'Mailer');
+        $mail->addAddress($to, 'Recipient Name');     // Add a recipient
+        $mail->addReplyTo('blabla2i@rezoleo.fr', 'Information');
+
+// Content
+        $mail->isHTML(true);                                  // Set email format to HTML
+        $mail->Subject = $subject;
+        $mail->Body    = $message;
+        $mail->AltBody = $message;
+
+        $mail->send();
+    } catch (Exception $e) {
+        dd("Message could not be sent. Mailer Error: {$mail->ErrorInfo}");
+    }
 }
 
 ?>
