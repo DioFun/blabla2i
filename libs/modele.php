@@ -282,11 +282,11 @@ function addCar($registration, $idUser) {
 	$SQL = "SELECT 1 FROM vehicles WHERE registration = '$registration');";
 	if (!empty(parcoursRs(SQLSelect($SQL)))) {
 
-		$qs = "?view=create&msg=". urlencode("Adresse mail déjà utilisée");
+		$qs = "?view=create&msg=". urlencode("Voiture déjà existante !");
 
 	}else{
 
-	$SQL = "INSERT INTO vehicles (registration, owner_id) VALUES ('$registration', '$idUser')";
+	$SQL = "INSERT INTO vehicles (registration, owner_id) VALUES ('$registration', '$idUser');";
 	SQLInsert($SQL);
 	$qs = "?view=login&msg=". urlencode("Utilisateur crée avec succès !");
 	}
@@ -332,7 +332,7 @@ function getTripCar($idTrip){
  * @return int L'identifiant de la notification créée
  */
 function createNotif($idUser){
-	$SQL = "INSERT INTO notifications (user_id) VALUES ('$idUser')";
+	$SQL = "INSERT INTO notifications (user_id) VALUES ('$idUser');";
 	$lastId = SQLInsert($SQL);
 
 	return $lastId;
