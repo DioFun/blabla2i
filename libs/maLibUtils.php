@@ -128,6 +128,8 @@ function tprint($tab)
 }
 
 
+
+
 function rediriger($url,$qs="")
 {
 	// if ($qs != "")	 $qs = urlencode($qs);	

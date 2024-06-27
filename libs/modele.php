@@ -7,10 +7,20 @@ Dans ce fichier, on définit diverses fonctions permettant de récupérer des do
 // inclure ici la librairie faciliant les requêtes SQL (en veillant à interdire les inclusions multiples)
 include_once("maLibSQL.pdo.php");
 
+// TODO : Changer les url pour avoir un base url dans la config !
 function sendConfirmationEmail($email, $token, $id) {
     $subject = "Confirmation de votre email";
     $message = "Cliquez sur le lien suivant pour confirmer votre email : ";
-    $message .= "http://localhost/TWE2024/projet%20WEB/index.php?view=confirm&token=" . urlencode($token)."&id=".urldecode($id);
+    $message .= "http://localhost/TWE2024/projetWEB/controleur.php?action=Verify&token=" . urlencode($token)."&id=".urldecode($id);
+    $headers = "From: noreply@blabla2i.com";
+
+    mail($email, $subject, $message, $headers);
+}
+
+function sendResetEmail($email, $token, $id) {
+    $subject = "Confirmation de votre email";
+    $message = "Cliquez sur le lien suivant pour confirmer votre email : ";
+    $message .= "http://localhost/TWE2024/projetWEB/index.php?view=repassword2&token=" . urlencode($token)."&id=".urldecode($id);
     $headers = "From: noreply@blabla2i.com";
 
     mail($email, $subject, $message, $headers);
@@ -25,14 +35,20 @@ function verifUserBdd($login,$passe)
 
 	//$passwordHash = password_hash($passe, PASSWORD_BCRYPT);
 
-	$SQL = "SELECT password,id FROM users
+	$SQL = "SELECT password,id,confirmed FROM users
 	WHERE email = '$login'";
 
+	$requete = ParcoursRs(SQLSelect($SQL))[0];
 
-	$hash = ParcoursRs(SQLSelect($SQL))[0]["password"];
+	if (!$requete["confirmed"]) {
+		createFlash("error", "L'adresse mail n'est pas validée");
+		return false;
+	}
+
+	$hash = $requete["password"];
 
 	if (password_verify($passe, $hash)){
-		return parcoursRs(SQLSelect($SQL))[0]["id"];
+		return $requete["id"];
 	}
 	
 	else return false;
@@ -47,15 +63,48 @@ function generateToken($length = 32) {
 }
 
 function changePassword($mail,$pass){
-	
+
 	$hashed_password = password_hash($pass, PASSWORD_BCRYPT);
 	$SQL = "UPDATE users SET password = '$hashed_password' WHERE email = '$mail';";
 	SQLUpdate($SQL);
 }
 
-function confirmMail($id){
-	
-	
+function updatePassword($id,$newpass){
+
+	$SQL = "UPDATE users SET password = '$newpass' WHERE id = '$id';";
+	SQLUpdate($SQL);
+}
+
+function updateLastname($id,$newLastname){
+
+	$SQL = "UPDATE users SET lastname = '$newLastname' WHERE id = '$id';";
+	SQLUpdate($SQL);
+}
+
+function updateFirstname($id,$newFirstname){
+
+	$SQL = "UPDATE users SET firstname = '$newFirstname' WHERE id = '$id';";
+	SQLUpdate($SQL);
+}
+
+function putResetToken($id,$resetToken){
+
+	$SQL = "UPDATE users SET reset_token = '$resetToken' WHERE id = '$id';";
+	SQLUpdate($SQL);
+}
+
+
+function recupResetToken($id){
+
+	$SQL = "SELECT reset_token, reset_send_at FROM users WHERE id = '$id';";
+	return parcoursRs(SQLSelect($SQL));
+}
+
+
+
+function updateConfirmedMail($id){
+
+
 	$SQL = "UPDATE users SET confirmed = 1 WHERE id = '$id';";
 	SQLUpdate($SQL);
 
@@ -72,10 +121,10 @@ function verifCreateUser($nom,$prenom,$mail,$adress,$pass,$secondpass,$planning)
 	if ((strlen($nom) >= 255)||(strlen($prenom) >= 255)||(strlen($mail) >= 255)||
 		(strlen($pass) >= 255)||(strlen($secondpass) >= 255)||(strlen($adress) >= 255)||(strlen($planning) >= 255)) {
 
-		
+
 		createFlash("error", "Tous les champs textuels doivent contenir moins de 255 caractères.");
 		$qs = "?view=create";
-		
+
 
 
 	} elseif (!empty(parcoursRs(SQLSelect($SQL)))) {
@@ -89,16 +138,16 @@ function verifCreateUser($nom,$prenom,$mail,$adress,$pass,$secondpass,$planning)
 
 		createFlash("error", "Les deux mots de passe sont différents.");
 		$qs = "?view=create";
-		
+
 
 	}
 
-	elseif (substr($mail, -strlen("@centrale.centralelille.fr")) !== "@centrale.centralelille.fr") { 
+	elseif (substr($mail, -strlen("centralelille.fr")) !== "centralelille.fr") {
 
 
-		createFlash("error", "L'adresse mail doit être une adresse centrale (nom.prenom@centrale.centralelille.fr) ");
+		createFlash("error", "L'adresse mail doit être une adresse centrale (en centralelille.fr) ");
 		$qs = "?view=create";
-		
+
 
 	} else {
 
@@ -132,7 +181,7 @@ function verifCreateUser($nom,$prenom,$mail,$adress,$pass,$secondpass,$planning)
 	SQLInsert($SQL);
 	createFlash("success", "Utilisateur crée avec succès !");
 	$qs = "?view=confirm	";
-	
+
 	
 	}
 
@@ -159,6 +208,23 @@ function recupToken($idUser)
 
 }
 
+function recupConfirmationToken($idUser)
+{
+	$SQL = "SELECT confirmation_token, confirmation_send_at from users
+	WHERE id = '$idUser'";
+
+	return parcoursRs(SQLSelect($SQL));
+
+}
+
+function putConnectionToken($idUser, $connectionToken)
+{
+
+	$SQL = "UPDATE connection_tokens SET connection_token = '$resetToken' WHERE user_id = '$id';";
+	SQLUpdate($SQL);
+
+}
+
 
 
 /**
@@ -178,7 +244,7 @@ function addCal($calURL, $idUser) {
  * @param string $num Le numéro de téléphone
  * @param int $idUser L'identifiant de l'utilisateur
  * @return string Le message à afficher à l'utilisateur
- 
+
  */
 function getUserInfos($idUser){
 	$SQL = "SELECT lastname, firstname, email, adress FROM users WHERE id = '$idUser'";
@@ -262,4 +328,3 @@ function deleteNotif($idNotif){
 }
 
 ?>
-

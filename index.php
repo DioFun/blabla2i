@@ -10,7 +10,7 @@ Les formulaires de toutes les vues générées enverront leurs données vers la 
 */
 
 
-	include_once("libs/maLibUtils.php");
+	include_once "libs/maLibUtils.php";
 
 	// Dans tous les cas, on affiche l'entete, 
 	// qui contient les balises de structure de la page, le logo, etc. 
@@ -27,21 +27,26 @@ Les formulaires de toutes les vues générées enverront leurs données vers la 
 	// En fonction de la vue à afficher, on appelle tel ou tel template
 	switch($view)
 	{		
-		case "login" : 
-			include("templates/login.php");
+		case "account.login" : 
+			include("templates/account/login.php");
 		break; 
 
-		case "confirm" : 
-			include("templates/confirm.php");
+		case "account.confirm" : 
+			include("templates/account/repassword2.php");
+		break;
+
+		case "account.create" : 
+			include("templates/account/create.php");
+		break;
+
+		case "account.profile" : 
+			include("templates/profile.php");
 		break;
 
 		case "accueil" : 
 			include("templates/accueil.php");
 		break;
 
-		case "profile" :
-			include("templates/profile.php");
-		break;
 		default : // si le template correspondant à l'argument existe, on l'affiche
 			if (file_exists("templates/$view.php"))
 				include("templates/$view.php");	

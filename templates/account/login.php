@@ -3,7 +3,7 @@
 // Si la page est appelée directement par son adresse, on redirige en passant pas la page index
 if (basename($_SERVER["PHP_SELF"]) != "index.php")
 {
-	header("Location:../index.php?view=login");
+	header("Location:../index.php?view=account.login");
 	die("");
 }
 
@@ -12,6 +12,8 @@ if (valider("connecte",'SESSION'))
 	header("Location:index.php?view=accueil");
 	die("");
 }
+
+
 
 ?>
  
@@ -23,7 +25,7 @@ if (valider("connecte",'SESSION'))
 
 
 
-<?=$info?>
+
 
 <div id="formLogin">
 	<form action="controleur.php" method="GET">
