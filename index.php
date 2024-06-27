@@ -22,7 +22,7 @@ Les formulaires de toutes les vues générées enverront leurs données vers la 
 	$view = valider("view"); 
 
 	// S'il est vide, on charge la vue accueil par défaut
-	if (!$view) $view = "login"; 
+	if (!$view) $view = "account.login"; 
 
 	// En fonction de la vue à afficher, on appelle tel ou tel template
 	switch($view)
@@ -40,11 +40,23 @@ Les formulaires de toutes les vues générées enverront leurs données vers la 
 		break;
 
 		case "account.profile" : 
-			include("templates/profile.php");
+			include("templates/account/profile.php");
 		break;
 
 		case "accueil" : 
 			include("templates/accueil.php");
+		break;
+
+		case "account.repassword" : 
+			include("templates/account/repassword.php");
+		break;
+
+		case "account.repassword2" : 
+			include("templates/account/repassword2.php");
+		break;
+
+		case "conversations" : 
+			include("templates/account/conversations.php");
 		break;
 
 		case "chat" :

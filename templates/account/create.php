@@ -7,22 +7,15 @@ if (basename($_SERVER["PHP_SELF"]) != "index.php")
 	die("");
 }
 
-$info = "";
-if ($msg = valider("msg")) {
-	$info = "<h3 style = \"color:red; \">$msg</h3>";
-}
-
 ?>
  
 <div id="corps">
 
-	<img src="URL_de_l'image" alt="Logo">
+	<img src="../../ressources/logo.png" alt="Logo">
 
 <h1>Créer un compte</h1>
 
 
-
-<?=$info?>
 
 <div id="formLogin">
 	<form action="controleur.php" method="GET">

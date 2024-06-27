@@ -3,7 +3,7 @@
 // Si la page est appelée directement par son adresse, on redirige en passant pas la page index
 if (basename($_SERVER["PHP_SELF"]) != "index.php")
 {
-	header("Location:../index.php?view=account.login");
+	header("Location:../index.php?view=account.repassword2");
 	die("");
 }
 
@@ -16,7 +16,7 @@ if (($token === valider("token"))&&($id === valider("id"))): ?>
  
 <div id="corps">
 
-	<img src="URL_de_l'image" alt="Logo">
+	<img src="../../ressources/logo.png" alt="Logo">
 
 <h1>Réinitialiser votre mot de passe</h1>
 

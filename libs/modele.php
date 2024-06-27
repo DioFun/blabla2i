@@ -41,7 +41,6 @@ function verifUserBdd($login,$passe)
 	$requete = ParcoursRs(SQLSelect($SQL))[0];
 
 	if (!$requete["confirmed"]) {
-		createFlash("error", "L'adresse mail n'est pas validée");
 		return false;
 	}
 
@@ -87,9 +86,9 @@ function updateFirstname($id,$newFirstname){
 	SQLUpdate($SQL);
 }
 
-function putResetToken($id,$resetToken){
+function putResetToken($resetMail,$resetToken){
 
-	$SQL = "UPDATE users SET reset_token = '$resetToken' WHERE id = '$id';";
+	$SQL = "UPDATE users SET reset_token = '$resetToken', reset_send_at = NOW() WHERE email = '$resetMail';";
 	SQLUpdate($SQL);
 }
 
