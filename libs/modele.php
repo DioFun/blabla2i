@@ -123,13 +123,16 @@ function isAdmin($idUser)
 
 }
 
-function createTrip($isDriving, $departure, $arrival, $date, $hour, $passengers)
+function createTrip($isDriving, $departure, $arrival, $date, $hour, $passengers, $vehicle)
 {
 
 	$id = valider("idUser", "SESSION");
 	$driving = $isDriving ? $id : "NULL";
-	$SQL = "INSERT INTO trips (driver_id, creator_id, departure, arrival, date, hour, passenger, status) VALUES ($driving, $id, '$departure', '$arrival', '$date', '$hour', '$passengers', 0)";
-//	dd($SQL);
+	$car = $vehicle == "Aucune" ? "NULL" : "$vehicle";
+	$bddCar = $car == "NULL" ? NULL : getCarOwner($car);
+	if ($car != "NULL" && $bddCar != $id && $bddCar != 1) return false;
+	if ($car != "NULL" && !isCarAvailable($car, $date)) return false;
+	$SQL = "INSERT INTO trips (vehicle_id, driver_id, creator_id, departure, arrival, date, hour, passenger, status) VALUES ($car, $driving, $id, '$departure', '$arrival', '$date', '$hour', '$passengers', 0)";
 	$trip_id = SQLInsert($SQL);
 	if (!$trip_id) return false;
 	$SQL = "INSERT INTO passengers (user_id, trip_id) VALUES ('$id', '$trip_id') ";
@@ -169,13 +172,57 @@ function removeTrip($id)
 	return SQLDelete($SQL);
 }
 
-function editTrip($id, $isDriving, $departure, $destination, $date, $time, $passengers)
+function editTrip($id, $isDriving, $departure, $destination, $date, $time, $passengers, $vehicle)
 {
 	$userId = valider("idUser", "SESSION");
 	$driving = $isDriving ? $userId : "NULL";
-	$SQL = "UPDATE trips SET driver_id = $driving, departure = '$departure', arrival='$destination', date='$date', hour='$time', passenger='$passengers' WHERE id = '$id'";
+	$car = $vehicle == "Aucune" ? "NULL" : "$vehicle";
+	$bddCar = $car == "NULL" ? NULL : getCarOwner($car);
+	if ($car != "NULL" && $bddCar != $id && $bddCar != 1) return false;
+	if ($car != "NULL" && !isCarAvailableTripBypass($car, $date, $id)) return false;
+	$SQL = "UPDATE trips SET driver_id = $driving, departure = '$departure', arrival='$destination', date='$date', hour='$time', passenger='$passengers', vehicle_id = $car WHERE id = '$id'";
 	return SQLUpdate($SQL);
 }
 
+function getAvailableCars($date)
+{
+	$id = valider("idUser", "SESSION");
+	$SQL = "SELECT DISTINCT vehicles.id, registration FROM vehicles LEFT JOIN trips ON vehicle_id = vehicles.id WHERE (trips.id IS NULL OR (trips.id IS NOT NULL AND date<>'$date')) AND (owner_id = '$id' OR owner_id = 1);";
+	return parcoursRs(SQLSelect($SQL));
+}
+
+function getAvailableCarsTripBypass($date, $tripId)
+{
+	$id = valider("idUser", "SESSION");
+	$SQL = "SELECT DISTINCT vehicles.id, registration FROM vehicles LEFT JOIN trips ON vehicle_id = vehicles.id WHERE (trips.id IS NULL OR ((trips.id IS NOT NULL AND date<>'$date') OR trips.id = '$tripId')) AND (owner_id = '$id' OR owner_id = 1) ;";
+	return parcoursRs(SQLSelect($SQL));
+}
+
+function getCarOwner($id)
+{
+	$SQL = "SELECT owner_id FROM vehicles WHERE id = '$id'";
+	return SQLGetChamp($SQL);
+}
+
+function getCar($id)
+{
+	$SQL = "SELECT * FROM vehicles WHERE id = '$id'";
+	return parcoursRs(SQLSelect($SQL))[0];
+}
+
+function isCarAvailable($id, $date)
+{
+	$userId = valider("idUser", "SESSION");
+	$SQL = "SELECT vehicles.id FROM vehicles LEFT JOIN trips ON vehicle_id = vehicles.id WHERE (trips.id IS NULL OR (trips.id IS NOT NULL AND date<>'$date')) AND (owner_id = '$userId' OR owner_id = 1) AND vehicles.id = '$id';";
+	return SQLGetChamp($SQL);
+}
+
+function isCarAvailableTripBypass($id, $date, $tripId)
+{
+	$userId = valider("idUser", "SESSION");
+	$SQL = "SELECT vehicles.id FROM vehicles LEFT JOIN trips ON vehicle_id = vehicles.id WHERE (trips.id IS NULL OR ((trips.id IS NOT NULL AND date<>'$date') OR trips.id = '$tripId')) AND (owner_id = '$userId' OR owner_id = 1) AND vehicles.id = '$id' ";
+
+	return SQLGetChamp($SQL);
+}
 
 ?>

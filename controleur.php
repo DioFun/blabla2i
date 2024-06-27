@@ -12,7 +12,7 @@ session_start();
 	{
 		ob_start ();
 
-		echo "Action = '$action' <br />";
+//		echo "Action = '$action' <br />";
 
 		// Un paramètre action a été soumis, on fait le boulot...
 		switch($action)
@@ -83,8 +83,9 @@ session_start();
 				$destination = valider("destination") ? "ig2i" : "centrale";
 				$isDriving = valider("driver");
 				if (($departure = valider("departure")) && ($date = valider("date"))
-					&& ($time = valider("time")) && ($passengers = valider("passengers"))) {
-					if (!createTrip($isDriving, $departure, $destination, $date, $time, $passengers)) createFlash("error", "Une erreur est survenue lors de la création !");
+					&& ($time = valider("time")) && ($passengers = valider("passengers"))
+                    && ($vehicle = valider("car"))) {
+					if (!createTrip($isDriving, $departure, $destination, $date, $time, $passengers, $vehicle)) createFlash("error", "Une erreur est survenue lors de la création !");
 					else createFlash("success", "Le trajet a bien été créé !");
 					$qs = '?view=accueil';
 
@@ -101,7 +102,7 @@ session_start();
                     createFlash("success", "Le trajet a bien été supprimé !");
                 }
                 $qs = "?view=accueil";
-
+            break;
             case "trajets.edit":
                 if (!canEditTrip(valider('id'))) {
                     $qs = "?view=accueil";
@@ -110,9 +111,10 @@ session_start();
                     $destination = valider("destination") ? "ig2i" : "centrale";
                     $isDriving = valider("driver");
                     if (($departure = valider("departure")) && ($date = valider("date"))
-                        && ($time = valider("time")) && ($passengers = valider("passengers"))) {
-                        if (!editTrip($id, $isDriving, $departure, $destination, $date, $time, $passengers)) createFlash("error", "Une erreur est survenue lors de la création !");
-                        else createFlash("success", "Le trajet a bien été modifié !");
+                        && ($time = valider("time")) && ($passengers = valider("passengers"))
+                        && $vehicle = valider("car")) {
+                        editTrip($id, $isDriving, $departure, $destination, $date, $time, $passengers, $vehicle);
+                        createFlash("success", "Le trajet a bien été modifié !");
                         $qs = "?view=trajets.view&id=$id";
 
                     } else {
@@ -120,6 +122,13 @@ session_start();
                         createFlash("error", "Un ou plusieurs paramètres ne sont pas correctements remplis !");
                     }
                 }
+            break;
+            case "ajax.getAvailableCars" :
+                header("Content-Type: application/json; charset=UTF-8");
+                if ($edited = valider("edit")) $response['cars'] = getAvailableCarsTripBypass(valider("date"), $edited);
+                else $response['cars'] = getAvailableCars(valider("date"));
+                echo json_encode($response);
+                die();
 
 		}
 	}
@@ -137,3 +146,5 @@ session_start();
 
 	// On écrit seulement après cette entête
 	ob_end_flush();
+
+
