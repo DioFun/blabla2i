@@ -71,7 +71,7 @@ include_once("libs/maLibForms.php");// mkTable, mkLiens, mkSelect ...
 }
 </style>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="jquery-3.7.1.min.js"></script>
 <script>
 	var i;
 	var jConversation = $("<div class = \"conversation\">")
@@ -88,7 +88,7 @@ include_once("libs/maLibForms.php");// mkTable, mkLiens, mkSelect ...
 			if (convArray[i].hasOwnProperty("tripId")){
 				jCloneConv.children(".convname").html(convArray[i].t.date + " " + convArray[i].t.heure + " "+ convArray[i].t.departure);
 				jCloneConv.click(window.location.replace("index.php?view=chat&tripId="+convArray[i].tripId));
-			} elseif (convArray[i].hasOwnProperty("userId")) {
+			} else if (convArray[i].hasOwnProperty("userId")) {
 				jCloneConv.children(".convname").html(convArray[i].firstname + " " + convArray[i].lastname);
 				jCloneConv.click(window.location.replace("index.php?view=chat&userId="+convArray[i].userId));
 			} else {
@@ -98,7 +98,7 @@ include_once("libs/maLibForms.php");// mkTable, mkLiens, mkSelect ...
 			jCloneConv.children(".convMessage").html(convArray[i].firstname + " " + convArray[i].lastname + " : " + convArray[i].content);
 			jCloneConv.children(".convDate").html(convArray[i].created_at);
 
-			$("#convCont").append(jCloneArray);
+			$("#convCont").append(jCloneConv);
 		}
     }
 
@@ -110,7 +110,7 @@ include_once("libs/maLibForms.php");// mkTable, mkLiens, mkSelect ...
 			success : function(oRep){
 				console.log(oRep);
 				var convJSON = JSON.parse(oRep);
-				var convArray = convJSON.trip.concat(convJSON.user).concat(convJSON.general);
+				var convArray = (convJSON.trip).concat(convJSON.user).concat(convJSON.general);
 				convArray.sort(convDateSort);
 				return convArray;
 			}
@@ -126,7 +126,9 @@ include_once("libs/maLibForms.php");// mkTable, mkLiens, mkSelect ...
     $(document).ready(function(){
         console.log("Ok");
         $("#newMessageForm").hide();
+        console.log("test1");
         refreshMessages();
+        console.log("test2");
         refreshConv = setInterval(refreshMessages, 1000);
         $("#newMessageTo").click(function(){
             $("#newMessageForm").show();
@@ -151,8 +153,9 @@ include_once("libs/maLibForms.php");// mkTable, mkLiens, mkSelect ...
         });
 
         $("#receiver").keyup(function(){
+            console.log("test");
             var userInput = $("#receiver").val();
-            if (userInput == "") $("#newMessageForm").hide();
+            if (userInput == "") $("#suggest").hide();
             else {
                 $.ajax({
                     url : "controleur.php",
@@ -173,6 +176,7 @@ include_once("libs/maLibForms.php");// mkTable, mkLiens, mkSelect ...
                                                                         .data(option.data);
                                                     });
                             $("#suggest").append(option);
+                            $("#suggest").show();
                         }
                     }
                 })

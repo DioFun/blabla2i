@@ -235,7 +235,7 @@ function getTripMessages($tripId){
 
 function getSenderConversations($idUser){ // A priori useless mais je laisse ça là en attendant de test
 	$SQL = "SELECT u.id AS userId, firstname, lastname, content, ct.created_at AS created_at
-	FROM chat_user AS cu
+	FROM chat_users AS cu
 	INNER JOIN users AS u ON cu.receiver_id = u.id
 	WHERE cu.sender_id = $idUser
 	ORDER BY cu.created_at DESC";
@@ -245,7 +245,7 @@ function getSenderConversations($idUser){ // A priori useless mais je laisse ça
 
 function getReceiverConversations($idUser){ // A priori useless mais je laisse ça là en attendant de test
 	$SQL = "SELECT u.id AS userId, firstname, lastname, content, cu.created_at AS created_at
-	FROM chat_user AS cu
+	FROM chat_users AS cu
 	INNER JOIN users AS u ON cu.sender_id = u.id
 	WHERE cu.receiver_id = $idUser
 	GROUP BY userId
@@ -255,19 +255,29 @@ function getReceiverConversations($idUser){ // A priori useless mais je laisse �
 }
 
 // On cherche le dernier message qui implique idUser (qu'il soit sender ou receiver)
+/*
 function getUserConversations($idUser){
 	$SQL = "SELECT u.id AS userId, firstname, lastname, content, cu.created_at AS created_at
-	FROM (SELECT u.id, firstname, lastname, content, cu.created_at FROM chat_user AS cu INNER JOIN users AS u ON cu.sender_id = u.id WHERE cu.receiver_id = '$idUser')
-	UNION (SELECT u.id AS userId, firstname, lastname, content, cu.created_at AS created_at FROM chat_user AS cu INNER JOIN users AS u ON cu.sender_id = u.id WHERE cu.receiver_id = '$idUser')
-	GROUP BY userId
-	ORDER BY cu.created_at DESC";
+	FROM ((SELECT u.id, firstname, lastname, content, cu.created_at FROM chat_users AS cu INNER JOIN users AS u ON cu.sender_id = u.id WHERE cu.receiver_id = '$idUser') AS h
+	UNION (SELECT u.id, firstname, lastname, content, cu.created_at FROM chat_users AS cu INNER JOIN users AS u ON cu.sender_id = u.id WHERE cu.receiver_id = '$idUser') AS g)
+    GROUP BY userId
+    ORDER BY created_at DESC";
 
 	return parcoursRs(SQLSelect($SQL));
+}
+*/
+function getUserConversations($idUser){
+    $SQL = "SELECT u.id AS userId, firstname, lastname, content, cu.created_at AS created_at FROM chat_users AS cu INNER JOIN users AS u ON cu.sender_id = u.id WHERE cu.receiver_id = '$idUser'
+            UNION 
+            SELECT u.id AS userId, firstname, lastname, content, cu.created_at AS created_at FROM chat_users AS cu INNER JOIN users AS u ON cu.receiver_id = u.id WHERE cu.sender_id = '$idUser'
+            GROUP BY userId
+            ORDER BY created_at DESC";
+    return parcoursRs(SQLSelect($SQL));
 }
 
 function getActiveTripConversations($idUser){
 	// On prend la date et l'heure pour le nom de la conversation
-	$SQL = "SELECT ct.trip_id AS tripId, t.date, t.heure, t.departure, firstname, lastname, content, ct.created_at AS created_at
+	$SQL = "SELECT ct.trip_id AS tripId, t.date, t.hour, t.departure, firstname, lastname, content, ct.created_at AS created_at
 	FROM chat_trips AS ct
 	INNER JOIN passengers AS p ON ct.trip_id = p.trip_id
 	INNER JOIN trips AS t ON ct.trip_id = t.id
