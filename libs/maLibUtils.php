@@ -8,6 +8,8 @@
  * Ce fichier définit des fonctions d'accès ou d'affichage pour les tableaux superglobaux
  */
 
+
+
 /**
  * Vérifie l'existence (isset) et la taille (non vide) d'un paramètre dans un des tableaux GET, POST, COOKIES, SESSION
  * Renvoie false si le paramètre est vide ou absent
@@ -171,30 +173,7 @@ function showNotif($msg){
 	<?php
 }
 
-/**
- * Modifie les informations d'un utilisateur -> présent dans la page profile.php
- * @param string $nom Le nom de l'utilisateur
- * @param string $prenom Le prénom de l'utilisateur
- * @param string $mail L'adresse mail de l'utilisateur
- * @param string $adress L'adresse de l'utilisateur
- * @param int $idUser L'identifiant de l'utilisateur
- * @return string Le message à afficher à l'utilisateur
- */
-function modifyInfos($nom, $prenom, $mail, $adress, $idUser) {
-	$SQL = "UPDATE users SET lastname = '$nom', firstname = '$prenom', email = '$mail', adress = '$adress' WHERE id = '$idUser'";
-	$modif = SQLUpdate($SQL);
-	log($modif === 0);
-	if ($modif === 0) {
 
-		$resetToken = generateToken();
-		putResetToken($mail,$resetToken);
-
-		sendResetEmail($mail, $resetToken, $id);
-		return "?view=profile&msg=". urlencode("Informations modifiées avec succès ! Si l'email à été changé, vueillez le confirmer.");
-	}else{
-		return "?view=profile&msg=". urlencode("Erreur lors de la modification des informations.");
-	}
-}
 
 /**
  * Fonction pour montrer la liste des véhicules entrée en paramètre
@@ -212,8 +191,9 @@ function showVehicleList($voitures){
 			echo "<div id='voiture".$voiture["id"]."' class='voiture'>";
 			echo "<img src='../ressources/ec-lille.png' alt='Logo Voiture' />";
 			echo "<p>".$voiture["registration"]."</p>";
-			echo "</div>";
+			
 			echo "<button onclick='deleteCar(".$voiture["id"].")'>Supprimer</button>";
+			echo "</div>";
 		}
 	}
 	echo "</div>";
@@ -235,7 +215,6 @@ function showUsersList(){
 			echo "<div id='user".$user["id"]."' class='user'>";
 			echo "<p>".$user["lastname"]." ".$user["firstname"]."</p>";
 			echo "<p>".$user["email"]."</p>";
-			echo "<p>".$user["adress"]."</p>";
 			echo "<button onclick='banUser(".$user["id"].")'>Bannir</button>";
 			echo "</div>";
 		}
@@ -258,7 +237,6 @@ function showBannedUsersList(){
 			echo "<div id='user".$user["id"]."' class='user'>";
 			echo "<p>".$user["lastname"]." ".$user["firstname"]."</p>";
 			echo "<p>".$user["email"]."</p>";
-			echo "<p>".$user["adress"]."</p>";
 			echo "<button onclick='unbanUser(".$user["id"].")'>Débannir</button>";
 			echo "</div>";
 		}
@@ -301,13 +279,16 @@ function dd(...$vars)
 	}
 </script>
 
+<script src="jquery-3.7.1.min.js"></script>
+
 <script>
+	
 	// Fonction pour supprimer une voiture
 	function deleteCar(id){
 		$.ajax({
 			url: "controleur.php",
 			type: "GET",
-			data: {action: "DeleteCar", id: id},
+			data: {action: "SuppressionVoiture", idCar: id},
 			success: function(){
 				$("#voiture"+id).hide();
 			}
