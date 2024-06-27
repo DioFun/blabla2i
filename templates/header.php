@@ -39,8 +39,15 @@ echo "<?xml version=\"1.0\" encoding=\"utf-8\" ?>";
 </div>
 
 <a href="index.php?view=accueil">Accueil</a>
-<a href="index.php?view=users">Utilisateurs</a>
+<a href="index.php?view=accueil">Rajouter trajet</a>
+<a href="index.php?view=accueil">Rechercher</a>
+<?php if (valider("isAdmin","SESSION")): ?>
+    <a href="index.php?view=admin">Admin</a>
+<?php else: ?>
+    <a href="index.php?view=accueil">Profil</a>
+<?php endif; ?>
 <a href="index.php?view=conversation">Conversations</a>
+
 
 
 

@@ -27,16 +27,28 @@ Les formulaires de toutes les vues générées enverront leurs données vers la 
 	// En fonction de la vue à afficher, on appelle tel ou tel template
 	switch($view)
 	{		
-		case "login" : 
-			include("templates/login.php");
+		case "account.login" : 
+			include("templates/account/login.php");
 		break; 
+
+		case "account.confirm" : 
+			include("templates/account/repassword2.php");
+		break;
+
+		case "account.create" : 
+			include("templates/account/create.php");
+		break;
+
+		case "account.profile" : 
+			include("templates/profile.php");
+		break;
 
 		case "accueil" : 
 			include("templates/accueil.php");
 		break;
 
-		case "conversation" : 
-			include("templates/conversations.php");
+		case "chat" :
+			include("templates/chat.php");
 		break;
 
 		case "trajets.view" :

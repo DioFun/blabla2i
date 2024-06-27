@@ -153,6 +153,93 @@ if (basename($_SERVER["PHP_SELF"]) != "index.php")
 }
 */
 
+/**
+ * Fonction pour créer une notif dans la bdd et sur la page (on récupère l'id sur le moment et il nous sert d'id de notif en html aussi)
+ * @param string $msg Le message de la notification
+ * @return void
+ */
+function showNotif($msg){
+	$id = createNotif(valider("idUser", "SESSION"));
+	?>
+	<div id="notif<?= $id ?>" class="notif">
+		<p id-notif="<?=$msg?>"><?= $msg ?></p>
+		<button onclick="removeNotif(<?=$id?>)">X</button>
+	</div>
+	<?php
+}
+
+/**
+ * Fonction pour montrer la liste des véhicules entrée en paramètre
+ * à utiliser avec getUserCar ou getTripCar, par exemple.
+ * @param array $voitures La liste des voitures à afficher
+ * @return void
+ */
+function showVehicleList($voitures){
+	echo "<div id='listeVoitures' class='liste'>";
+	echo "<h1>Mes voitures</h1>";
+	if (count($voitures) == 0){
+		echo "<p>Vous n'avez pas encore enregistré de voiture</p>";
+	}else{
+		foreach($voitures as $voiture){
+			echo "<div id='voiture".$voiture["id"]."' class='voiture'>";
+			echo "<img src='../ressources/ec-lille.png' alt='Logo Voiture' />";
+			echo "<p>".$voiture["registration"]."</p>";
+			echo "</div>";
+			echo "<button onclick='deleteCar(".$voiture["id"].")'>Supprimer</button>";
+		}
+	}
+	echo "</div>";
+	return;
+}
+
+/**
+ * Fonction pour montrer la liste des utilisateurs (page admin)
+ * @return void
+ */
+function showUsersList(){
+	$usersList = getAllUsers();
+	echo "<div id='listeUsers' class='liste'>";
+	echo "<h1>Liste des utilisateurs</h1>";
+	if (count($usersList) == 0){
+		echo "<p>Il n'y a pas encore d'utilisateurs enregistrés</p>";
+	}else{
+		foreach($usersList as $user){
+			echo "<div id='user".$user["id"]."' class='user'>";
+			echo "<p>".$user["lastname"]." ".$user["firstname"]."</p>";
+			echo "<p>".$user["email"]."</p>";
+			echo "<p>".$user["adress"]."</p>";
+			echo "<button onclick='banUser(".$user["id"].")'>Bannir</button>";
+			echo "</div>";
+		}
+	}
+	echo "</div>";
+}
+
+/**
+ * Fonction pour montrer la liste des utilisateurs bannis (page admin)
+ * @return void
+ */
+function showBannedUsersList(){
+	$usersList = getAllBannedUsers();
+	echo "<div id='listeBannedUsers' class='liste'>";
+	echo "<h1>Liste des utilisateurs bannis</h1>";
+	if (count($usersList) == 0){
+		echo "<p>Il n'y a pas encore d'utilisateurs bannis</p>";
+	}else{
+		foreach($usersList as $user){
+			echo "<div id='user".$user["id"]."' class='user'>";
+			echo "<p>".$user["lastname"]." ".$user["firstname"]."</p>";
+			echo "<p>".$user["email"]."</p>";
+			echo "<p>".$user["adress"]."</p>";
+			echo "<button onclick='unbanUser(".$user["id"].")'>Débannir</button>";
+			echo "</div>";
+		}
+	}
+	echo "</div>";
+
+}
+
+
 function canEditTrip($id)
 {
 	if (!($userId = valider("idUser", "SESSION"))) return false;
@@ -169,3 +256,60 @@ function dd(...$vars)
 }
 
 ?>
+
+<script>
+	// Fonction pour supprimer une notification
+	function removeNotif(id){
+		$.ajax({
+			url: "controleur.php",
+			type: "GET",
+			data: {action: "DeleteNotif", id: id},
+			success: function(){
+				$("#notif"+id).hide();
+			}
+		});
+
+
+	}
+</script>
+
+<script>
+	// Fonction pour supprimer une voiture
+	function deleteCar(id){
+		$.ajax({
+			url: "controleur.php",
+			type: "GET",
+			data: {action: "DeleteCar", id: id},
+			success: function(){
+				$("#voiture"+id).hide();
+			}
+		});
+	}
+</script>
+
+<script>
+	// Fonctions pour bannir ou débannir un utilisateur
+	// ban
+	function banUser(id){
+		$.ajax({
+			url: "controleur.php",
+			type: "GET",
+			data: {action: "BanUser", idBanUser: id},
+			success: function(){
+				$("#listeBannedUsers").append($("#user"+id));
+			}
+		});
+	}
+
+	// unban
+	function unbanUser(id){
+		$.ajax({
+			url: "controleur.php",
+			type: "GET",
+			data: {action: "UnBanUser", idUnBanUser: id},
+			success: function(){
+				$("#listeUsers").append($("#user"+id));
+			}
+		});
+	}
+</script>

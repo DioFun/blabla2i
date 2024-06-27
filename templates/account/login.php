@@ -3,7 +3,7 @@
 // Si la page est appelée directement par son adresse, on redirige en passant pas la page index
 if (basename($_SERVER["PHP_SELF"]) != "index.php")
 {
-	header("Location:../index.php?view=login");
+	header("Location:../index.php?view=account.login");
 	die("");
 }
 
@@ -13,7 +13,8 @@ if (valider("connecte",'SESSION'))
 	die("");
 }
 
-$info = "";
+
+
 ?>
  
 <div id="corps">
@@ -24,7 +25,7 @@ $info = "";
 
 
 
-<?=$info?>
+
 
 <div id="formLogin">
 	<form action="controleur.php" method="GET">
@@ -32,7 +33,7 @@ $info = "";
 		Password : <input type="password" name="pass" placeholder="Entrez votre mot de passe"/><br />
 
 		<a href="index.php?view=create">Créer un compte</a>
-		<a href="index.php?view=password">Mot de passe oublié ?</a>
+		<a href="index.php?view=repassword">Mot de passe oublié ?</a>
 
 		<input type="submit" name="action" value="Connexion" />
 		
