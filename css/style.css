@@ -8,22 +8,49 @@ body {
 
 /*classes*/
 
+/*header.php*/
 .icons{
 	height: 40px;
 	fill: white;
 }
 
+/*conversations.php*/
+.conversation{
+    padding-top: 15px;
+    padding-bottom: 15px;
+    margin-top: 0;
+    margin-bottom: 0;
+	height : 60px;
+	align-items: center;
+}
+.conversation:hover{
+    background-color: #8aa6a9;
+}
+
+.convName, .convDate, .convMessage{
+    display: inline;
+	margin-left: 5px;
+	margin-right: 5px;
+}
+
+.convDate{
+    float: right;
+}
+
+.convPp{
+    float: left;
+	width : 50px;
+	height : 50px;
+}
 
 /*ids*/
+/**/
+/*header.php*/
 #banniere img{
 	height:60px;
 	margin-right:10px;
 }
 
-#banniere a{
-	float:left;
-	margin-left:10px;
-}
 
 #banniere form {
 	float:right;
@@ -57,7 +84,6 @@ body {
 	bottom: 0;
 	left: 0;
 	right: 0;
-	background-color: #f1f1f1;
 	display : flex;
 	justify-content: space-evenly;
 	align-items: center;
@@ -83,9 +109,78 @@ body {
 	width : 50%;
 }
 
+/*conversations.php*/
+#topBarConv{
+    position: relative;
+    left: 0;
+    right: 0;
+    top:0;
+    padding: 5px;
+    border-bottom: 1px solid white;
+    text-align: center;
+}
+
+#archiveButton{
+    position: absolute;
+    bottom : 5px;
+    right : 5px;
+}
+
+#titleConv{
+    display: inline;
+	font-size: 9ch;
+}
+
+#newMessageTo{
+	color : #ebebeb;
+	font-size: 5ch;
+}
+
+#newMessageForm{
+	margin-top : 30px;
+	padding: 10px;
+	padding-bottom: 30px;
+	padding-left: 70px;
+	border-bottom: 1px solid white;
+}
+
+#newMessageForm input {
+	border-radius: 15px;
+	width : 700px;
+}
+
+#newMessageForm input[type="button"] {
+	height : 60px;
+	width : 150px;
+	font-size: 2ch;
+}
+
+#receiver {
+	height : 30px;
+}
+#content {
+	height : 60px;
+}
+
+#loadMoreButton{
+    text-align: center;
+    background-color: orange;
+    padding: 10px;
+    cursor: pointer;
+}
+
+#loadMoreButton:hover{
+    background-color: darkorange;
+}
+
+
 @media only screen and (max-width: 1000px) {
 	.icons{
 		height: 70px;
+	}
+	.convPp{
+		width : 100px;
+		height : 100px;
 	}
 	#banniere{
 		padding: 10px;
@@ -101,7 +196,21 @@ body {
 	#navbar{
 		width : 90%;
 	}
-	
+	#newMessageForm{
+		align-self: left;
+	}
+	#receiver {
+		height : 75px;
+	}
+	#content {
+		height : 150px;
+	}
+	#newMessageForm input[type="button"] {
+		height : 150px;
+	}
+	#loadMoreButton{
+		font-size : 5ch;
+	}
 }
 
 

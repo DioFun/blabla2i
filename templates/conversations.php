@@ -14,62 +14,7 @@ include_once("libs/maLibForms.php");// mkTable, mkLiens, mkSelect ...
 ?>
 
 <!-- Le style est à adapter mais l'idée y est-->
-<style>
-#topBarConv{
-    position: relative;
-    left: 0;
-    right: 0;
-    top:0;
-    padding: 5px;
-    border-bottom: 1px solid black;
-    text-align: center;
-}
 
-#archiveButton{
-    position: absolute;
-    bottom : 5px;
-    right : 5px;
-}
-
-#titleConv{
-    text-align: center;
-    display: inline;
-}
-
-.conversation{
-    padding-top: 15px;
-    padding-bottom: 15px;
-    margin-top: 0;
-    margin-bottom: 0;
-}
-
-.conversation:hover{
-    background-color: aqua;
-}
-
-.convName, .convDate, .convMessage{
-    display: inline;
-}
-
-.convDate{
-    float: right;
-}
-
-.convPp{
-    float: left;
-}
-
-#loadMoreButton{
-    text-align: center;
-    background-color: blueviolet;
-    padding: 10px;
-    cursor: pointer;
-}
-
-#loadMoreButton:hover{
-    background-color: blue;
-}
-</style>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script>
