@@ -310,6 +310,55 @@ body {
 	width: 100%;
 	font-size: 1.5ch;
 }
+#nav {
+	left: 0;
+	right: 0;
+	display: flex;
+	justify-content: space-evenly;
+	align-items: center;
+	height: 70px;
+}
+#nav button {
+	width: 50%;
+}
+#nav > button {
+	background-color : #6fa2a8fd;
+	color : white;
+	font-size : 4ch;
+}
+#nav > button+button {
+	background-color : #35484afd;
+	color : white;
+	font-size : 4ch;
+}
+#verifInfos{
+	border-bottom: 1px solid white;
+}
+#verifInfos button {
+	background-color: orange;
+	color: white;
+	height : 40px;
+	width: 400px;
+	border-radius: 15px;
+	font-size: 2ch;
+}
+#verifInfos input[type="text"]{
+	height : 30px;
+	width: 400px;
+	font-size: 1.5ch;
+	background-color: rgba(0,0,0,0);
+	border: none;
+	border-bottom: 1px solid white;
+}
+#verifInfos input[type="submit"]{
+	margin-top: 10px;
+	height : 40px;
+	width: 150px;
+	border-radius: 15px;
+	font-size: 1.5ch;
+	color: white;
+	background-color: orange;
+}
 
 @media only screen and (max-width: 1000px) {
 	.icons{
@@ -365,6 +414,37 @@ body {
 	#wholeChat > input[type="button"] {
 		width : 10%;
 		font-size: 2ch;
+	}
+	#formCreationVoiture > form > input[type="text"]{
+		height : 50px;
+		width: 600px;
+		font-size: 2ch;
+	}
+	#formCreationVoiture > form > input[type="submit"]{
+		height : 50px;
+		width: 250px;
+		border-radius: 15px;
+		font-size: 2ch;
+		color: white;
+		background-color: orange;
+	}
+	#verifInfos button {
+		height : 50px;
+		width: 98%;
+		border-radius: 15px;
+		font-size: 4ch;
+	}
+	#verifInfos input[type="text"]{
+		height : 40	px;
+		width: 80%;
+		font-size: 3ch;
+	}
+	#verifInfos input[type="submit"]{
+		margin-top: 10px;
+		height : 50px;
+		width: 18%;
+		border-radius: 15px;
+		font-size: 3ch;
 	}
 }
 

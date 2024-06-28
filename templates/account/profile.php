@@ -20,14 +20,7 @@ include_once("libs/maLibForms.php");
 $infos = getUserInfos(1);
 ?>
 
-<style>
-    .liste{
-        width: 90%;
-        min-height: 20px;
-        border: 2ch solid black;
-        padding: 10px;
-        margin: 10px;
-    }
+<style> 
     .section0{
         display: block;
     }
@@ -86,8 +79,8 @@ $infos = getUserInfos(1);
 <script> //fonction pour afficher la première ou la deuxième section dans le profile (à propos : 0 & Compte : 1)
 function display(which){
     if (which == 0){
-        $("#nav button:eq(1)").css("background-color", "lightgrey");
-        $("#nav button:eq(0)").css("background-color", "white");
+        $("#nav button:eq(0)").css("background-color", "#6fa2a8fd");
+        $("#nav button:eq(1)").css("background-color", "#35484afd");
         s0 = document.getElementsByClassName("section0");
         for (i = 0; i < s0.length; i++){
             s0[i].style.display = "block";
@@ -98,8 +91,8 @@ function display(which){
         }
     }
     else if (which == 1){
-        $("#nav button:eq(0)").css("background-color", "lightgrey");
-        $("#nav button:eq(1)").css("background-color", "white");
+        $("#nav button:eq(1)").css("background-color", "#6fa2a8fd");
+        $("#nav button:eq(0)").css("background-color", "#35484afd");
         s0 = document.getElementsByClassName("section0");
         for (i = 0; i < s0.length; i++){
             s0[i].style.display = "none";
@@ -132,8 +125,8 @@ function display(which){
 </script>
 <!-- Mockup : Ici c'est la barre de navigation qui permet de naviguer entre les différentes sections du profile -->
 <div id="nav">
-    <button style="background-color : white; color : black; font-size : 4ch" onclick="display(0)">A propos de vous</button>
-    <button style="background-color : lightgrey; color : black; font-size : 4ch" onclick="display(1)">Compte</button>
+    <button onclick="display(0)">A propos de vous</button>
+    <button onclick="display(1)">Compte</button>
 </div>
 
 <br>
@@ -147,7 +140,7 @@ function display(which){
 
 <!-- Mockup : Ici c'est la deuxième section "Compte" qui apparaît avec la possibilité de modifier ses infos -->
 <div id="settingInfos" class="section1">
-    <h1>Informations</h1>
+    <h1 style="font-size : 1ch;">Informations</h1>
     <button onclick="editInfos()">Edit</button>
     <div id="formEditInfos" style="display:none;">
         <form action="controleur.php" method="GET">
@@ -188,7 +181,7 @@ function display(which){
     <!-- Là c'est le formulaire pour ajouter une voiture -->
     <div id="formCreationVoiture">
         <form action="controleur.php" method="GET">
-            Immatriculation de la Voiture : <input type="text" name="registrationCar" placeholder="Entrez l'immatriculation de votre voiture"/><br />
+            Immatriculation de la Voiture : <input type="text" name="registrationCar" placeholder="Entrez l'immatriculation de votre voiture"/>
 
             <input type="submit" name="action" value="CreationVoiture" />
             
