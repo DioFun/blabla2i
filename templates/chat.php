@@ -119,11 +119,11 @@ include_once("libs/maLibForms.php");
 	<div class = "messDate">Date & heure</div>
 </div>
 -->
-<body>
+<div id="wholeChat">
 	<div id="chatCont">
 
 	</div>
 
-	<input type="text"/>
+	<input type="text" placeholder="Message à envoyer"/>
 	<input type="button" value ="Envoyer" onclick="sendMessage()"/>
-</body>
+</div>

@@ -153,6 +153,8 @@ body {
 	height : 60px;
 	width : 150px;
 	font-size: 2ch;
+	background-color: orange;
+	color : white;
 }
 
 #receiver {
@@ -173,6 +175,31 @@ body {
     background-color: darkorange;
 }
 
+/*chat.php*/
+
+#wholeChat{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position : fixed;
+	bottom : 90px;
+	left: 0;
+	right: 0;
+}
+
+#wholeChat > input{
+	margin : 5px;
+	border-radius: 15px;
+}
+
+#wholeChat > input[type="text"] {
+	width : 80%;
+}
+
+#wholeChat > input[type="button"] {
+	width : 5%;
+	background-color: orange;
+}
 
 @media only screen and (max-width: 1000px) {
 	.icons{
