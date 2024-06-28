@@ -84,7 +84,7 @@ include_once("libs/maLibForms.php");
 					if ($tripId=valider("tripId")) {
 						echo "'tripId' : '$tripId'";
 					}
-					if ($receiverId=valider("receiverId")) {
+					if ($receiverId=valider("userId")) {
 						echo "'receiverId' : '$receiverId'";
 					}
 					?>
