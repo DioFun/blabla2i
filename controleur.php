@@ -261,19 +261,19 @@ session_start();
 
 			case "newMessage" :
 				if ($tripId = valider("tripId")){
-					if ($senderId = valider("senderId")
-						&& $content = valider("content")){
+					if (($senderId = valider("senderId"))
+						&& ($content = valider("content"))){
 							sendTripMessage($senderId, $tripId, $content);
 					}
 				} elseif ($receiverId=valider("receiverId")){
-					if ($senderId = valider("senderId")
-						&& $content = valider("content")){
+					if (($senderId = valider("senderId"))
+						&& ($content = valider("content"))){
 							sendUserMessage($senderId, $receiverId, $content);
 					}
 				}
 				else { // chat général
-					if ($senderId = valider("senderId")
-						&& $content = valider("content")){
+					if (($senderId = valider("senderId"))
+						&& ($content = valider("content"))){
 							sendGeneralMessage($senderId, $content);
 					}
 				}

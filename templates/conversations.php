@@ -82,8 +82,47 @@ include_once("libs/maLibForms.php");// mkTable, mkLiens, mkSelect ...
 
     function refreshMessages(){
         $("#convCont").html("");
-		var convArray = getConversations();
-		for (i = 0; i<convArray.length; i++){
+		var convArray;
+        $.ajax({
+            type : "GET",
+            url : "controleur.php",
+            data : {"action" : "getConversations"},
+            success : function(oRep){
+                var convJSON = JSON.parse(oRep);
+                convArray = (convJSON.trip).concat(convJSON.user).concat(convJSON.general);
+                convArray.sort(convDateSort);
+                console.log(convArray);
+                var i;
+                for (i = 0; i<4; i++){
+                    console.log("test boucle");
+                    var jCloneConv = jConversation.clone();
+                    if (convArray[i].hasOwnProperty("tripId")){
+                        jCloneConv.children(".convname").html(convArray[i].t.date + " " + convArray[i].t.heure + " "+ convArray[i].t.departure);
+                        jCloneConv.click(function () {
+                            window.location.replace("index.php?view=chat&tripId=" + convArray[i].tripId)
+                        });
+                    } else if (convArray[i].hasOwnProperty("userId")) {
+                        jCloneConv.children(".convname").html(convArray[i].firstname + " " + convArray[i].lastname);
+                        jCloneConv.click(function () {
+                            window.location.replace("index.php?view=chat&userId=" + convArray[i].userId)
+                        });
+                    } else {
+                        jCloneConv.children(".convname").html("Général");
+                        jCloneConv.click(function () {
+                            window.location.replace("index.php?view=chat");
+                        });
+                    }
+                    jCloneConv.children(".convMessage").html(convArray[i].firstname + " " + convArray[i].lastname + " : " + convArray[i].content);
+                    jCloneConv.children(".convDate").html(convArray[i].created_at);
+
+                    $("#convCont").append(jCloneConv);
+                }
+            }
+        });
+        /*
+        var i;
+		for (i = 0; i<4; i++){
+            console.log("test boucle");
 			var jCloneConv = jConversation.clone();
 			if (convArray[i].hasOwnProperty("tripId")){
 				jCloneConv.children(".convname").html(convArray[i].t.date + " " + convArray[i].t.heure + " "+ convArray[i].t.departure);
@@ -100,19 +139,19 @@ include_once("libs/maLibForms.php");// mkTable, mkLiens, mkSelect ...
 
 			$("#convCont").append(jCloneConv);
 		}
+
+         */
     }
 
     function getConversations(){
-		return $.ajax({
+		$.ajax({
 			type : "GET",
 			url : "controleur.php",
             data : {"action" : "getConversations"},
 			success : function(oRep){
-				console.log(oRep);
 				var convJSON = JSON.parse(oRep);
-				var convArray = (convJSON.trip).concat(convJSON.user).concat(convJSON.general);
+				convArray = (convJSON.trip).concat(convJSON.user).concat(convJSON.general);
 				convArray.sort(convDateSort);
-				return convArray;
 			}
 		})
     }
@@ -127,11 +166,11 @@ include_once("libs/maLibForms.php");// mkTable, mkLiens, mkSelect ...
         console.log("Ok");
         $("#newMessageForm").hide();
         refreshMessages();
-        refreshConv = setInterval(refreshMessages, 1000);
+        refreshConv = setInterval(refreshMessages, 10000);
         $("#newMessageTo").click(function(){
             $("#newMessageForm").show();
         });
-        $("#newMessageForm button").click(function(){
+        $("#newMessageForm input[type='button']").click(function(){
             $.ajax({
                 url : "controleur.php",
                 type : "POST",
