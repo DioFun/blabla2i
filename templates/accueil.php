@@ -29,21 +29,10 @@ if (basename($_SERVER["PHP_SELF"]) != "index.php")
     <div class="my-trips">
         <?php if ($trips = getUserTrips(valider("idUser", "SESSION"))): ?>
         <?php foreach ($trips as $trip): ?>
-          <div class="trip"><?= $trip['departure'] ?>, <?= $trip['arrival'] ?>, <?= $trip['email'] ?>, <a href="?view=trajets.view&id=<?= $trip['id'] ?>">view</a></div>
+                <div class="trip">De <?= $trip['departure'] ?> à <?= $trip['arrival'] ?> le <?= date_format(date_create($trip['date']), "j/n/Y")?> à <?= $trip['hour'] ?><a href="?view=trajets.view&id=<?= $trip['id'] ?>">view</a></div>
         <?php endforeach; ?>
         <?php else: ?>
             <h3>Vous n'avez aucun trajet de prévu !</h3>
-        <?php endif; ?>
-    </div>
-
-    <h2>Trajets disponibles</h2>
-    <div class="available-trips">
-        <?php if ($trips = getAvailableTrips(valider("idUser", "SESSION"))): ?>
-            <?php foreach ($trips as $trip): ?>
-                <div class="trip"><?= $trip['departure'] ?>, <?= $trip['arrival'] ?>, <?= $trip['email'] ?>, <a href="?view=trajets.view&id=<?= $trip['id'] ?>">view</a></div>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <h3>Il n'y a pas de tajets disponibles !</h3>
         <?php endif; ?>
     </div>
 

@@ -24,7 +24,7 @@ if (basename($_SERVER["PHP_SELF"]) != "index.php")
 
 
 <form action="controleur.php" method="POST">
-    <label for="destination">Où allez vous ?</label> <input type="checkbox" id="destination" name="destination"/> <br>
+    <label for="destination">Où allez vous ?</label> <input type="text" name="destination" id="destination" placeholder="Départ"><br>
     <label for="departure">D'où partez vous ?</label> <input type="text" id="departure" name="departure" placeholder="Point de rencontre"><br>
     <label for="date">Quel jour partez vous ?</label> <input type="date" id="date" name="date" min=date.now()><br>
     <label for="time">A quelle heure ?</label> <input type="time" id="time" name="time"><br>

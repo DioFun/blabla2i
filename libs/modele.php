@@ -372,7 +372,8 @@ function putConnectionToken($idUser, $connectionToken)
 function addCal($calURL, $idUser) {
 	$SQL = "UPDATE users SET planninglink = '$calURL' WHERE id = '$idUser'";
 	SQLUpdate($SQL);
-	return "?view=profile&msg=". urlencode("Calendrier ajouté avec succès !");
+    createFlash("success", "Calendrier ajouté !");
+	return "?view=profile";
 }
 
 /**
@@ -398,13 +399,14 @@ function addCar($registration, $idUser) {
 
 	$SQL = "SELECT 1 FROM vehicles WHERE registration = '$registration';";
 	if (!empty(parcoursRs(SQLSelect($SQL)))) {
-
-		$qs = "?view=create&msg=". urlencode("Voiture déjà existante !");
+        createFlash("error", "Voiture déjà existante !");
+		$qs = "?view=create";
 
 	}else{
 		$SQL = "INSERT INTO vehicles (registration, owner_id) VALUES ('$registration', '$idUser');";
 		SQLInsert($SQL);
-		$qs = "?view=account.profile&msg=". urlencode("Voiture crée avec succès !");
+        createFlash("success", "Voiture créée avec succès !");
+		$qs = "?view=account.profile";
 	}
 
 	return $qs;
@@ -434,14 +436,14 @@ function getTrip($id)
 
 function getUserTrips($id)
 {
-	$SQL = "SELECT departure, arrival, email, trips.id FROM trips JOIN passengers ON trips.id = passengers.trip_id JOIN users ON users.id = trips.creator_id WHERE passengers.user_id = '$id'";
+	$SQL = "SELECT departure, arrival, trips.id, date, hour FROM trips JOIN passengers ON trips.id = passengers.trip_id JOIN users ON users.id = trips.creator_id WHERE passengers.user_id = '$id'";
 	return parcoursRs(SQLSelect($SQL));
 }
 
 function getAvailableTrips($id)
 {
 	$SQL = "SELECT trips.id FROM trips JOIN passengers ON trips.id = passengers.trip_id WHERE passengers.user_id = '$id'";
-	$SQL = "SELECT departure, arrival, email, trips.id FROM trips JOIN passengers ON trips.id = passengers.trip_id JOIN users ON users.id = trips.creator_id WHERE trips.id NOT IN ({$SQL}) ";
+	$SQL = "SELECT departure, arrival, date, hour, trips.id FROM trips JOIN passengers ON trips.id = passengers.trip_id JOIN users ON users.id = trips.creator_id WHERE trips.id NOT IN ({$SQL}) ";
 	return parcoursRs(SQLSelect($SQL));
 
 }
@@ -567,10 +569,12 @@ function modifyInfos($nom, $prenom, $mail, $adress, $idUser) {
 		$resetToken = generateToken();
 		putResetToken($mail,$resetToken);
 
-		sendResetEmail($mail, $resetToken, $id);
-		return "?view=profile&msg=". urlencode("Informations modifiées avec succès ! Si l'email à été changé, vueillez le confirmer.");
+		sendResetEmail($mail, $resetToken, $idUser);
+        createFlash("success", "Informations modifiées !");
+		return "?view=profile";
 	}else{
-		return "?view=profile&msg=". urlencode("Erreur lors de la modification des informations.");
+        createFlash('error', 'Erreur lors de la modification !');
+		return "?view=profile";
 	}
 }
 

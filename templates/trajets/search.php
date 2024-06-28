@@ -25,7 +25,7 @@ if (basename($_SERVER["PHP_SELF"]) != "index.php")
     <div class="available-trips">
         <?php if ($trips = getAvailableTrips(valider("idUser", "SESSION"))): ?>
             <?php foreach ($trips as $trip): ?>
-                <div class="trip"><?= $trip['departure'] ?>, <?= $trip['arrival'] ?>, <?= $trip['email'] ?>, <a href="?view=trajets.view&id=<?= $trip['id'] ?>">view</a></div>
+                <div class="trip">De <?= $trip['departure'] ?> à <?= $trip['arrival'] ?> le <?= date_format(date_create($trip['date']), "j/n/Y")?>à <?= $trip['time'] ?><a href="?view=trajets.view&id=<?= $trip['id'] ?>">view</a></div>
             <?php endforeach; ?>
         <?php else: ?>
             <h2 class="titleTrip">Il n'y a pas de tajets disponibles !</h2>

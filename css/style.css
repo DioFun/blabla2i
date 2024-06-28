@@ -6,6 +6,25 @@ body {
 
 }
 
+.flash {
+	width: 80%;
+	border-radius: 15px;
+	list-style: none;
+	padding: 5px 10px;
+	border-width: 5px;
+	margin: auto;
+}
+
+.error {
+	background-color: lightcoral;
+	border-color: red;
+}
+
+.success {
+	background-color: lightgreen;
+	border-color: green;
+}
+
 /*trajets/create.php*/
 form label{
 	font-size: 2ch;
@@ -93,7 +112,7 @@ form input[type="submit"]{
 	background-color: orange;
 	color: white;
 	height : 40px;
-	width: 100px;
+	width: auto;
 	border-radius: 15px;
 	font-size: 2ch;
 	align-self: flex-end;
@@ -489,7 +508,7 @@ form input[type="submit"]{
 		width : 90%;
 	}
 	#newMessageForm{
-		align-self: left;
+		align-self: flex-start;
 	}
 	#receiver {
 		height : 75px;
@@ -537,7 +556,7 @@ form input[type="submit"]{
 		font-size: 4ch;
 	}
 	#verifInfos input[type="text"]{
-		height : 40	px;
+		height : 40px;
 		width: 80%;
 		font-size: 3ch;
 	}
