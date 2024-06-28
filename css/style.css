@@ -43,6 +43,36 @@ body {
 	height : 50px;
 }
 
+/*profile.php*/
+.voiture{
+	margin-top: 20px;
+	padding: 10px;
+	width: 50%;
+	background-color: #4a7b80fd;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+}
+.voiture > img{
+	width: 20px;
+	height: 20px;
+}
+.voiture > button{
+	background-color: orange;
+	color: white;
+	height : 40px;
+	width: 100px;
+	border-radius: 15px;
+	font-size: 2ch;
+	align-self: flex-end;
+}
+.liste{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+
 /*ids*/
 /**/
 /*header.php*/
@@ -202,6 +232,85 @@ body {
 	background-color: orange;
 }
 
+/*profile.php*/
+
+#settingInfos{
+	margin-top: 20px;
+	margin-left: 20px;
+	border-bottom: 1px solid white;
+	padding: 10px;
+	width: 90%;
+	font-size: 6ch;
+}
+
+#settingInfos > button {
+	background-color: orange;
+	color: white;
+	height : 40px;
+	width: 70px;
+	border-radius: 15px;
+	font-size: 0.7ch;
+}
+#formEditInfos{
+	display: none;
+	font-size: 0.7ch;
+	margin-top: 15px;
+}
+#formEditInfos > form  input[type="text"]{
+	height : 40px;
+	width: 400px;
+	font-size: 1.5ch;
+	background-color: rgba(0,0,0,0);
+	border: none;
+	border-bottom: 1px solid white;
+}
+#formEditInfos > form > input[type="submit"]{
+	margin-top: 10px;
+	height : 50px;
+	width: 200px;
+	border-radius: 15px;
+	font-size: 1.5ch;
+	color: white;
+	background-color: orange;
+}
+#settingStaticInfos{
+	display: block;
+	font-size: 0.7ch;
+}
+#formCreationVoiture{
+	margin-top: 20px;
+	padding: 10px;
+	width: 90%;
+	font-size: 2ch;
+}
+#voituresProfile{
+	width: 100%;
+	font-size: 3ch;
+}
+#formCreationVoiture > form > input[type="text"]{
+	height : 40px;
+	width: 400px;
+	background-color: rgba(0,0,0,0);
+	border: none;
+	border-bottom: 1px solid white;
+	font-size: 1ch;
+}
+#formCreationVoiture > form > input[type="submit"]{
+	display: inline;
+	height : 40px;
+	width: 200px;
+	border-radius: 15px;
+	font-size: 1ch;
+	color: white;
+	background-color: orange;
+}
+#listeVoitures{
+	margin-top: 20px;
+	padding: 10px;
+	width: 100%;
+	font-size: 1.5ch;
+}
+
 @media only screen and (max-width: 1000px) {
 	.icons{
 		height: 70px;
@@ -209,6 +318,10 @@ body {
 	.convPp{
 		width : 100px;
 		height : 100px;
+	}
+	.voiture{
+		width : 95%;
+		font-size: 3ch;
 	}
 	#banniere{
 		padding: 10px;
