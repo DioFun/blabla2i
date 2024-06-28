@@ -21,13 +21,13 @@ if (basename($_SERVER["PHP_SELF"]) != "index.php")
     }
 </script>
 
-<h2>Trajets disponibles</h2>
+<h2 class="titleTrip">Trajets disponibles</h2>
     <div class="available-trips">
         <?php if ($trips = getAvailableTrips(valider("idUser", "SESSION"))): ?>
             <?php foreach ($trips as $trip): ?>
                 <div class="trip"><?= $trip['departure'] ?>, <?= $trip['arrival'] ?>, <?= $trip['email'] ?>, <a href="?view=trajets.view&id=<?= $trip['id'] ?>">view</a></div>
             <?php endforeach; ?>
         <?php else: ?>
-            Il n'y a pas de tajets disponibles !
+            <h2 class="titleTrip">Il n'y a pas de tajets disponibles !</h2>
         <?php endif; ?>
     </div>

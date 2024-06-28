@@ -72,6 +72,31 @@ body {
 	align-items: center;
 }
 
+/*trajets/search.php*/
+.titleTrip{
+	width : 98%;
+	text-align: center;
+	font-size: 3ch;
+}
+.trip{
+	margin-top: 20px;
+	padding: 10px;
+	width: 50%;
+	background-color: #4a7b80fd;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+}
+.trip > a{
+	background-color: orange;
+	color: white;
+	height : 40px;
+	width: 100px;
+	border-radius: 15px;
+	font-size: 2ch;
+	align-self: flex-end;
+}
+
 
 /*ids*/
 /**/
@@ -431,6 +456,13 @@ form input[type="submit"]{
 	.voiture{
 		width : 95%;
 		font-size: 3ch;
+	}
+	.trip{
+		width : 95%;
+		font-size: 3ch;
+	}
+	.titleTrip{
+		font-size: 5ch;
 	}
 	#banniere{
 		padding: 10px;
