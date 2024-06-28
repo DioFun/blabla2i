@@ -382,6 +382,12 @@ body {
 	background-color: orange;
 }
 
+/*account/login.php*/
+#formLogin a{
+	color: white;
+	margin: 10px;
+}
+
 @media only screen and (max-width: 1000px) {
 	.icons{
 		height: 70px;
