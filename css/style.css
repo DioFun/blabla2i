@@ -190,6 +190,7 @@ body {
 #wholeChat > input{
 	margin : 5px;
 	border-radius: 15px;
+	height : 30px;
 }
 
 #wholeChat > input[type="text"] {
@@ -237,6 +238,20 @@ body {
 	}
 	#loadMoreButton{
 		font-size : 5ch;
+	}
+	#wholeChat{
+		bottom : 100px;
+	}
+	#wholeChat > input{
+		height : 75px;
+	}
+	#wholeChat > input[type="text"] {
+		width : 90%;
+	}
+	
+	#wholeChat > input[type="button"] {
+		width : 10%;
+		font-size: 2ch;
 	}
 }
 

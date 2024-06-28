@@ -6,11 +6,11 @@ if (basename($_SERVER["PHP_SELF"]) != "index.php")
 	die("");
 }
 
-if (!valider("connecte",'SESSION') && !valider("isAdmin","SESSION"))
-{
-	header("Location:index.php?view=accueil");
-	die("");
-}
+// if (!valider("connecte",'SESSION') && !valider("isAdmin","SESSION"))
+// {
+// 	header("Location:index.php?view=accueil");
+// 	die("");
+// }
 include_once("libs/modele.php");
 include_once("libs/maLibUtils.php");
 include_once("libs/maLibForms.php");
@@ -18,11 +18,30 @@ include_once("libs/maLibForms.php");
 $infos = getUserInfos(valider("idUser","SESSION"));
 
 ?>
+
 <script>
     function changeIconColor(){
         $(".icons:eq(3)").css("fill", "orange");
     }
 </script>
+
+<script> // Le formulaire d'édition des infos est caché par défaut, on l'affiche à la demande de l'utilisateur
+    cache = true; //pas caché
+    function editInfos(){
+        console.log("editInfos");
+        if (cache){
+            document.getElementById("formEditInfos").style.display = "block";
+            document.getElementById("settingStaticInfos").style.display = "none";
+        }
+        else{
+            document.getElementById("formEditInfos").style.display = "none";
+            document.getElementById("settingStaticInfos").style.display = "block";
+        }
+        cache = !cache;
+    }
+
+</script>
+
 <div id="settingInfos">
     <button onclick="editInfos()">Edit</button>
     <div id="formEditInfos" style="display:none;">
