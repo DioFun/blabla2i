@@ -19,7 +19,6 @@ include_once("libs/maLibForms.php");
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script>
-	var cache; // on associe userId et le nom de l'utilisateur pour l'affichage
 	<?php
 		echo "var userId =".$_SESSION["idUser"]; // pour la mise en page (utilisateur connecté à droite dans le chat)
 	?>
@@ -29,55 +28,49 @@ include_once("libs/maLibForms.php");
 												.append("<div class = \"messContent\">")
 												.append("<div class = \"messDate\">");
 
-	function getMessages(){
-		$.ajax({
-			type : "GET",
-			url : "controleur.php",
-			data : {"action" : "getChat"
-					<?php
-					if ($tripId=valider("tripId")) {
-						echo "'tripId' : '$tripId'";
-					}
-					if ($userId=valider("userId")) {
-						echo "'userId' : '$userId'";
-					}
-					?>},
-			success : function(oRep){
-				console.log(oRep);
-				return JSON.parse(oRep);
-			}
-		})
+		function displayMessages() {
+            $.ajax({
+                type: "GET",
+                url: "controleur.php",
+                data: {
+                    "action": "getChat",
+                    <?php
+                    if ($tripId = valider("tripId")) {
+                        echo "'tripId' : '$tripId'";
+                    }
+                    if ($userId = valider("userId")) {
+                        echo "'userId' : '$userId'";
+                    }
+                    ?>},
+                success: function (oRep) {
+                    var messages = JSON.parse(oRep);
+                    console.log(messages);
+                    var i;
+                    $("#chatCont").html("");
+                    for (i = 0; i < messages.length; i++) {
+                        var jCloneMessage = jMessage.clone();
+                            $.ajax({
+                                type: "GET",
+                                url: "controleur.php",
+                                data: {
+                                    "action": "getUserName",
+                                    "userId": messages[i].sender_id
+                                },
+                                succes: function (oRep) {
+                                    console.log(oRep);
+                                    jCloneMessage.children(".senderName").html(oRep);
+                                }
+                            });
+                        jCloneMessage.children(".messContent").html(messages[i].content);
+                        jCloneMessage.children(".messDate").html(messages[i].created_at);
 
-		function displayMessages(){
-			var messages = getMessages();
-			var i;
+                        if (messages[i].sender_id == userId) jCloneMessage.addClass("loggedInUserMessage"); // pour différencier message de l'utilisateur connecté et les autres
+                        $("#chatCont").append(jCloneMessage);
+                    }
+                }
+            })
+        }
 
-			$("#chatCont").html("");
-			for (i = 0; i<messages.legnth; i++){
-				var jCloneMessage = jMessage.clone();
-				if (!cache.hasOwnProperty(messages[i].sender_id)){
-					$.ajax({
-						type: "GET",
-						url : "controleur.php",
-						data : {
-							"action" : "getUserName",
-							"userId" : messages[i].sender_id
-						},
-						succes : function(oRep){
-							console.log(oRep);
-							cache.messages[i].sender_id = oRep;
-						}
-					})
-				}
-				jCloneMessage.children(".senderName").html(cache.messages[i].sender_id);
-				jCloneMessage.children(".messContent").html(messages[i].content);
-				jCloneMessage.children(".messDate").html(messages[i].created_at);
-
-				if (messages[i].sender_id == userId) jCloneMessage.addClass("loggedInUserMessage"); // pour différencier message de l'utilisateur connecté et les autres
-				$("#chatCont").append(jCloneMessage);
-			}
-		}
-	}
 
 	function sendMessage(){
 		$.ajax({
@@ -86,15 +79,16 @@ include_once("libs/maLibForms.php");
 			data : {
 				"action" : "newMessage",
 				"senderId" : userId,
-				"content" : $("input [type=text]").val()},
+				"content" : $("input [type=text]").val(),
 				<?php
 					if ($tripId=valider("tripId")) {
 						echo "'tripId' : '$tripId'";
 					}
-					if ($receiverId=valider("receiverId")) {
+					if ($receiverId=valider("userId")) {
 						echo "'receiverId' : '$receiverId'";
 					}
-					?>,
+					?>
+            },
 			success : function(){
 				displayMessages();
 			}
