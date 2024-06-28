@@ -123,18 +123,10 @@ include_once("libs/maLibForms.php");// mkTable, mkLiens, mkSelect ...
 		return 0;
 	}
 
-    function remplir(nom, id){
-        $("#receiver").val(nom)
-                        .data("userId", id);
-        console.log($("#receiver").data());
-    }
-
     $(document).ready(function(){
         console.log("Ok");
         $("#newMessageForm").hide();
-        console.log("test1");
         refreshMessages();
-        console.log("test2");
         refreshConv = setInterval(refreshMessages, 1000);
         $("#newMessageTo").click(function(){
             $("#newMessageForm").show();
@@ -159,7 +151,6 @@ include_once("libs/maLibForms.php");// mkTable, mkLiens, mkSelect ...
         });
 
         $("#receiver").keyup(function(){
-            console.log("test");
             $("#suggest").html("");
             var userInput = $("#receiver").val();
             if (userInput == "") $("#suggest").hide();
@@ -178,7 +169,11 @@ include_once("libs/maLibForms.php");// mkTable, mkLiens, mkSelect ...
                         for (i = 0; i<repJSON.length; i++){
                             var option = $("<div>").html(repJSON[i].firstname + " " + repJSON[i].lastname)
                                                     .data("userId", repJSON[i].id)
-                                                    .click(remplir(repJSON[i].firstname + " " + repJSON[i].lastname, repJSON[i].id));
+                                                    //.click(remplir(repJSON[i].firstname + " " + repJSON[i].lastname, repJSON[i].id));
+                                                    .click(function(){
+                                                        $("#receiver").val($(this).html())
+                                                                    .data($(this).data());
+                                                    })
                             $("#suggest").append(option);
                             $("#suggest").show();
                         }
