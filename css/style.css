@@ -6,6 +6,38 @@ body {
 
 }
 
+/*trajets/create.php*/
+form label{
+	font-size: 2ch;
+}
+
+form input[type="text"], form input[type="number"], form input[type="date"], form input[type="time"]{
+	height : 40px;
+	width: 400px;
+	font-size: 1.5ch;
+	background-color: rgba(0,0,0,0);
+	border: none;
+	border-bottom: 1px solid white;
+}
+
+form select, form option{
+	background-color: rgba(0,0,0,0);
+	border: none;
+	border-bottom: 1px solid white;
+	margin : 10px;
+	font-size: 1.5ch;
+}
+
+form input[type="submit"]{
+	margin-top: 10px;
+	height : 50px;
+	width: 150px;
+	border-radius: 15px;
+	font-size: 2ch;
+	color: white;
+	background-color: orange;
+}
+
 /*classes*/
 
 /*header.php*/
@@ -413,36 +445,14 @@ body {
 	margin: 10px;
 }
 
-/*trajets/create.php*/
-form label{
-	font-size: 2ch;
-}
-
-form input[type="text"], form input[type="number"], form input[type="date"], form input[type="time"]{
+/*accueil.php*/
+#corps button{
+	background-color: orange;
+	color: white;
 	height : 40px;
-	width: 400px;
-	font-size: 1.5ch;
-	background-color: rgba(0,0,0,0);
-	border: none;
-	border-bottom: 1px solid white;
-}
-
-form select, form option{
-	background-color: rgba(0,0,0,0);
-	border: none;
-	border-bottom: 1px solid white;
-	margin : 10px;
-	font-size: 1.5ch;
-}
-
-form input[type="submit"]{
-	margin-top: 10px;
-	height : 50px;
-	width: 150px;
+	width: 200px;
 	border-radius: 15px;
 	font-size: 2ch;
-	color: white;
-	background-color: orange;
 }
 
 @media only screen and (max-width: 1000px) {
@@ -585,6 +595,20 @@ form input[type="submit"]{
 		height : 50px;
 		width: 250px;
 		font-size: 4ch;
+	}
+	#corps button{
+		background-color: orange;
+		color: white;
+		height : 80px;
+		width: 400px;
+		border-radius: 15px;
+		font-size: 6ch;
+	}
+	#corps h2{
+		font-size: 6ch;
+	}
+	#corps h3{
+		font-size: 5ch;
 	}
 }
 

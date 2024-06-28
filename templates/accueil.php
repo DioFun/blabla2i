@@ -32,7 +32,7 @@ if (basename($_SERVER["PHP_SELF"]) != "index.php")
           <div class="trip"><?= $trip['departure'] ?>, <?= $trip['arrival'] ?>, <?= $trip['email'] ?>, <a href="?view=trajets.view&id=<?= $trip['id'] ?>">view</a></div>
         <?php endforeach; ?>
         <?php else: ?>
-            Vous n'avez aucun trajet de prévu !
+            <h3>Vous n'avez aucun trajet de prévu !</h3>
         <?php endif; ?>
     </div>
 
@@ -43,7 +43,7 @@ if (basename($_SERVER["PHP_SELF"]) != "index.php")
                 <div class="trip"><?= $trip['departure'] ?>, <?= $trip['arrival'] ?>, <?= $trip['email'] ?>, <a href="?view=trajets.view&id=<?= $trip['id'] ?>">view</a></div>
             <?php endforeach; ?>
         <?php else: ?>
-            Il n'y a pas de tajets disponibles !
+            <h3>Il n'y a pas de tajets disponibles !</h3>
         <?php endif; ?>
     </div>
 
