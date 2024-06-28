@@ -272,6 +272,8 @@ function getUserConversations($idUser){
             SELECT u.id AS userId, firstname, lastname, content, cu.created_at AS created_at FROM chat_users AS cu INNER JOIN users AS u ON cu.receiver_id = u.id WHERE cu.sender_id = '$idUser'
             GROUP BY userId
             ORDER BY created_at DESC";
+
+
     return parcoursRs(SQLSelect($SQL));
 }
 

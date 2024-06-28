@@ -235,7 +235,7 @@ session_start();
 					echo json_encode(getTripMessages($tripId));
 					}
 				elseif ($userId=valider("userId")){
-					echo json_encode(getUserMessages($_SESSION['iduUser'], $userId));
+					echo json_encode(getUserMessages($_SESSION['idUser'], $userId));
 				}
 				else{ // chat général
 					echo json_encode(getGeneralMessages());

@@ -99,12 +99,12 @@ include_once("libs/maLibForms.php");// mkTable, mkLiens, mkSelect ...
                     if (convArray[i].hasOwnProperty("tripId")){
                         jCloneConv.children(".convname").html(convArray[i].t.date + " " + convArray[i].t.heure + " "+ convArray[i].t.departure);
                         jCloneConv.click(function () {
-                            window.location.replace("index.php?view=chat&tripId=" + convArray[i].tripId)
+                            window.location.replace("index.php?view=chat&tripId=" + convArray[i].tripId);
                         });
                     } else if (convArray[i].hasOwnProperty("userId")) {
                         jCloneConv.children(".convname").html(convArray[i].firstname + " " + convArray[i].lastname);
                         jCloneConv.click(function () {
-                            window.location.replace("index.php?view=chat&userId=" + convArray[i].userId)
+                            window.location.replace("index.php?view=chat&userId=" + convArray[i].userId);
                         });
                     } else {
                         jCloneConv.children(".convname").html("Général");
