@@ -142,7 +142,7 @@ CREATE TABLE `connection_tokens` (
     `id` int(11) NOT NULL,
     `user_id` int(11) NOT NULL,
     `connection_token` varchar(255) NOT NULL,
-    'send_at' timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+    `send_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -220,6 +220,13 @@ ALTER TABLE `users`
 ALTER TABLE `vehicles`
   ADD PRIMARY KEY (`id`),
   ADD KEY `owner_id` (`owner_id`);
+
+--
+-- Index pour la table `connection_tokens`
+--
+ALTER TABLE `connection_tokens`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- AUTO_INCREMENT pour les tables déchargées
@@ -329,7 +336,7 @@ ALTER TABLE `vehicles`
 COMMIT;
 
 ALTER TABLE `connection_tokens`
-  ADD CONSTRAINT `tokens_ibfk_1` FOREIGN KEY ('user_id') REFERENCES `users` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `tokens_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

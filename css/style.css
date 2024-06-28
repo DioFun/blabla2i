@@ -1,26 +1,162 @@
-#banniere {
-	height:70px;
+/*usual parts of webpage*/
+body {
+	background-color: #6fa2a8fd;
+	font-family: Arial, sans-serif;
+	color: white;
+
 }
 
-#stitre
-{
-	text-align:center;
+.flash {
+	width: 80%;
+	border-radius: 15px;
+	list-style: none;
+	padding: 5px 10px;
+	border-width: 5px;
+	margin: auto;
 }
 
-#logo {
-	display:inline;
-	float:left;
+.error {
+	background-color: lightcoral;
+	border-color: red;
 }
 
+.success {
+	background-color: lightgreen;
+	border-color: green;
+}
+
+/*trajets/create.php*/
+form label{
+	font-size: 2ch;
+}
+
+form input[type="text"], form input[type="number"], form input[type="date"], form input[type="time"]{
+	height : 40px;
+	width: 400px;
+	font-size: 1.5ch;
+	background-color: rgba(0,0,0,0);
+	border: none;
+	border-bottom: 1px solid white;
+}
+
+form select, form option{
+	background-color: rgba(0,0,0,0);
+	border: none;
+	border-bottom: 1px solid white;
+	margin : 10px;
+	font-size: 1.5ch;
+}
+
+form input[type="submit"]{
+	margin-top: 10px;
+	height : 50px;
+	width: 150px;
+	border-radius: 15px;
+	font-size: 2ch;
+	color: white;
+	background-color: orange;
+}
+
+/*classes*/
+
+/*header.php*/
+.icons{
+	height: 40px;
+	fill: white;
+}
+
+/*conversations.php*/
+.conversation{
+    padding-top: 15px;
+    padding-bottom: 15px;
+    margin-top: 0;
+    margin-bottom: 0;
+	height : 60px;
+	align-items: center;
+}
+.conversation:hover{
+    background-color: #8aa6a9;
+}
+
+.convName, .convDate, .convMessage{
+    display: inline;
+	margin-left: 5px;
+	margin-right: 5px;
+}
+
+.convDate{
+    float: right;
+}
+
+.convPp{
+    float: left;
+	width : 50px;
+	height : 50px;
+}
+
+/*account/profile.php*/
+.voiture{
+	margin-top: 20px;
+	padding: 10px;
+	width: 50%;
+	background-color: #4a7b80fd;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+}
+.voiture > img{
+	width: 20px;
+	height: 20px;
+}
+.voiture > button{
+	background-color: orange;
+	color: white;
+	height : 40px;
+	width: auto;
+	border-radius: 15px;
+	font-size: 2ch;
+	align-self: flex-end;
+}
+.liste{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+/*trajets/search.php*/
+.titleTrip{
+	width : 98%;
+	text-align: center;
+	font-size: 3ch;
+}
+.trip{
+	margin-top: 20px;
+	padding: 10px;
+	width: 50%;
+	background-color: #4a7b80fd;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+}
+.trip > a{
+	background-color: orange;
+	color: white;
+	height : 40px;
+	width: 100px;
+	border-radius: 15px;
+	font-size: 2ch;
+	align-self: flex-end;
+}
+
+
+/*ids*/
+/**/
+/*header.php*/
 #banniere img{
 	height:60px;
 	margin-right:10px;
 }
 
-#banniere a{
-	float:left;
-	margin-left:10px;
-}
 
 #banniere form {
 	float:right;
@@ -38,7 +174,7 @@
 }
 
 #corps {
-	border :1px solid black;
+	border :1px solid white;
 	padding:20px;
 	margin:10px;
 }
@@ -49,6 +185,451 @@
 	margin:10px;
 }
 
+#banniere {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	display : flex;
+	justify-content: space-evenly;
+	align-items: center;
+	background-color: #1f2f31;
+	padding: 5px;
+	height: 70px
+}
+
+#stitre{
+	width : 50%;
+	text-align:center;
+	color : white;
+}
+
+#logo {
+	display:inline;
+	float:left;
+}
+
+#navbar {
+	display:flex;
+	justify-content: space-evenly;
+	width : 50%;
+}
+
+/*conversations.php*/
+#topBarConv{
+    position: relative;
+    left: 0;
+    right: 0;
+    top:0;
+    padding: 5px;
+    border-bottom: 1px solid white;
+    text-align: center;
+}
+
+#archiveButton{
+    position: absolute;
+    bottom : 5px;
+    right : 5px;
+}
+
+#titleConv{
+    display: inline;
+	font-size: 9ch;
+}
+
+#newMessageTo{
+	color : #ebebeb;
+	font-size: 5ch;
+}
+
+#newMessageForm{
+	margin-top : 30px;
+	padding: 10px;
+	padding-bottom: 30px;
+	padding-left: 70px;
+	border-bottom: 1px solid white;
+}
+
+#newMessageForm input {
+	border-radius: 15px;
+	width : 700px;
+}
+
+#newMessageForm input[type="button"] {
+	height : 60px;
+	width : 150px;
+	font-size: 2ch;
+	background-color: orange;
+	color : white;
+}
+
+#receiver {
+	height : 30px;
+}
+#content {
+	height : 60px;
+}
+
+#loadMoreButton{
+    text-align: center;
+    background-color: orange;
+    padding: 10px;
+    cursor: pointer;
+}
+
+#loadMoreButton:hover{
+    background-color: darkorange;
+}
+
+/*chat.php*/
+
+#wholeChat{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position : fixed;
+	bottom : 90px;
+	left: 0;
+	right: 0;
+}
+
+#wholeChat > input{
+	margin : 5px;
+	border-radius: 15px;
+	height : 30px;
+}
+
+#wholeChat > input[type="text"] {
+	width : 80%;
+}
+
+#wholeChat > input[type="button"] {
+	width : 5%;
+	background-color: orange;
+}
+
+/*account/profile.php*/
+
+#settingInfos{
+	margin-top: 20px;
+	margin-left: 20px;
+	border-bottom: 1px solid white;
+	padding: 10px;
+	width: 90%;
+	font-size: 6ch;
+}
+
+#settingInfos > button {
+	background-color: orange;
+	color: white;
+	height : 40px;
+	width: 70px;
+	border-radius: 15px;
+	font-size: 0.7ch;
+}
+#formEditInfos{
+	display: none;
+	font-size: 0.7ch;
+	margin-top: 15px;
+}
+#formEditInfos > form  input[type="text"]{
+	height : 40px;
+	width: 400px;
+	font-size: 1.5ch;
+	background-color: rgba(0,0,0,0);
+	border: none;
+	border-bottom: 1px solid white;
+}
+#formEditInfos > form > input[type="submit"]{
+	margin-top: 10px;
+	height : 50px;
+	width: 200px;
+	border-radius: 15px;
+	font-size: 1.5ch;
+	color: white;
+	background-color: orange;
+}
+#settingStaticInfos{
+	display: block;
+	font-size: 0.7ch;
+}
+#formCreationVoiture{
+	margin-top: 20px;
+	padding: 10px;
+	width: 90%;
+	font-size: 2ch;
+}
+#voituresProfile{
+	width: 100%;
+	font-size: 3ch;
+}
+#formCreationVoiture > form > input[type="text"]{
+	height : 40px;
+	width: 400px;
+	background-color: rgba(0,0,0,0);
+	border: none;
+	border-bottom: 1px solid white;
+	font-size: 1ch;
+}
+#formCreationVoiture > form > input[type="submit"]{
+	display: inline;
+	height : 40px;
+	width: 200px;
+	border-radius: 15px;
+	font-size: 1ch;
+	color: white;
+	background-color: orange;
+}
+#listeVoitures{
+	margin-top: 20px;
+	padding: 10px;
+	width: 100%;
+	font-size: 1.5ch;
+}
+#nav {
+	left: 0;
+	right: 0;
+	display: flex;
+	justify-content: space-evenly;
+	align-items: center;
+	height: 70px;
+}
+#nav button {
+	width: 50%;
+}
+#nav > button {
+	background-color : #6fa2a8fd;
+	color : white;
+	font-size : 4ch;
+}
+#nav > button+button {
+	background-color : #35484afd;
+	color : white;
+	font-size : 4ch;
+}
+#verifInfos{
+	padding-bottom: 10px;
+	border-bottom: 1px solid white;
+}
+#verifInfos button {
+	background-color: orange;
+	color: white;
+	height : 40px;
+	width: 400px;
+	border-radius: 15px;
+	font-size: 2ch;
+}
+#verifInfos input[type="text"]{
+	height : 30px;
+	width: 400px;
+	font-size: 1.5ch;
+	background-color: rgba(0,0,0,0);
+	border: none;
+	border-bottom: 1px solid white;
+}
+#verifInfos input[type="submit"]{
+	margin-top: 10px;
+	height : 40px;
+	width: 150px;
+	border-radius: 15px;
+	font-size: 1.5ch;
+	color: white;
+	background-color: orange;
+}
+
+/*account/create.php*/
+
+#formLogin form input[type="text"], #formLogin form input[type="password"]{
+	height : 30px;
+	width: 400px;
+	font-size: 1.5ch;
+	background-color: rgba(0,0,0,0);
+	border: none;
+	border-bottom: 1px solid white;
+}
+
+#formLogin form input[type="submit"]{
+	margin-top: 10px;
+	height : 40px;
+	width: 150px;
+	border-radius: 15px;
+	font-size: 1.5ch;
+	color: white;
+	background-color: orange;
+}
+
+/*account/login.php*/
+#formLogin a{
+	color: white;
+	margin: 10px;
+}
+
+/*accueil.php*/
+#corps button{
+	background-color: orange;
+	color: white;
+	height : 40px;
+	width: 200px;
+	border-radius: 15px;
+	font-size: 2ch;
+}
+
+@media only screen and (max-width: 1000px) {
+	.icons{
+		height: 70px;
+	}
+	.convPp{
+		width : 100px;
+		height : 100px;
+	}
+	.voiture{
+		width : 95%;
+		font-size: 3ch;
+	}
+	.trip{
+		width : 95%;
+		font-size: 3ch;
+	}
+	.titleTrip{
+		font-size: 5ch;
+	}
+	#banniere{
+		padding: 10px;
+	}
+	#stitre{
+		display: none;
+		width : 0%;
+	}
+	#logo{
+		display: none;
+		width : 0%;
+	}
+	#navbar{
+		width : 90%;
+	}
+	#newMessageForm{
+		align-self: flex-start;
+	}
+	#receiver {
+		height : 75px;
+	}
+	#content {
+		height : 150px;
+	}
+	#newMessageForm input[type="button"] {
+		height : 150px;
+	}
+	#loadMoreButton{
+		font-size : 5ch;
+	}
+	#wholeChat{
+		bottom : 100px;
+	}
+	#wholeChat > input{
+		height : 75px;
+	}
+	#wholeChat > input[type="text"] {
+		width : 90%;
+	}
+	
+	#wholeChat > input[type="button"] {
+		width : 10%;
+		font-size: 2ch;
+	}
+	#formCreationVoiture > form > input[type="text"]{
+		height : 50px;
+		width: 600px;
+		font-size: 2ch;
+	}
+	#formCreationVoiture > form > input[type="submit"]{
+		height : 50px;
+		width: 250px;
+		border-radius: 15px;
+		font-size: 2ch;
+		color: white;
+		background-color: orange;
+	}
+	#verifInfos button {
+		height : 50px;
+		width: 98%;
+		border-radius: 15px;
+		font-size: 4ch;
+	}
+	#verifInfos input[type="text"]{
+		height : 40px;
+		width: 80%;
+		font-size: 3ch;
+	}
+	#verifInfos input[type="submit"]{
+		margin-top: 10px;
+		height : 50px;
+		width: 18%;
+		border-radius: 15px;
+		font-size: 3ch;
+	}
+	#corps h1{
+		font-size: 8ch;
+	}
+	#formLogin{
+		font-size: 5ch;
+	}
+	#formLogin form input[type="text"], #formLogin form input[type="password"]{
+		height : 50px;
+		width: 600px;
+		margin : 20px;
+		padding : 10px;
+		font-size: 1.5ch;
+	}
+	#formLogin form input[type="submit"]{
+		margin-top: 20px;
+		height : 70px;
+		width: 450px;
+		font-size: 2ch;
+
+	}
+	form label{
+		margin-top: 30px;
+		margin-bottom: 30px;
+		font-size: 5ch;
+	}
+	
+	form input[type="text"], form input[type="number"], form input[type="date"], form input[type="time"]{
+		margin-top: 30px;
+		margin-bottom: 30px;
+		height : 40px;
+		width: 400px;
+		font-size: 4ch;
+	}
+	
+	form select, form option{
+		margin : 10px;
+		font-size: 5ch;
+	}
+	form input[type="checkbox"]{
+		width : 40px;
+		height : 40px;
+	}
+	form input[type="submit"]{
+		margin-top: 10px;
+		height : 50px;
+		width: 250px;
+		font-size: 4ch;
+	}
+	#corps button{
+		background-color: orange;
+		color: white;
+		height : 80px;
+		width: 400px;
+		border-radius: 15px;
+		font-size: 6ch;
+	}
+	#corps h2{
+		font-size: 6ch;
+	}
+	#corps h3{
+		font-size: 5ch;
+	}
+}
 
 
 

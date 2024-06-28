@@ -19,14 +19,71 @@ $infos = getUserInfos(valider("idUser","SESSION"));
 
 ?>
 
+<style>
+    
+    h1{
+        font-size: 2.8ch;
+        text-align: center;
+    }
+    .user{
+        margin-top: 20px;
+        padding: 10px;
+        width: 50%;
+        background-color: #4a7b80fd;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .user > button{
+        background-color: orange;
+        color: white;
+        height : 40px;
+        width: 100px;
+        border-radius: 15px;
+        font-size: 2ch;
+        align-self: flex-end;
+    }
+    @media only screen and (max-width: 1000px) {
+        .user{
+            width: 95%;
+            font-size: 3ch;
+        }
+        
+    }
+
+</style>
+
+<script>
+    function changeIconColor(){
+        $(".icons:eq(3)").css("fill", "orange");
+    }
+</script>
+
+<script> // Le formulaire d'édition des infos est caché par défaut, on l'affiche à la demande de l'utilisateur
+    cache = true; //pas caché
+    function editInfos(){
+        console.log("editInfos");
+        if (cache){
+            document.getElementById("formEditInfos").style.display = "block";
+            document.getElementById("settingStaticInfos").style.display = "none";
+        }
+        else{
+            document.getElementById("formEditInfos").style.display = "none";
+            document.getElementById("settingStaticInfos").style.display = "block";
+        }
+        cache = !cache;
+    }
+
+</script>
+
 <div id="settingInfos">
-    <button onclick="editInfos()">Edit</button>
-    <div id="formEditInfos" style="display:none;">
+    Informations <button onclick="editInfos()">Edit</button>
+    <div id="formEditInfos">
         <form action="controleur.php" method="GET">
-            <p>Nom : </p><input type="text" name="nom" placeholder="Nom" value="<?=$infos["lastname"]?>"/><br />
-            <p>Pr&eacute;nom : </p><input type="text" name="prenom" placeholder="Prénom" value="<?=$infos["firstname"]?>"/><br />
-            <p>Email : </p><input type="text" name="mail" placeholder="E-Mail (en @centrale.centralelille.fr)" value="<?=$infos["email"]?>"/><br />
-            <p>Adresse : </p><input type="text" name="adress" placeholder="Adresse" value="<?=$infos["adress"]?>"/><br />
+            Nom : <input type="text" name="nom" placeholder="Nom" value="<?=$infos["lastname"]?>"/><br />
+            Pr&eacute;nom : <input type="text" name="prenom" placeholder="Prénom" value="<?=$infos["firstname"]?>"/><br />
+            Email : <input type="text" name="mail" placeholder="E-Mail (en @centrale.centralelille.fr)" value="<?=$infos["email"]?>"/><br />
+            Adresse : <input type="text" name="adress" placeholder="Adresse" value="<?=$infos["adress"]?>"/><br />
             <input type="submit" name="action" value="ModifyInfos" />
         </form>
     </div>
@@ -45,9 +102,9 @@ $infos = getUserInfos(valider("idUser","SESSION"));
     <!-- Là c'est le formulaire pour ajouter une voiture -->
     <div id="formCreationVoiture">
         <form action="controleur.php" method="GET">
-            Immatriculation de la Voiture : <input type="text" name="registrationCar" placeholder="Entrez l'immatriculation de votre voiture"/><br />
+            Immatriculation de la Voiture : <input type="text" name="registrationCar" placeholder="Entrez l'immatriculation de votre voiture"/>
 
-            <input type="submit" name="action" value="CreationVoiture" />
+            <input type="submit" name="action" value="CreationVoiture"/>
             
         </form>
     </div>
@@ -67,3 +124,5 @@ $infos = getUserInfos(valider("idUser","SESSION"));
 <?php
     showBannedUsersList(); //afficher la liste des utilisateurs bannis
 ?>
+
+<br>

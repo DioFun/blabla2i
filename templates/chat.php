@@ -19,6 +19,11 @@ include_once("libs/maLibForms.php");
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script>
+    function changeIconColor(){
+        $(".icons:eq(4)").css("fill", "orange");
+    }
+</script>
+<script>
 	var cache; // on associe userId et le nom de l'utilisateur pour l'affichage
 	<?php
 		echo "var userId =".$_SESSION["idUser"]; // pour la mise en page (utilisateur connecté à droite dans le chat)
@@ -114,11 +119,11 @@ include_once("libs/maLibForms.php");
 	<div class = "messDate">Date & heure</div>
 </div>
 -->
-<body>
+<div id="wholeChat">
 	<div id="chatCont">
 
 	</div>
 
-	<input type="text"/>
+	<input type="text" placeholder="Message à envoyer"/>
 	<input type="button" value ="Envoyer" onclick="sendMessage()"/>
-</body>
+</div>

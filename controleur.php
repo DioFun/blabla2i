@@ -159,11 +159,10 @@ session_start();
 			break;
 
 			case 'trajets.create' :
-				$destination = valider("destination") ? "ig2i" : "centrale";
 				$isDriving = valider("driver");
 				if (($departure = valider("departure")) && ($date = valider("date"))
 					&& ($time = valider("time")) && ($passengers = valider("passengers"))
-                    && ($vehicle = valider("car"))) {
+                    && ($vehicle = valider("car") && ($destination = valider("destination")))) {
 					if (!createTrip($isDriving, $departure, $destination, $date, $time, $passengers, $vehicle)) createFlash("error", "Une erreur est survenue lors de la création !");
 					else createFlash("success", "Le trajet a bien été créé !");
 					$qs = '?view=accueil';
@@ -187,11 +186,10 @@ session_start();
                     $qs = "?view=accueil";
                 } else {
                     $id = valider("id");
-                    $destination = valider("destination") ? "ig2i" : "centrale";
                     $isDriving = valider("driver");
                     if (($departure = valider("departure")) && ($date = valider("date"))
                         && ($time = valider("time")) && ($passengers = valider("passengers"))
-                        && $vehicle = valider("car")) {
+                        && ($vehicle = valider("car") && ($destination = valider("destination")))) {
                         editTrip($id, $isDriving, $departure, $destination, $date, $time, $passengers, $vehicle);
                         createFlash("success", "Le trajet a bien été modifié !");
                         $qs = "?view=trajets.view&id=$id";
@@ -278,7 +276,6 @@ session_start();
 					}
 				}
 				die();
-			break;
 
 			case "suggestUser" :
 				if ($debut = valider("debut")){

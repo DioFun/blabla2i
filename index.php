@@ -71,6 +71,10 @@ Les formulaires de toutes les vues générées enverront leurs données vers la 
 			include("templates/trajets/create.php");
 		break;
 
+		case "trajets.search" :
+			include("templates/trajets/search.php");
+		break;
+
 		case "trajets.edit" :
 			include("templates/trajets/edit.php");
 		break;

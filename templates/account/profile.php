@@ -1,5 +1,5 @@
 <?php
-// Si la page est appelée directement par son adresse, on redirige en passant pas la page index
+//Si la page est appelée directement par son adresse, on redirige en passant pas la page index
 if (basename($_SERVER["PHP_SELF"]) != "index.php")
 {
 	header("Location:../index.php?view=account.profile");
@@ -16,23 +16,37 @@ include_once("libs/maLibUtils.php");
 include_once("libs/maLibForms.php");
 
 $infos = getUserInfos(valider("idUser","SESSION"));
+
+$infos = getUserInfos(1);
 ?>
 
-<style>
-    .liste{
-        width: 90%;
-        min-height: 20px;
-        border: 2ch solid black;
-        padding: 10px;
-        margin: 10px;
-    }
+<style> 
     .section0{
         display: block;
     }
     .section1{
         display: none;
     }
+    button {
+        background-color: white;
+        border: none;
+        color: orange;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+    
+    }
 </style>
+
+<script>
+    function changeIconColor(){
+        $(".icons:eq(3)").css("fill", "orange");
+    }
+</script>
+
 <script> //Les formulaire d'ajout/modif de calendrier et de numéro sont cachés par défaut, on les affiches à la demande de l'utilisateur
     function createForm(which){
         if (which == "cal"){
@@ -65,6 +79,8 @@ $infos = getUserInfos(valider("idUser","SESSION"));
 <script> //fonction pour afficher la première ou la deuxième section dans le profile (à propos : 0 & Compte : 1)
 function display(which){
     if (which == 0){
+        $("#nav button:eq(0)").css("background-color", "#6fa2a8fd");
+        $("#nav button:eq(1)").css("background-color", "#35484afd");
         s0 = document.getElementsByClassName("section0");
         for (i = 0; i < s0.length; i++){
             s0[i].style.display = "block";
@@ -75,6 +91,8 @@ function display(which){
         }
     }
     else if (which == 1){
+        $("#nav button:eq(1)").css("background-color", "#6fa2a8fd");
+        $("#nav button:eq(0)").css("background-color", "#35484afd");
         s0 = document.getElementsByClassName("section0");
         for (i = 0; i < s0.length; i++){
             s0[i].style.display = "none";
@@ -111,6 +129,8 @@ function display(which){
     <button onclick="display(1)">Compte</button>
 </div>
 
+<br>
+
 <!-- Mockup : Ici c'est la première section "A propos de vous" qui apparaît avec Prénom + Nom + Mail -->
 <div id="infos" class="section0">
     <h1><?=$_SESSION["pseudo"]?></h1>
@@ -120,6 +140,7 @@ function display(which){
 
 <!-- Mockup : Ici c'est la deuxième section "Compte" qui apparaît avec la possibilité de modifier ses infos -->
 <div id="settingInfos" class="section1">
+    <h1 style="font-size : 1ch;">Informations</h1>
     <button onclick="editInfos()">Edit</button>
     <div id="formEditInfos" style="display:none;">
         <form action="controleur.php" method="GET">
@@ -160,12 +181,12 @@ function display(which){
     <!-- Là c'est le formulaire pour ajouter une voiture -->
     <div id="formCreationVoiture">
         <form action="controleur.php" method="GET">
-            Immatriculation de la Voiture : <input type="text" name="registrationCar" placeholder="Entrez l'immatriculation de votre voiture"/><br />
+            Immatriculation de la Voiture : <input type="text" name="registrationCar" placeholder="Entrez l'immatriculation de votre voiture"/>
 
             <input type="submit" name="action" value="CreationVoiture" />
             
         </form>
     </div>
     <!-- Là c'est la liste -->
-    <?php showVehicleList(getUserCar($_SESSION["idUser"]));?>
+    <?php showVehicleList(getUserCar(valider("idUser", "SESSION")));?>
 </div>

@@ -8,7 +8,11 @@ if (basename($_SERVER["PHP_SELF"]) != "index.php")
 }
 
 ?>
- 
+<script>
+    function changeIconColor(){
+        $(".icons:eq(3)").css("fill", "orange");
+    }
+</script>
 <div id="corps">
 
 	<img src="../../ressources/logo.png" alt="Logo">

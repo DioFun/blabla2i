@@ -17,7 +17,11 @@ if (basename($_SERVER["PHP_SELF"]) != "index.php" || !($id = valider("id")))
 $tripDetail = getTrip($id);
 $passengers = getPassengers($id);
 ?>
-
+<script>
+    function changeIconColor(){
+        $(".icons:eq(1)").css("fill", "orange");
+    }
+</script>
 <div id="corps">
     <a href="?view=accueil">retour</a>
     <h1>Détail du trajet</h1>
