@@ -388,6 +388,38 @@ body {
 	margin: 10px;
 }
 
+/*trajets/create.php*/
+form label{
+	font-size: 2ch;
+}
+
+form input[type="text"], form input[type="number"], form input[type="date"], form input[type="time"]{
+	height : 40px;
+	width: 400px;
+	font-size: 1.5ch;
+	background-color: rgba(0,0,0,0);
+	border: none;
+	border-bottom: 1px solid white;
+}
+
+form select, form option{
+	background-color: rgba(0,0,0,0);
+	border: none;
+	border-bottom: 1px solid white;
+	margin : 10px;
+	font-size: 1.5ch;
+}
+
+form input[type="submit"]{
+	margin-top: 10px;
+	height : 50px;
+	width: 150px;
+	border-radius: 15px;
+	font-size: 2ch;
+	color: white;
+	background-color: orange;
+}
+
 @media only screen and (max-width: 1000px) {
 	.icons{
 		height: 70px;
@@ -493,6 +525,34 @@ body {
 		width: 450px;
 		font-size: 2ch;
 
+	}
+	form label{
+		margin-top: 30px;
+		margin-bottom: 30px;
+		font-size: 5ch;
+	}
+	
+	form input[type="text"], form input[type="number"], form input[type="date"], form input[type="time"]{
+		margin-top: 30px;
+		margin-bottom: 30px;
+		height : 40px;
+		width: 400px;
+		font-size: 4ch;
+	}
+	
+	form select, form option{
+		margin : 10px;
+		font-size: 5ch;
+	}
+	form input[type="checkbox"]{
+		width : 40px;
+		height : 40px;
+	}
+	form input[type="submit"]{
+		margin-top: 10px;
+		height : 50px;
+		width: 250px;
+		font-size: 4ch;
 	}
 }
 
